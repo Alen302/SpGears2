@@ -1,10 +1,11 @@
-import spinal.core._
-import spinal.lib._
-import spinal.core.sim._
+package OtherCode
 
-import scala.util.Random
+import spinal.core._
+import spinal.core.sim._
+import spinal.lib._
 
 import scala.annotation.tailrec
+import scala.util.Random
 
 case class BitonicSortV2 [T <: Data] (datatpye :HardType[T] , n :Int , comparator :(Seq[T] , Boolean) => Seq[T] , isUp :Boolean) extends Component {
   require(isPow2(n) , "You should check you input")
