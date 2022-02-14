@@ -1,9 +1,9 @@
 package Axi4Code.Axi4Full
 
-import spinal.lib._
-import spinal.core._
-import spinal.lib.bus.amba4.axi._
 import spinal.core.sim._
+import spinal.core.{U, _}
+import spinal.lib._
+import spinal.lib.bus.amba4.axi._
 
 
 /**
@@ -38,16 +38,16 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
   // record the times of write op in write channel
   val writeCounter = Counter(0, len)
 
-  // record the times of handshake between fifo and Axi4WriteMaster interface
+  // record the times of handshake between fifo and Axi4Module.Axi4Full.Axi4WriteMaster interface
   val handshakeCounter: Counter = Counter(0, len)
 
-  // ----------------fifo to Axi4WriteMaster channel map-------------------
+  // ----------------fifo to Axi4Module.Axi4Full.Axi4WriteMaster channel map-------------------
 
   // register the fifo data (or fifo data buffer)
 
   val fifoDataBuffer: Vec[Bits] = Vec(List.tabulate(len)(i => RegInit(B(0, widthPerData bits))))
 
-  // handshake between fifo and Axi4WriteMaster
+  // handshake between fifo and Axi4Module.Axi4Full.Axi4WriteMaster
   when(StreamInterface.fire) {
     fifoDataBuffer(handshakeCounter.resized) := StreamInterface.payload
     handshakeCounter.increment()
@@ -59,8 +59,6 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
   }
 
   // when the write channel complete a burst, the buffer can receive next burst data from fifo
-
-  import Axi4.resp._
 
   when(writeCounter.willOverflowIfInc) {
     handshakeCounter.clear()
@@ -226,4 +224,3 @@ object Axi4WriteMasterSpecRenamer {
   }
 
 }
-
