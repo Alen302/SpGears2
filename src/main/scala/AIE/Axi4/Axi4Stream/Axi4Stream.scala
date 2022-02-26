@@ -1,4 +1,4 @@
-package Axi4Code.Axi4Stream
+package AIE.Axi4.Axi4Stream
 
 import spinal.core._
 import spinal.lib._

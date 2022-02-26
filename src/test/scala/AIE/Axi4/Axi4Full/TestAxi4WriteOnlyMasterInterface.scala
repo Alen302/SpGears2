@@ -1,4 +1,4 @@
-package Axi4Code.Axi4Full
+package AIE.Axi4.Axi4Full
 
 import spinal.lib._
 import spinal.core._

@@ -1,4 +1,4 @@
-package Axi4Code.Axi4Full
+package AIE.Axi4.Axi4Full
 
 import spinal.lib._
 import spinal.core._
@@ -14,7 +14,7 @@ import spinal.core.sim._
  * @param len          The total number of data transfers within a burst.
  * @param widthPerData The width of each data from fifo
  */
-case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int = 32) extends Bundle {
+case class Axi4WriteOnlyMaster(addressWidth: Int, len: Int = 256, widthPerData: Int = 32) extends Bundle {
 
   require(len > 0 & len <= 256, "the define of the number of transfer in a burst is illegal !")
   // -------------------set the config information--------------------
@@ -27,11 +27,11 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
 
   // ------------------declare the interface we need-------------------
   val stream = slave Stream Bits(widthPerData bits)
-  val t = master(Axi4(config))
+  val t = master(Axi4WriteOnly(config))
 
   def StreamInterface: Stream[Bits] = stream
 
-  def writeMasterInterface: Axi4 = t
+  def writeOnlyMasterInterface: Axi4WriteOnly = t
 
   // --------------------the interconnection logic---------------------
 
@@ -69,13 +69,14 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
 
   // ----------------------the write address channel map----------------------
 
-  // compute the start address for each transfer in each burst
-  val address: UInt = Reg(UInt(addressWidth bits)) init (U(0, addressWidth bits)) simPublic()
-  when(writeMasterInterface.w.fire) {
+  // compute the start address for each transfer in each burst and store it
+  val address: UInt = Reg(UInt(addressWidth bits)) init (U(0, addressWidth bits))
+  address.setName("debugAddress").simPublic()
+  when(writeOnlyMasterInterface.w.fire) {
     address := Axi4.incr(address,
-      writeMasterInterface.aw.burst,
-      writeMasterInterface.aw.len,
-      writeMasterInterface.aw.size,
+      writeOnlyMasterInterface.aw.burst,
+      writeOnlyMasterInterface.aw.len,
+      writeOnlyMasterInterface.aw.size,
       config.bytePerWord)
   }
   // handshake logic
@@ -86,9 +87,8 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
     isTransferAfterReset := False
   }
   // Asynchronous LOW Level reset
-  // TODO: fix
   when(ClockDomain.current.readResetWire) {
-    when(writeMasterInterface.aw.fire) {
+    when(writeOnlyMasterInterface.aw.fire) {
       controlAwValid := False
     }
     when(writeCounter.willOverflowIfInc || isTransferAfterReset) {
@@ -96,8 +96,8 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
     }
   }
 
-  writeMasterInterface.aw.valid := controlAwValid
-
+  writeOnlyMasterInterface.aw.valid := controlAwValid
+  writeCounter.value.setName("writeCounter").simPublic()
 
   // data logic
   val initialAddress = Reg(UInt(addressWidth bits)) init (U(0, addressWidth bits))
@@ -110,38 +110,39 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
   }
   // when a burst complete, the start address should change
   when(writeCounter.willOverflowIfInc) {
-    writeMasterInterface.aw.payload.addr := address
+    writeOnlyMasterInterface.aw.payload.addr := address
   } otherwise {
-    writeMasterInterface.aw.payload.addr := initialAddress
+    writeOnlyMasterInterface.aw.payload.addr := initialAddress
   }
 
   // other logic
 
   import Axi4.burst._
 
-  writeMasterInterface.aw.payload.region := B(0, 4 bits)
-  writeMasterInterface.aw.payload.burst := INCR
-  writeMasterInterface.aw.payload.len := U(len - 1, 8 bits)
-  writeMasterInterface.aw.payload.size := U(log2Up(config.bytePerWord), 3 bits)
-  writeMasterInterface.aw.payload.cache := B(0, 4 bits)
-  writeMasterInterface.aw.payload.qos := B(0, 4 bits)
-  writeMasterInterface.aw.payload.prot := B(0, 3 bits)
+  writeOnlyMasterInterface.aw.payload.region := B(0, 4 bits)
+  writeOnlyMasterInterface.aw.payload.burst := INCR
+  writeOnlyMasterInterface.aw.payload.len := U(len - 1, 8 bits)
+  writeOnlyMasterInterface.aw.payload.size := U(log2Up(config.bytePerWord), 3 bits)
+  writeOnlyMasterInterface.aw.payload.cache := B(0, 4 bits)
+  writeOnlyMasterInterface.aw.payload.qos := B(0, 4 bits)
+  writeOnlyMasterInterface.aw.payload.prot := B(0, 3 bits)
 
   // --------------------------the write channel map--------------------------
 
   // data logic
-  writeMasterInterface.w.payload.data := B(0, widthPerData bits)
-  when(writeMasterInterface.w.valid) {
-    writeMasterInterface.w.payload.data := fifoDataBuffer(writeCounter.resized)
+  writeOnlyMasterInterface.w.payload.data := B(0, widthPerData bits)
+  when(writeOnlyMasterInterface.w.valid) {
+    writeOnlyMasterInterface.w.payload.data := fifoDataBuffer(writeCounter.resized)
   }
-  when(writeMasterInterface.w.fire) {
+  when(writeOnlyMasterInterface.w.fire) {
     writeCounter.increment()
   }
 
   // handshake logic
-  writeMasterInterface.w.valid := False
+  handshakeCounter.value.setName("handshakeCounter").simPublic()
+  writeOnlyMasterInterface.w.valid := False
   when(handshakeCounter > U(0) & writeCounter < handshakeCounter & !writeCounter.willOverflowIfInc) {
-    writeMasterInterface.w.valid := True
+    writeOnlyMasterInterface.w.valid := True
   }
   // when a burst complete reset counter for next burst
   when(writeCounter.willOverflowIfInc) {
@@ -149,41 +150,27 @@ case class Axi4WriteMaster(addressWidth: Int, len: Int = 256, widthPerData: Int 
   }
 
   // other logic
-  writeMasterInterface.w.setStrb()
-  writeMasterInterface.w.last := writeCounter === U(len - 1)
+  writeOnlyMasterInterface.w.setStrb()
+  writeOnlyMasterInterface.w.last := writeCounter === U(len - 1)
 
   // ------------------------The write respond map---------------------------
   // when the first transfer start in a burst, we can receive the bResp signal
+
   val controlBReady = RegInit(False)
-  when(writeMasterInterface.w.valid.rise()) {
+  when(writeOnlyMasterInterface.w.valid.rise()) {
     controlBReady := True
   }
-  when(writeMasterInterface.b.fire) {
+  when(writeOnlyMasterInterface.b.fire) {
     controlBReady := False
   }
-  writeMasterInterface.b.ready := controlBReady
+  writeOnlyMasterInterface.b.ready := controlBReady
 
 
-  // --------------------The read address channel map -----------------------
-  // in this interface, we not read the slave, so we can set the default value for this channel
-  writeMasterInterface.ar.payload.addr := U(0, addressWidth bits)
-  writeMasterInterface.ar.payload.region := B(0, 4 bits)
-  writeMasterInterface.ar.payload.burst := INCR
-  writeMasterInterface.ar.payload.len := U(len - 1, 8 bits)
-  writeMasterInterface.ar.payload.size := U(config.bytePerWord, 3 bits)
-  writeMasterInterface.ar.payload.cache := B(0, 4 bits)
-  writeMasterInterface.ar.payload.qos := B(0, 4 bits)
-  writeMasterInterface.ar.payload.prot := B(0, 3 bits)
-  writeMasterInterface.ar.valid := False
-
-  // ------------------------The read channel map-----------------------------
-  // in this interface, noting to do
-  writeMasterInterface.r.ready := False
 }
 
 
-object Axi4WriteMasterSpecRenamer {
-  def apply(that: Axi4WriteMaster): Unit = {
+object Axi4WriteOnlyMasterSpecRenamer {
+  def apply(that: Axi4WriteOnlyMaster): Unit = {
     def doIt() = {
       val name: String = that.getName()
       that.flatten.foreach { port =>
@@ -205,8 +192,7 @@ object Axi4WriteMasterSpecRenamer {
     }
   }
 
-
-  def apply(that: Axi4): Unit = {
+  def apply(that: Axi4WriteOnly): Unit = {
     def doIt() = {
       val name: String = that.getName()
       that.flatten.foreach { port =>
