@@ -1,10 +1,11 @@
 // Verilated -*- C++ -*-
 // DESCRIPTION: Verilator output: Symbol table internal header
 //
-// Internal details; most calling programs do not need this header
+// Internal details; most calling programs do not need this header,
+// unless using verilator public meta comments.
 
-#ifndef _VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms_H_
-#define _VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms_H_
+#ifndef _VSTREAM2AXI4WRITEONLYMASTERINTERFACEADDFIFO__SYMS_H_
+#define _VSTREAM2AXI4WRITEONLYMASTERINTERFACEADDFIFO__SYMS_H_  // guard
 
 #include "verilated.h"
 
@@ -40,6 +41,6 @@ class VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms : public VerilatedSyms {
     inline const char* name() { return __Vm_namep; }
     inline bool getClearActivity() { bool r=__Vm_activity; __Vm_activity=false; return r; }
     
-} VL_ATTR_ALIGNED(64);
+} VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);
 
-#endif // guard
+#endif  // guard

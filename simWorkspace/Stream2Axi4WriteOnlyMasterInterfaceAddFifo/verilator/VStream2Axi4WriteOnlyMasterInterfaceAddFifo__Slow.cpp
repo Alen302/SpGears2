@@ -2,22 +2,17 @@
 // DESCRIPTION: Verilator output: Design implementation internals
 // See VStream2Axi4WriteOnlyMasterInterfaceAddFifo.h for the primary calling header
 
-#include "VStream2Axi4WriteOnlyMasterInterfaceAddFifo.h" // For This
+#include "VStream2Axi4WriteOnlyMasterInterfaceAddFifo.h"
 #include "VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms.h"
 
 #include "verilated_dpi.h"
 
-
-//--------------------
-// STATIC VARIABLES
-
-
-//--------------------
+//==========
 
 VL_CTOR_IMP(VStream2Axi4WriteOnlyMasterInterfaceAddFifo) {
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp = __VlSymsp = new VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms(this, name());
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    VL_CELL (Stream2Axi4WriteOnlyMasterInterfaceAddFifo, VStream2Axi4WriteOnlyMasterInterfaceAddFifo_Stream2Axi4WriteOnlyMasterInterfaceAddFifo);
+    VL_CELL(Stream2Axi4WriteOnlyMasterInterfaceAddFifo, VStream2Axi4WriteOnlyMasterInterfaceAddFifo_Stream2Axi4WriteOnlyMasterInterfaceAddFifo);
     // Reset internal values
     
     // Reset structure values
@@ -33,41 +28,51 @@ VStream2Axi4WriteOnlyMasterInterfaceAddFifo::~VStream2Axi4WriteOnlyMasterInterfa
     delete __VlSymsp; __VlSymsp=NULL;
 }
 
-//--------------------
-// Internal Methods
-
-void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__1(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__1\n"); );
+void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_initial__TOP__1(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_initial__TOP__1\n"); );
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlTOPp->m_axi_awregion = 0U;
-    vlTOPp->m_axi_awlen = 0xffU;
-    vlTOPp->m_axi_awsize = 2U;
-    vlTOPp->m_axi_awburst = 1U;
-    vlTOPp->m_axi_awcache = 0U;
-    vlTOPp->m_axi_awqos = 0U;
-    vlTOPp->m_axi_awprot = 0U;
     vlTOPp->m_axi_wstrb = 0xfU;
-    vlTOPp->m_axi_awvalid = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_controlAwValid;
-    vlTOPp->m_axi_wlast = (0xffU == (IData)(vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.writeCounter));
-    vlTOPp->m_axi_bready = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_controlBReady;
-    vlTOPp->m_axi_awaddr = ((0x100U == (IData)(vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.writeCounter))
-			     ? vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.debugAddress
-			     : vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_initialAddress);
+    vlTOPp->m_axi_awprot = 0U;
+    vlTOPp->m_axi_awqos = 0U;
+    vlTOPp->m_axi_awcache = 0U;
+    vlTOPp->m_axi_awburst = 1U;
+    vlTOPp->m_axi_awsize = 2U;
+    vlTOPp->m_axi_awregion = 0U;
 }
 
-void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__2(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__2\n"); );
+void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__4(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__4\n"); );
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlTOPp->m_axi_wvalid = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__m_axi_wvalid;
+    vlTOPp->transInterrupt = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_isBurstComplete;
+    vlTOPp->m_axi_awlen = (0xffU & ((IData)(vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__burstLengthReg) 
+                                    - (IData)(1U)));
+    vlTOPp->m_axi_awaddr = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_finalAddressReg;
+    vlTOPp->m_axi_awvalid = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_controlAwValidSignal;
+    vlTOPp->m_axi_bready = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__axi4Interface_controlBReady;
+}
+
+void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__5(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_settle__TOP__5\n"); );
+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
+    vlTOPp->m_axi_wlast = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__m_axi_wlast;
     vlTOPp->m_axi_wdata = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__m_axi_wdata;
+    vlTOPp->m_axi_wvalid = vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection.__PVT__m_axi_wvalid;
     vlTOPp->s_axis_ready = (1U & (~ (IData)(vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo.__PVT__fifoInstance__DOT__logic_full)));
 }
 
 void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_eval_initial(VStream2Axi4WriteOnlyMasterInterfaceAddFifo__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_eval_initial\n"); );
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
+    vlTOPp->_initial__TOP__1(vlSymsp);
+    vlTOPp->__Vclklast__TOP__aclk = vlTOPp->aclk;
+    vlTOPp->__Vclklast__TOP__aresetn = vlTOPp->aresetn;
+    vlTOPp->__Vclklast__TOP____VinpClk__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection____PVT___zz_4 
+        = vlTOPp->__VinpClk__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection____PVT___zz_4;
+    vlTOPp->__Vclklast__TOP__start = vlTOPp->start;
 }
 
 void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::final() {
@@ -81,13 +86,12 @@ void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_eval_settle(VStream2Axi4Write
     VL_DEBUG_IF(VL_DBG_MSGF("+    VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_eval_settle\n"); );
     VStream2Axi4WriteOnlyMasterInterfaceAddFifo* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlTOPp->_settle__TOP__1(vlSymsp);
+    vlTOPp->_settle__TOP__4(vlSymsp);
     vlTOPp->__Vm_traceActivity = (1U | vlTOPp->__Vm_traceActivity);
-    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection__1(vlSymsp);
-    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection__2(vlSymsp);
-    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__1(vlSymsp);
-    vlTOPp->_settle__TOP__2(vlSymsp);
-    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection__3(vlSymsp);
+    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection__5(vlSymsp);
+    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__3(vlSymsp);
+    vlTOPp->_settle__TOP__5(vlSymsp);
+    vlSymsp->TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection._settle__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection__6(vlSymsp);
 }
 
 void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_ctor_var_reset() {
@@ -115,8 +119,14 @@ void VStream2Axi4WriteOnlyMasterInterfaceAddFifo::_ctor_var_reset() {
     m_axi_bready = VL_RAND_RESET_I(1);
     m_axi_bresp = VL_RAND_RESET_I(2);
     aresetn = VL_RAND_RESET_I(1);
+    start = VL_RAND_RESET_I(1);
+    burstLen = VL_RAND_RESET_I(8);
+    startAddr = VL_RAND_RESET_I(32);
+    offset = VL_RAND_RESET_I(32);
+    pathNumb = VL_RAND_RESET_I(8);
+    transInterrupt = VL_RAND_RESET_I(1);
     aclk = VL_RAND_RESET_I(1);
-    __Vclklast__TOP__aclk = VL_RAND_RESET_I(1);
-    __Vclklast__TOP__aresetn = VL_RAND_RESET_I(1);
-    __Vm_traceActivity = VL_RAND_RESET_I(32);
+    __VinpClk__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection____PVT___zz_4 = VL_RAND_RESET_I(1);
+    __Vchglast__TOP__Stream2Axi4WriteOnlyMasterInterfaceAddFifo__axi4Interconnection___zz_4 = VL_RAND_RESET_I(1);
+    __Vm_traceActivity = 0;
 }

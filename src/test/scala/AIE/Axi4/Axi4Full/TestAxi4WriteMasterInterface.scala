@@ -1,8 +1,8 @@
 package AIE.Axi4.Axi4Full
 
-import spinal.lib._
 import spinal.core._
 import spinal.core.sim._
+import spinal.lib._
 import spinal.lib.bus.amba4.axi._
 
 case class Stream2Axi4WriteMasterInterface(addressWidth: Int, len: Int = 256, widthPerData: Int = 32) extends Component {
@@ -22,7 +22,7 @@ case class Stream2Axi4WriteMasterInterfaceAddFifo(addressWidth: Int, len: Int = 
   val streamInterface = slave Stream Bits(widthPerData bits)
   // rename streamInterface
   val bundleName = streamInterface.getName()
-  streamInterface.flatten.foreach{ port =>
+  streamInterface.flatten.foreach { port =>
     port.setName(port.getName().replace(bundleName, "s_axis"))
   }
 
@@ -41,16 +41,14 @@ case class Stream2Axi4WriteMasterInterfaceAddFifo(addressWidth: Int, len: Int = 
 
 object TestAxi4WriteMasterInterface extends App {
 
-  import scala.util.Random
   import scala.collection.mutable._
+  import scala.util.Random
 
   SimConfig.withWave.allOptimisation.compile(Stream2Axi4WriteMasterInterfaceAddFifo(32))
     .doSim { dut =>
 
       val testCase = ArrayBuffer[BigInt]()
       val writeData = ArrayBuffer[BigInt]()
-
-      import Axi4.resp._
       dut.axi4WriteMasterInterface.w.ready #= false
       dut.axi4WriteMasterInterface.aw.ready #= false
       dut.axi4WriteMasterInterface.b.resp #= 0
@@ -69,7 +67,7 @@ object TestAxi4WriteMasterInterface extends App {
         dut.streamInterface.valid #= true
         dut.axi4WriteMasterInterface.aw.ready #= readySignal
         dut.axi4WriteMasterInterface.w.ready #= readySignal
-        if(dut.axi4WriteMasterInterface.w.payload.last.toBoolean){
+        if (dut.axi4WriteMasterInterface.w.payload.last.toBoolean) {
           dut.axi4WriteMasterInterface.b.valid #= true
         }
         if (dut.streamInterface.valid.toBoolean & dut.streamInterface.ready.toBoolean) {
