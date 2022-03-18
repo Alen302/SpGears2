@@ -1,6 +1,6 @@
 version := "1.0"
 scalaVersion := "2.11.12"
-organization := "org.example"
+organization := "SEIT311"
 name := "LicioLib"
 
 val spinalVersion = "1.6.4"
