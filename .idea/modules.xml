@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LicioLib.iml" filepath="$PROJECT_DIR$/.idea/modules/LicioLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LicioLib-build.iml" filepath="$PROJECT_DIR$/.idea/modules/LicioLib-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpGears.iml" filepath="$PROJECT_DIR$/.idea/modules/SpGears.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SpGears-build.iml" filepath="$PROJECT_DIR$/.idea/modules/SpGears-build.iml" />
     </modules>
   </component>
 </project>
