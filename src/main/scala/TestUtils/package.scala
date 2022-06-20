@@ -1,326 +1,357 @@
-import TestUtils.Testable
-import org.slf4j.{Logger, LoggerFactory}
 import spinal.lib._
 import spinal.core._
 import spinal.core.sim._
-import spinal.sim.SimThread
+import spinal.lib.sim._
 
-import scala.collection.mutable.ArrayBuffer
-import scala.util.Random
+import scala.collection.mutable._
 
-package object TestUtil {
+package object TestUtils {
 
-  // set monitor for SpinalHDL BaseType
-  def setMonitor[T <: BaseType](trigger: Bool, target: T, container: ArrayBuffer[T]): SimThread = fork {
-    while (true) {
-      if (trigger.toBoolean) container += target
-      sleep(2)
+  def simConfig(pathName: String = "simWaves", workSpaceName: String = null, config: SpinalConfig = null): SpinalSimConfig = {
+    (workSpaceName, config) match {
+      case (null, null)            => SimConfig.withFstWave.workspacePath(s"./${pathName}").allOptimisation
+      case (workSpaceName, null)   => SimConfig.withFstWave.workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
+      case (null, config)          => SimConfig.withFstWave.withConfig(config).workspacePath(s"./${pathName}").allOptimisation
+      case (workSpaceName, config) => SimConfig.withFstWave.withConfig(config).workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
     }
+
   }
 
-  def setMonitorOnVec[T <: BaseType](trigger: Bool, target: Vec[T], Container: ArrayBuffer[T]): SimThread = fork {
-    while (true) {
-      if (trigger.toBoolean) Container ++= target.toBuffer
-      sleep(2)
+  /** @param data
+    *   it's the SpinalHDL DataCarrier type
+    * @tparam H
+    *   it's the SpinalHDL Data type
+    */
+  implicit class DataCarrierUtils[H <: Data](data: DataCarrier[H]) {
+
+    /** This function can be use to set DataCarrier's Stimulus Randomly
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setRandomDriver(clockDomain: ClockDomain) = {
+      data match {
+        case flow: Flow[_] =>
+          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+            payload.randomize()
+            true
+          }
+        case stream: Stream[_] =>
+          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+            payload.randomize()
+            true
+          }
+        case _ => ???
+      }
+
     }
-  }
 
-  // poke data of whatever type(bool, int), not type-safe(won't be found by linter)
+    /** This function can be use to set DataCarrier's zero Stimulus
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setZeroDriver(clockDomain: ClockDomain) = {
+      data match {
+        case flow: Flow[_] =>
+          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case stream: Stream[_] =>
+          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case _ => ???
+      }
 
-  def pokeData[T](port: Data, data: T): Unit = {
-    port match {
-      case bool: Bool => bool #= data.asInstanceOf[Boolean]
-      case bitVector: BitVector => bitVector #= data.asInstanceOf[BigInt]
-      case vec: Vec[_] =>
-        vec.head match {
-          case bool: Bool => vec.asInstanceOf[Vec[Bool]].zip(data.asInstanceOf[Seq[Boolean]]).foreach { case (port, int) => port #= int }
-          case bitVector: BitVector => vec.asInstanceOf[Vec[BitVector]].zip(data.asInstanceOf[Seq[BigInt]]).foreach { case (port, int) => port #= int }
-        }
-      case fragment: Fragment[_] =>
-        fragment.fragment match {
-          case bool: Bool => bool #= data.asInstanceOf[Boolean]
-          case bitVector: BitVector => bitVector #= data.asInstanceOf[BigInt]
-          case vec: Vec[_] =>
-            vec.head match {
-              case bool: Bool => vec.asInstanceOf[Vec[Bool]].zip(data.asInstanceOf[Seq[Boolean]]).foreach { case (port, int) => port #= int }
-              case bitVector: BitVector => vec.asInstanceOf[Vec[BitVector]].zip(data.asInstanceOf[Seq[BigInt]]).foreach { case (port, int) => port #= int }
+    }
+
+    /** This function can be use to set DataCarrier's Stimulus by input some testCases
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param stimulus
+      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention Queue, it will drive the
+      *   ports in order
+      * @tparam T
+      *   the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setDriver[T](clockDomain: ClockDomain, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = new ArrayBuffer[ArrayBuffer[T]]()
+      stimulus.copyToBuffer(driverCases)
+
+      data match {
+        case flow: Flow[_] =>
+          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
             }
-        }
-    }
-  }
-
-  def pokeZero[T](port: Data): Unit = {
-    port match {
-      case bool: Bool => bool #= false
-      case bitVector: BitVector => bitVector #= 0
-      case vec: Vec[_] =>
-        vec.head match {
-          case bool: Bool => vec.asInstanceOf[Vec[Bool]].foreach(_ #= false)
-          case bitVector: BitVector => vec.asInstanceOf[Vec[BitVector]].foreach(_ #= 0)
-        }
-      case fragment: Fragment[_] =>
-        fragment.fragment match {
-          case bool: Bool => bool #= false
-          case bitVector: BitVector => bitVector #= 0
-          case vec: Vec[_] =>
-            vec.head match {
-              case bool: Bool => vec.asInstanceOf[Vec[Bool]].foreach(_ #= false)
-              case bitVector: BitVector => vec.asInstanceOf[Vec[BitVector]].foreach(_ #= 0)
+            true
+          }
+        case stream: Stream[_] =>
+          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
             }
-        }
-    }
-  }
-
-  // peek data of whatever type(bool, int), not type-safe(won't be found by linter)
-  def peekData[T](port: Data): T = {
-    port match {
-      case baseType: BaseType => baseType.toBigInt.asInstanceOf[T]
-      case vec: Vec[_] => vec.head match {
-        case baseType: BaseType => vec.map(_.asInstanceOf[BaseType].toBigInt).asInstanceOf[T]
-      }
-      case fragment: Fragment[_] => fragment.fragment match {
-        case baseType: BaseType => baseType.toBigInt.asInstanceOf[T]
-        case vec: Vec[_] => vec.head match {
-          case baseType: BaseType => vec.map(_.asInstanceOf[BaseType].toBigInt).asInstanceOf[T]
-        }
+            true
+          }
+        case _ => ???
       }
     }
-  }
 
-  // A test procedure for Flow => poke stimulus to dataIn Flow and monitor dataOut Flow
-  def flowPeekPoke[To, Ti, Hi <: Data, Ho <: Data]
-  (dut: Component, testCases: Seq[Ti], dataIn: DataCarrier[Hi], dataOut: DataCarrier[Ho], latency: Int = 0): ArrayBuffer[To] = {
-    // init
-    dataIn.clear()
-    dut.clockDomain.waitSampling()
-    // set monitor
-    val dutResult = ArrayBuffer[To]()
-    dataOut.setMonitor(dutResult)
-    // poke stimulus
-    testCases.indices.foreach { i =>
-      dataIn.poke(testCases(i), lastWhen = i == (testCases.length - 1))
-      dut.clockDomain.waitSampling()
-    }
-    // wait for result
-    dataIn.clear()
-    dut.clockDomain.waitSampling(latency + 1)
-    dutResult
-  }
-
-  def doFlowPeekPokeTest[To, Ti, Hi <: Data, Ho <: Data]
-  (name: String, dut: => Component with Testable[Hi, Ho], testCases: Seq[Ti], golden: Seq[To], initLength: Int = 0): ArrayBuffer[To] = {
-
-    val logger: Logger = LoggerFactory.getLogger(s"test-${name}")
-
-    val dutResult = ArrayBuffer[To]()
-    SimConfig.withWave
-      .workspaceName(name)
-      .compile(dut).doSim { dut =>
-
-      val outputSize = dut.dataOut.payload match {
-        case vec: Vec[_] => vec.size
-        case _ => 1
-      }
-      val innerGolden = golden.drop(initLength * outputSize)
-
-      import dut.{clockDomain, dataIn, dataOut, latency}
-      dataIn.halt()
-      clockDomain.forkStimulus(5)
-
-      dutResult ++= flowPeekPoke(dut, testCases, dataIn, dataOut, latency).drop(initLength * outputSize)
-
-      if (innerGolden != null) {
-        val printSize = (dutResult ++ innerGolden).map(_.toString.size).max
-        logger.info(s"testing result:" +
-          s"\nyours : ${dutResult.map(_.toString.padTo(printSize, ' ')).mkString(" ")}" +
-          s"\ngolden: ${innerGolden.map(_.toString.padTo(printSize, ' ')).mkString(" ")}")
-
-        val difference = dutResult.diff(innerGolden)
-        assert(difference.isEmpty, difference.mkString(" "))
-      }
-    }
-    dutResult
-  }
-
-  def streamPeekPokeAllDataOneToMore[To, Ti, Hi <: Data, Ho <: Data]
-  (dut: Component, testCases: Seq[Ti], dataIn: Stream[Hi], dataOut: Vec[Stream[Ho]], latency: Int = 0): ArrayBuffer[ArrayBuffer[To]] = {
-    // init
-    dataIn.clear()
-    dut.clockDomain.waitSampling()
-    // set monitor
-    val dutResult = ArrayBuffer.fill(dataOut.size)(ArrayBuffer[To]())
-    (0 until dutResult.size).foreach { i =>
-      dataOut(i).setMonitorForStream(dutResult(i))
-    }
-    // poke stimulus
-    testCases.indices.foreach { i =>
-      dataIn.poke(testCases(i), lastWhen = i == (testCases.length - 1))
-      dut.clockDomain.waitRisingEdgeWhere(dataIn.valid.toBoolean && dataIn.ready.toBoolean)
-    }
-    // wait for result
-    dataIn.clear()
-    dut.clockDomain.waitSampling(latency + 1)
-    dutResult
-  }
-
-  def streamPeekPokeDataRandomOneToMore[To, Ti, Hi <: Data, Ho <: Data]
-  (dut: Component, testCases: Seq[Ti], dataIn: Stream[Hi], dataOut: Vec[Stream[Ho]], latency: Int = 0): ArrayBuffer[ArrayBuffer[To]] = {
-    // init
-    dataIn.clear()
-    dut.clockDomain.waitSampling()
-    // set monitor
-    val dutResult = ArrayBuffer.fill(dataOut.size)(ArrayBuffer[To]())
-    (0 until dutResult.size).foreach { i =>
-      dataOut(i).setMonitorForStream(dutResult(i))
-    }
-    // poke stimulus
-    val loopCond = ArrayBuffer.fill(testCases.size)(Random.nextBoolean())
-    testCases.indices.foreach { i =>
-      while(!loopCond(i)){
-        dataIn.pokeInvalidData(BigInt(Random.nextInt(256)))
-        dut.clockDomain.waitSampling()
-        loopCond(i) = Random.nextBoolean()
-      }
-      if(loopCond(i)){
-        dataIn.poke(testCases(i), lastWhen = i == (testCases.length - 1))
-        dut.clockDomain.waitRisingEdgeWhere(dataIn.valid.toBoolean && dataIn.ready.toBoolean)
+    /** This function can be use to drive the DataCarrier's ready randomly
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   StreamReadyRandomizer[H]
+      */
+    def setRandomReady(clockDomain: ClockDomain) = {
+      data match {
+        case flow: Flow[_]     => ???
+        case stream: Stream[_] => StreamReadyRandomizer(stream.asInstanceOf[Stream[H]], clockDomain)
+        case _                 => ???
       }
 
     }
-    // wait for result
-    dataIn.clear()
-    dut.clockDomain.waitSampling(latency + 1)
-    dutResult
-  }
 
+    /** This function can be use to monitor the DataCarrier's output
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param results
+      *   the output data container
+      * @tparam T
+      *   the data container's data type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   FlowMonitor[H] or StreamMonitor[H]
+      */
+    def setMonitor[T](clockDomain: ClockDomain, results: ArrayBuffer[T]*) = {
+      data match {
+        case flow: Flow[_] =>
+          FlowMonitor(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+            results.zip(payloads).foreach { case (result, baseType) =>
+              baseType match {
+                case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+                case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+                case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+                case _                        => ???
+              }
 
-  implicit class DataCarrierUtil[T <: Data](cut: DataCarrier[T]) {
+            }
+          }
+        case stream: Stream[_] =>
+          StreamMonitor(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+            results.zip(payloads).foreach { case (result, baseType) =>
+              baseType match {
+                case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+                case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+                case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+                case _                        => ???
+              }
+            }
+          }
+        case _ => ???
+      }
 
+    }
+
+    /** This function can be use to check the handshake protocol transaction correctness
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   SimStreamAssert[H]
+      */
+    def setAssert(clockDomain: ClockDomain) = {
+      data match {
+        case flow: Flow[_] => ???
+        case stream: Stream[_] =>
+          new SimStreamAssert(stream.asInstanceOf[Stream[H]], clockDomain)
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to halt DataCarrier's transaction
+      */
     def halt() = {
-      // slave
-      if (cut.valid.isInput) {
-        cut.valid #= false
-        cut.payload match {
-          case fragment: Fragment[T] => fragment.last #= false
-          case _ =>
-        }
-      }
-      // master
-      else {
-        cut match {
+      if (data.valid.isInput) {
+        data.valid #= false
+        data.payload.randomize()
+      } else {
+        data match {
           case stream: Stream[_] => stream.ready #= false
-          case _ =>
+          case _                 => ???
         }
       }
     }
 
+    /** This function can be use to initiate the DataCarrier to "Zero"
+      */
     def clear() = {
-      // slave
-      if (cut.valid.isInput) {
-        cut.valid #= false
-        cut.payload match {
-          case fragment: Fragment[T] => fragment.last #= false
-            pokeZero(fragment.fragment)
-          case payload => pokeZero(payload)
-        }
-      }
-      // master
-      else {
-        cut match {
+      if (data.valid.isInput) {
+        data.valid #= false
+        data.payload.flattenForeach(_.assignBigInt(0))
+      } else {
+        data match {
           case stream: Stream[_] => stream.ready #= false
-          case _ => // do nothing
+          case _                 => ???
         }
       }
     }
 
-    // poke stimulus for all kinds of DataCarrier
-    def poke[D](data: D, lastWhen: Boolean = false) = {
-
-      // deal with control signals
-      cut.valid #= true
-      cut.payload match {
-        case fragment: Fragment[_] => fragment.last #= lastWhen
-        case _ =>
-      }
-
-      // deal with payload
-      pokeData(cut.payload, data)
-    }
-
-    // poke stimulus for all kinds of DataCarrier (the payload is random)
-    def pokeRandom(lastWhen: Boolean = false) = {
-      {
-
-        // deal with control signals
-        cut.valid #= true
-        cut.payload match {
-          case fragment: Fragment[_] => fragment.last #= lastWhen
-          case _ =>
-        }
-
-        // deal with payload
-        cut.payload.randomize()
-      }
-    }
-
-    def pokeInvalidData[D](data: D, lastWhen: Boolean = false) = {
-
-      // deal with control signals
-      cut.valid #= false
-      cut.payload match {
-        case fragment: Fragment[_] => fragment.last #= lastWhen
-        case _ =>
-      }
-
-      // deal with payload
-      pokeData(cut.payload, data)
-    }
-
-    // fork a SimThread when this DataCarrier is valid
-    def forkWhenValid(body: => Unit): SimThread = fork {
-      while (true) {
-        if (cut.valid.toBoolean) {
-          body
-        }
-        sleep(2)
-      }
-    }
-
-    // set monitors for all kinds of DataCarrier
-    def setMonitor[T](Container: ArrayBuffer[T], name: String = ""): SimThread = forkWhenValid {
-      cut.payload match {
-        case vec: Vec[_] => Container ++= peekData(vec)
-        case fragment: Fragment[_] =>
-          fragment.fragment match {
-            case vec: Vec[_] => Container ++= peekData(vec)
-            case _ => Container += peekData(fragment.fragment)
-          }
-        case _ => Container += peekData(cut.payload)
-      }
-    }
   }
 
-  implicit class StreamUtils[T <: Data](cut: Stream[T]) {
+  implicit class DataUtils[D <: Data](data: D) {
 
-    def forkWhenFire(body: => Unit): SimThread = fork {
-      while (true) {
-        if (cut.valid.toBoolean && cut.ready.toBoolean) {
-          body
-        }
-        sleep(2)
+    /** This function can be use to drive the Data type port randomly and it can set driver delay
+      * @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param waitTime
+      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      * @return
+      *   DataDriver[D]
+      */
+    def getRandomDriver(clockDomain: ClockDomain, waitTime: Int = -1) = {
+      DataDriver(data, clockDomain, waitTime) { payload =>
+        payload.randomize()
+        true
       }
     }
 
-    def setMonitorForStream[T](Container: ArrayBuffer[T], name: String = ""): SimThread = forkWhenFire {
-      cut.payload match {
-        case vec: Vec[_] => Container ++= peekData(vec)
-        case fragment: Fragment[_] =>
-          fragment.fragment match {
-            case vec: Vec[_] => Container ++= peekData(vec)
-            case _ => Container += peekData(fragment.fragment)
+    /** This function can be use to drive zero to the Data type port
+      * @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @return
+      *   DataDriver[D]
+      */
+    def getZeroDriver(clockDomain: ClockDomain) = {
+      DataDriver(data, clockDomain, -1) { payload =>
+        payload.flattenForeach(_.assignBigInt(0))
+        true
+      }
+    }
+
+    /** @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param waitTime
+      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      * @param stimulus
+      *   the stimulus to Data for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention Queue, it will drive the ports in
+      *   order
+      * @tparam T
+      *   the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   DataDriver[D]
+      */
+    def getDriver[T](clockDomain: ClockDomain, waitTime: Int, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = new ArrayBuffer[ArrayBuffer[T]]()
+      stimulus.copyToBuffer(driverCases)
+
+      DataDriver(data, clockDomain, waitTime) { payload =>
+        val payloads = payload.flatten
+        assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+        payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+          if (driverCase.isEmpty) {
+            baseType.assignBigInt(0)
+          } else {
+            baseType match {
+              case bool: Bool =>
+                bool #= driverCase(0).asInstanceOf[Boolean]
+                driverCase.remove(0)
+              case bitVector: BitVector =>
+                bitVector #= driverCase(0).asInstanceOf[BigInt]
+                driverCase.remove(0)
+              case enum: SpinalEnumCraft[_] =>
+                enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                driverCase.remove(0)
+              case _ => ???
+            }
           }
-        case _ => Container += peekData(cut.payload)
+        }
+        true
       }
     }
+
+    /** @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param waitTime
+      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      * @param results
+      *   the output data container
+      * @tparam T
+      *   the data container's data type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   DataMonitor[D]
+      */
+    def getMonitor[T](clockDomain: ClockDomain, waitTime: Int, results: ArrayBuffer[T]*) = {
+      DataMonitor(data, clockDomain, waitTime) { payload =>
+        val payloads = payload.flatten
+        assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+        results.zip(payloads).foreach { case (result, baseType) =>
+          baseType match {
+            case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+            case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+            case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+            case _                        => ???
+          }
+        }
+      }
+    }
+
   }
+
 }

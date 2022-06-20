@@ -155,7 +155,6 @@ object BCAMSimFuncs {
           }
           monitorTimes += 1
           sleep(6)
-
         }
       }
 

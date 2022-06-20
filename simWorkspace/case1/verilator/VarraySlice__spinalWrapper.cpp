@@ -1088,7 +1088,7 @@ public:
       #ifdef TRACE
       Verilated::traceEverOn(true);
       top.trace(&tfp, 99);
-      tfp.open((std::string("/home/lqx/IdeaProjects/LicioLib/./simWorkspace/case1/") + name + ".fst").c_str());
+      tfp.open((std::string("/home/lqx/IdeaProjects/SpGears/./simWorkspace/case1/") + name + ".fst").c_str());
       #endif
       this->name = name;
     }
@@ -1103,7 +1103,7 @@ public:
       tfp.close();
       #endif
       #ifdef COVERAGE
-      VerilatedCov::write((("/home/lqx/IdeaProjects/LicioLib/./simWorkspace/case1/") + name + ".dat").c_str());
+      VerilatedCov::write((("/home/lqx/IdeaProjects/SpGears/./simWorkspace/case1/") + name + ".dat").c_str());
       #endif
     }
 
