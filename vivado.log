@@ -1,0 +1,487 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Fri Jun 24 15:03:24 2022
+# Process ID: 50368
+# Current directory: /home/lqx/IdeaProjects/SpGears
+# Command line: vivado
+# Log file: /home/lqx/IdeaProjects/SpGears/vivado.log
+# Journal file: /home/lqx/IdeaProjects/SpGears/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /home/lqx/vivadoProject/InterpolationStep1/InterpolationStep1.xpr
+WARNING: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/lqx/vivadoProject/InterpolationStep1/InterpolationStep1.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2021.1/data/ip'.
+INFO: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+update_compile_order -fileset sources_1
+INFO: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+INFO: [IP_Flow 19-3899] Cannot get the environment domain name variable for the component vendor name. Setting the vendor name to 'user.org'.
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.1 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.2 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.2/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/es/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_es:part0:1.3 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/es/1.3/board.xml as part xcvm1802-vsva2197-2mp-e-s-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/es/1.0/board.xml as part xczu58dr-fsvg1517-2-i-es1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld_es:part0:1.0 available at /tools/Xilinx/Vivado/2021.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/es/1.0/board.xml as part xczu59dr-ffvf1760-2-i-es1 specified in board_part file is either invalid or not available
+close_project
+create_project SuperResolutionTest /home/lqx/vivadoProject/SuperResolutionTest -part xczu7ev-ffvc1156-2-e
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2021.1/data/ip'.
+set_property board_part xilinx.com:zcu104:part0:1.1 [current_project]
+set_property coreContainer.enable 1 [current_project]
+add_files -norecurse /home/lqx/IdeaProjects/SpGears/SuperResolutionPart1.v
+update_compile_order -fileset sources_1
+launch_runs synth_1 -jobs 24
+[Fri Jun 24 15:09:14 2022] Launched synth_1...
+Run output will be captured here: /home/lqx/vivadoProject/SuperResolutionTest/SuperResolutionTest.runs/synth_1/runme.log
+open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu7ev-ffvc1156-2-e
+INFO: [Device 21-403] Loading part xczu7ev-ffvc1156-2-e
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 8286.633 ; gain = 0.000 ; free physical = 10894 ; free virtual = 44696
+INFO: [Netlist 29-17] Analyzing 15 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2021.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 8342.656 ; gain = 0.000 ; free physical = 10831 ; free virtual = 44610
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 15 instances were transformed.
+  IBUF => IBUF (IBUFCTRL, INBUF): 15 instances
+
+open_run: Time (s): cpu = 00:00:20 ; elapsed = 00:00:07 . Memory (MB): peak = 8422.031 ; gain = 565.637 ; free physical = 10626 ; free virtual = 44425
+report_desi
+INFO: [Implflow 30-839]  
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 15:10:20 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+1. Setup Path Characteristics 1-1
+2. Logic Level Distribution
+3. Placer Final Level Congestion Reporting
+4. SLR Net Crossing Reporting
+
+1. Setup Path Characteristics 1-1
+---------------------------------
+
++---------------------------+-------------------------------------------------------+
+|      Characteristics      |                        Path #1                        |
++---------------------------+-------------------------------------------------------+
+| Requirement               | inf                                                   |
+| Path Delay                | 2.615                                                 |
+| Logic Delay               | 1.641(63%)                                            |
+| Net Delay                 | 0.974(37%)                                            |
+| Clock Skew                | 0.000                                                 |
+| Slack                     | inf                                                   |
+| Clock Relationship        | Safely Timed                                          |
+| Clock Group               | 1                                                     |
+| Logic Levels              | 4                                                     |
+| Routes                    | NA                                                    |
+| Logical Path              | INBUF/StartIn-(1)-IBUFCTRL-LUT3-(1)-OBUF/dataIn_ready |
+| Start Point Clock         | input port clock                                      |
+| End Point Clock           |                                                       |
+| DSP Block                 | None                                                  |
+| BRAM                      | None                                                  |
+| IO Crossings              | 0                                                     |
+| SLR Crossings             | 0                                                     |
+| PBlocks                   | 0                                                     |
+| High Fanout               | 1                                                     |
+| Dont Touch                | 0                                                     |
+| Mark Debug                | 0                                                     |
+| Start Point Pin Primitive | StartIn                                               |
+| End Point Pin Primitive   | dataIn_ready                                          |
+| Start Point Pin           | StartIn                                               |
+| End Point Pin             | dataIn_ready                                          |
++---------------------------+-------------------------------------------------------+
+* Bounding box calculated as % of dimensions for the target device (2770, 746)
+
+
+2. Logic Level Distribution
+---------------------------
+
++-----------------+-------------+----+---+---+---+
+| End Point Clock | Requirement |  2 | 4 | 5 | 6 |
++-----------------+-------------+----+---+---+---+
+| (none)          | 0.000ns     | 33 | 2 | 9 | 2 |
++-----------------+-------------+----+---+---+---+
+* Columns represent the logic levels per end point clock
+** Distribution is for top worst 46 paths
+
+
+3. Placer Final Level Congestion Reporting
+------------------------------------------
+
++-----------+------+-------+--------+---------------+---------------+-----+--------+------+------+------+------+-----+-------+-----+------------+
+| Direction | Type | Level | Window | Combined LUTs | Avg LUT Input | LUT | LUTRAM | Flop | MUXF | RAMB | URAM | DSP | CARRY | SRL | Cell Names |
++-----------+------+-------+--------+---------------+---------------+-----+--------+------+------+------+------+-----+-------+-----+------------+
+* The design has not been placed, hence congestion data is not available. The command report_design_analysis -congestion should be run only after place_design has completed.
+
+
+4. SLR Net Crossing Reporting
+-----------------------------
+
++------------+-----------------------------+
+| Cell Names | Number of Nets crossing SLR |
++------------+-----------------------------+
+* The current part is not an SSI device
+
+
+report_design_analysis: Time (s): cpu = 00:00:09 ; elapsed = 00:00:08 . Memory (MB): peak = 9938.543 ; gain = 481.188 ; free physical = 9548 ; free virtual = 43328
+report_design_analysis -max_paths 50
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 15:10:42 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+1. Setup Path Characteristics 1-46
+
+1. Setup Path Characteristics 1-46
+----------------------------------
+
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+-----------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+-----------------+---------------------------------+
+|   Paths  | Requirement | Path Delay | Logic Delay |  Net Delay | Clock Skew | Slack | Clock Relationship | Clock Group | Logic Levels | Routes |                              Logical Path                             | Start Point Clock | End Point Clock | DSP Block | BRAM | IO Crossings | SLR Crossings | PBlocks | High Fanout | Dont Touch | Mark Debug | Start Point Pin Primitive | End Point Pin Primitive | Start Point Pin |          End Point Pin          |
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+-----------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+-----------------+---------------------------------+
+| Path #1  | inf         | 2.615      | 1.641(63%)  | 0.974(37%) | 0.000      | inf   | Safely Timed       | 1           | 4            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT3-(1)-OBUF/dataIn_ready                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | StartIn                   | dataIn_ready            | StartIn         | dataIn_ready                    |
+| Path #2  | inf         | 1.901      | 0.828(44%)  | 1.073(56%) | 0.000      | inf   | Safely Timed       | 1           | 6            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT6-(1)-LUT4-(1)-FDCE/D | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[9]/D   |
+| Path #3  | inf         | 1.865      | 0.900(49%)  | 0.965(51%) | 0.000      | inf   | Safely Timed       | 1           | 6            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT6-(1)-LUT4-(1)-FDCE/D | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | holdBuffer_reg/D                |
+| Path #4  | inf         | 1.710      | 0.822(49%)  | 0.888(51%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[6]/D   |
+| Path #5  | inf         | 1.678      | 0.790(48%)  | 0.888(52%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT4-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[4]/D   |
+| Path #6  | inf         | 1.678      | 0.790(48%)  | 0.888(52%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT4-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[5]/D   |
+| Path #7  | inf         | 1.678      | 0.790(48%)  | 0.888(52%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT6-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[7]/D   |
+| Path #8  | inf         | 1.646      | 0.758(47%)  | 0.888(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT3-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[0]/D   |
+| Path #9  | inf         | 1.646      | 0.758(47%)  | 0.888(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[2]/D   |
+| Path #10 | inf         | 1.646      | 0.758(47%)  | 0.888(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT6-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[3]/D   |
+| Path #11 | inf         | 1.628      | 0.758(47%)  | 0.870(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[8]/D   |
+| Path #12 | inf         | 1.595      | 0.773(49%)  | 0.822(51%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT4-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferEnable_reg/D              |
+| Path #13 | inf         | 1.437      | 0.752(53%)  | 0.685(47%) | 0.000      | inf   | Safely Timed       | 1           | 4            | NA     | INBUF/StartIn-(1)-IBUFCTRL-LUT5-(9)-LUT3-(1)-FDCE/D                   | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn         | bufferRowCount_value_reg[1]/D   |
+| Path #14 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[0]/CLR            |
+| Path #15 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[1]/CLR            |
+| Path #16 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset           | bmpHeight_reg[2]/PRE            |
+| Path #17 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset           | bmpHeight_reg[3]/PRE            |
+| Path #18 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset           | bmpHeight_reg[4]/PRE            |
+| Path #19 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[5]/CLR            |
+| Path #20 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[6]/CLR            |
+| Path #21 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[7]/CLR            |
+| Path #22 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bmpHeight_reg[8]/CLR            |
+| Path #23 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset           | bmpHeight_reg[9]/PRE            |
+| Path #24 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferEnable_reg/CLR            |
+| Path #25 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[0]/CLR |
+| Path #26 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[1]/CLR |
+| Path #27 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[2]/CLR |
+| Path #28 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[3]/CLR |
+| Path #29 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[4]/CLR |
+| Path #30 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[5]/CLR |
+| Path #31 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[6]/CLR |
+| Path #32 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[7]/CLR |
+| Path #33 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[8]/CLR |
+| Path #34 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | bufferRowCount_value_reg[9]/CLR |
+| Path #35 | inf         | 1.132      | 0.582(52%)  | 0.550(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset           | holdBuffer_reg/CLR              |
+| Path #36 | inf         | 1.102      | 0.582(53%)  | 0.520(47%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/StartIn-(1)-IBUFCTRL-FDRE/D                                     | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | StartIn                   | FDRE/D                  | StartIn         | StartIn_regNext_reg/D           |
+| Path #37 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[0]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[0]               | FDCE/D                  | heightIn[0]     | bmpHeight_reg[0]/D              |
+| Path #38 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[1]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[1]               | FDCE/D                  | heightIn[1]     | bmpHeight_reg[1]/D              |
+| Path #39 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[2]-(1)-IBUFCTRL-FDPE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[2]               | FDPE/D                  | heightIn[2]     | bmpHeight_reg[2]/D              |
+| Path #40 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[3]-(1)-IBUFCTRL-FDPE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[3]               | FDPE/D                  | heightIn[3]     | bmpHeight_reg[3]/D              |
+| Path #41 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[4]-(1)-IBUFCTRL-FDPE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[4]               | FDPE/D                  | heightIn[4]     | bmpHeight_reg[4]/D              |
+| Path #42 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[5]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[5]               | FDCE/D                  | heightIn[5]     | bmpHeight_reg[5]/D              |
+| Path #43 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[6]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[6]               | FDCE/D                  | heightIn[6]     | bmpHeight_reg[6]/D              |
+| Path #44 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[7]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[7]               | FDCE/D                  | heightIn[7]     | bmpHeight_reg[7]/D              |
+| Path #45 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[8]-(1)-IBUFCTRL-FDCE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[8]               | FDCE/D                  | heightIn[8]     | bmpHeight_reg[8]/D              |
+| Path #46 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[9]-(1)-IBUFCTRL-FDPE/D                                 | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[9]               | FDPE/D                  | heightIn[9]     | bmpHeight_reg[9]/D              |
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+-----------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+-----------------+---------------------------------+
+* Bounding box calculated as % of dimensions for the target device (2770, 746)
+
+
+close_design
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+[Fri Jun 24 15:21:15 2022] Launched synth_1...
+Run output will be captured here: /home/lqx/vivadoProject/SuperResolutionTest/SuperResolutionTest.runs/synth_1/runme.log
+open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu7ev-ffvc1156-2-e
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9954.555 ; gain = 0.000 ; free physical = 9583 ; free virtual = 43365
+INFO: [Netlist 29-17] Analyzing 15 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2021.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9954.555 ; gain = 0.000 ; free physical = 9523 ; free virtual = 43305
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 15 instances were transformed.
+  IBUF => IBUF (IBUFCTRL, INBUF): 15 instances
+
+report_design_analysis -max_paths 50
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 15:22:30 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+1. Setup Path Characteristics 1-47
+
+1. Setup Path Characteristics 1-47
+----------------------------------
+
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+------------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+------------------+---------------------------------+
+|   Paths  | Requirement | Path Delay | Logic Delay |  Net Delay | Clock Skew | Slack | Clock Relationship | Clock Group | Logic Levels | Routes |                              Logical Path                              | Start Point Clock | End Point Clock | DSP Block | BRAM | IO Crossings | SLR Crossings | PBlocks | High Fanout | Dont Touch | Mark Debug | Start Point Pin Primitive | End Point Pin Primitive |  Start Point Pin |          End Point Pin          |
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+------------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+------------------+---------------------------------+
+| Path #1  | inf         | 1.836      | 0.781(43%)  | 1.055(57%) | 0.000      | inf   | Safely Timed       | 1           | 6            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT6-(1)-LUT4-(1)-FDCE/D | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[9]/D   |
+| Path #2  | inf         | 1.832      | 0.885(49%)  | 0.947(51%) | 0.000      | inf   | Safely Timed       | 1           | 6            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT6-(1)-LUT3-(1)-FDCE/D | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | holdBuffer_reg/D                |
+| Path #3  | inf         | 1.802      | 1.106(62%)  | 0.696(38%) | 0.000      | inf   | Safely Timed       | 1           | 3            | NA     | FDCE/C-(3)-LUT3-(1)-OBUF/dataIn_ready                                  |                   |                 | None      | None | 0            | 0             | 0       | 3           | 0          | 0          | FDCE/C                    | dataIn_ready            | holdBuffer_reg/C | dataIn_ready                    |
+| Path #4  | inf         | 1.645      | 0.775(48%)  | 0.870(52%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[6]/D   |
+| Path #5  | inf         | 1.613      | 0.743(47%)  | 0.870(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT4-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[4]/D   |
+| Path #6  | inf         | 1.613      | 0.743(47%)  | 0.870(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT4-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[5]/D   |
+| Path #7  | inf         | 1.613      | 0.743(47%)  | 0.870(53%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT4-(5)-LUT6-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[7]/D   |
+| Path #8  | inf         | 1.581      | 0.711(45%)  | 0.870(55%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT3-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[0]/D   |
+| Path #9  | inf         | 1.581      | 0.711(45%)  | 0.870(55%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[2]/D   |
+| Path #10 | inf         | 1.581      | 0.711(45%)  | 0.870(55%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT5-(5)-LUT6-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[3]/D   |
+| Path #11 | inf         | 1.563      | 0.711(46%)  | 0.852(54%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT5-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[8]/D   |
+| Path #12 | inf         | 1.530      | 0.726(48%)  | 0.804(52%) | 0.000      | inf   | Safely Timed       | 1           | 5            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT6-(1)-LUT3-(1)-FDCE/D          | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferEnable_reg/D              |
+| Path #13 | inf         | 1.372      | 0.705(52%)  | 0.667(48%) | 0.000      | inf   | Safely Timed       | 1           | 4            | NA     | INBUF/rowEndIn-(1)-IBUFCTRL-LUT5-(9)-LUT3-(1)-FDCE/D                   | input port clock  |                 | None      | None | 0            | 0             | 0       | 9           | 0          | 0          | rowEndIn                  | FDCE/D                  | rowEndIn         | bufferRowCount_value_reg[1]/D   |
+| Path #14 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[0]/CLR            |
+| Path #15 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[1]/CLR            |
+| Path #16 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset            | bmpHeight_reg[2]/PRE            |
+| Path #17 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset            | bmpHeight_reg[3]/PRE            |
+| Path #18 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset            | bmpHeight_reg[4]/PRE            |
+| Path #19 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[5]/CLR            |
+| Path #20 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[6]/CLR            |
+| Path #21 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[7]/CLR            |
+| Path #22 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bmpHeight_reg[8]/CLR            |
+| Path #23 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDPE/PRE                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDPE/PRE                | reset            | bmpHeight_reg[9]/PRE            |
+| Path #24 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferEnable_reg/CLR            |
+| Path #25 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[0]/CLR |
+| Path #26 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[1]/CLR |
+| Path #27 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[2]/CLR |
+| Path #28 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[3]/CLR |
+| Path #29 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[4]/CLR |
+| Path #30 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[5]/CLR |
+| Path #31 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[6]/CLR |
+| Path #32 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[7]/CLR |
+| Path #33 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[8]/CLR |
+| Path #34 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | bufferRowCount_value_reg[9]/CLR |
+| Path #35 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | holdBuffer_reg/CLR              |
+| Path #36 | inf         | 1.133      | 0.582(52%)  | 0.551(48%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/reset-(1)-IBUFCTRL-FDCE/CLR                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | reset                     | FDCE/CLR                | reset            | startIn_1_reg/CLR               |
+| Path #37 | inf         | 1.090      | 0.582(54%)  | 0.508(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/StartIn-(1)-IBUFCTRL-FDCE/D                                      | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | StartIn                   | FDCE/D                  | StartIn          | startIn_1_reg/D                 |
+| Path #38 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[0]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[0]               | FDCE/D                  | heightIn[0]      | bmpHeight_reg[0]/D              |
+| Path #39 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[1]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[1]               | FDCE/D                  | heightIn[1]      | bmpHeight_reg[1]/D              |
+| Path #40 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[2]-(1)-IBUFCTRL-FDPE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[2]               | FDPE/D                  | heightIn[2]      | bmpHeight_reg[2]/D              |
+| Path #41 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[3]-(1)-IBUFCTRL-FDPE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[3]               | FDPE/D                  | heightIn[3]      | bmpHeight_reg[3]/D              |
+| Path #42 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[4]-(1)-IBUFCTRL-FDPE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[4]               | FDPE/D                  | heightIn[4]      | bmpHeight_reg[4]/D              |
+| Path #43 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[5]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[5]               | FDCE/D                  | heightIn[5]      | bmpHeight_reg[5]/D              |
+| Path #44 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[6]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[6]               | FDCE/D                  | heightIn[6]      | bmpHeight_reg[6]/D              |
+| Path #45 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[7]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[7]               | FDCE/D                  | heightIn[7]      | bmpHeight_reg[7]/D              |
+| Path #46 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[8]-(1)-IBUFCTRL-FDCE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[8]               | FDCE/D                  | heightIn[8]      | bmpHeight_reg[8]/D              |
+| Path #47 | inf         | 1.084      | 0.582(54%)  | 0.502(46%) | 0.000      | inf   | Safely Timed       | 1           | 2            | NA     | INBUF/heightIn[9]-(1)-IBUFCTRL-FDPE/D                                  | input port clock  |                 | None      | None | 0            | 0             | 0       | 1           | 0          | 0          | heightIn[9]               | FDPE/D                  | heightIn[9]      | bmpHeight_reg[9]/D              |
++----------+-------------+------------+-------------+------------+------------+-------+--------------------+-------------+--------------+--------+------------------------------------------------------------------------+-------------------+-----------------+-----------+------+--------------+---------------+---------+-------------+------------+------------+---------------------------+-------------------------+------------------+---------------------------------+
+* Bounding box calculated as % of dimensions for the target device (2770, 746)
+
+
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+[Fri Jun 24 16:53:34 2022] Launched synth_1...
+Run output will be captured here: /home/lqx/vivadoProject/SuperResolutionTest/SuperResolutionTest.runs/synth_1/runme.log
+close_design
+open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu7ev-ffvc1156-2-e
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9964.527 ; gain = 0.000 ; free physical = 9141 ; free virtual = 42953
+INFO: [Project 1-479] Netlist was created with Vivado 2021.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9964.527 ; gain = 0.000 ; free physical = 9088 ; free virtual = 42901
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_design_analysis -max_paths 50
+INFO: [Timing 38-72] No paths found.
+INFO: [Timing 38-72] No paths found.
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 16:54:28 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+
+report_design_analysis -max_paths 50
+INFO: [Timing 38-72] No paths found.
+INFO: [Timing 38-72] No paths found.
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 16:54:50 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+
+report_design_analysis -max_paths 50 -setup
+INFO: [Timing 38-72] No paths found.
+INFO: [Timing 38-72] No paths found.
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 16:55:08 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50 -setup
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+[Fri Jun 24 16:58:34 2022] Launched synth_1...
+Run output will be captured here: /home/lqx/vivadoProject/SuperResolutionTest/SuperResolutionTest.runs/synth_1/runme.log
+close_design
+open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xczu7ev-ffvc1156-2-e
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 9987.203 ; gain = 0.000 ; free physical = 9124 ; free virtual = 42937
+INFO: [Project 1-479] Netlist was created with Vivado 2021.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 9987.203 ; gain = 0.000 ; free physical = 9073 ; free virtual = 42886
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_design_analysis -max_paths 50 -setup
+INFO: [Timing 38-72] No paths found.
+INFO: [Timing 38-72] No paths found.
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (lin64) Build 3247384 Thu Jun 10 19:36:07 MDT 2021
+| Date         : Fri Jun 24 16:59:17 2022
+| Host         : FPGA-311 running 64-bit Ubuntu 18.04.2 LTS
+| Command      : report_design_analysis -max_paths 50 -setup
+| Design       : SuperResolutionPart1
+| Device       : xczu7ev
+| Design State : Synthesized
+------------------------------------------------------------------------------------
+
+Report Design Analysis
+
+Table of Contents
+-----------------
+

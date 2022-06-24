@@ -1,0 +1,45 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:07 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Fri Jun 24 15:03:24 2022
+# Process ID: 50368
+# Current directory: /home/lqx/IdeaProjects/SpGears
+# Command line: vivado
+# Log file: /home/lqx/IdeaProjects/SpGears/vivado.log
+# Journal file: /home/lqx/IdeaProjects/SpGears/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /home/lqx/vivadoProject/InterpolationStep1/InterpolationStep1.xpr
+update_compile_order -fileset sources_1
+close_project
+create_project SuperResolutionTest /home/lqx/vivadoProject/SuperResolutionTest -part xczu7ev-ffvc1156-2-e
+set_property board_part xilinx.com:zcu104:part0:1.1 [current_project]
+set_property coreContainer.enable 1 [current_project]
+add_files -norecurse /home/lqx/IdeaProjects/SpGears/SuperResolutionPart1.v
+update_compile_order -fileset sources_1
+launch_runs synth_1 -jobs 24
+wait_on_run synth_1
+open_run synth_1 -name synth_1
+report_desi
+report_design_analysis -max_paths 50
+close_design
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+wait_on_run synth_1
+open_run synth_1 -name synth_1
+report_design_analysis -max_paths 50
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+wait_on_run synth_1
+close_design
+open_run synth_1 -name synth_1
+report_design_analysis -max_paths 50
+report_design_analysis -max_paths 50
+report_design_analysis -max_paths 50 -setup
+reset_run synth_1
+launch_runs synth_1 -jobs 24
+wait_on_run synth_1
+close_design
+open_run synth_1 -name synth_1
+report_design_analysis -max_paths 50 -setup
