@@ -22,10 +22,10 @@ package object TestUtilsFactory {
       case (VERILATOR, null, config)          => SimConfig.withFstWave.withConfig(config).workspacePath(s"./${pathName}").allOptimisation
       case (VERILATOR, workSpaceName, config) => SimConfig.withFstWave.withConfig(config).workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
 
-      case (VCS, workSpaceName, config) => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
       case (VCS, null, null)            => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./${pathName}").allOptimisation
       case (VCS, workSpaceName, null)   => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
       case (VCS, null, config)          => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./${pathName}").allOptimisation
+      case (VCS, workSpaceName, config) => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./${pathName}").workspaceName(workSpaceName).allOptimisation
     }
 
   }

@@ -5,9 +5,10 @@ import spinal.core.sim._
 
 import scala.collection.mutable._
 import scala.util.Random._
+import SpGears.Backend._
 
 object UtilsTester extends App {
-  val compiled = simConfig().compile(UtilsTest())
+  val compiled = simConfig(VCS).compile(UtilsTest())
 
   compiled.doSimUntilVoid { dut =>
     import dut._
