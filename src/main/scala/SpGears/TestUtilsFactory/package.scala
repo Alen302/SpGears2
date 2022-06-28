@@ -9,6 +9,20 @@ import SpGears.Backend._
 import scala.collection.mutable._
 
 package object TestUtilsFactory {
+
+  /** @param backend
+    *   the simulation backend
+    * @param vcsFlags
+    *   the VCS simulation additional flag information
+    * @param pathName
+    *   the path of simulation generated file
+    * @param workSpaceName
+    *   the generated directory
+    * @param config
+    *   the simulation config information
+    * @return
+    *   the return SpinalSimConfig class
+    */
   def simConfig(
       backend: Backend      = VERILATOR,
       vcsFlags: VCSFlags    = VCSFlags(elaborateFlags = List("-LDFLAGS -Wl,--no-as-needed")),
@@ -35,16 +49,16 @@ package object TestUtilsFactory {
     * @tparam H
     *   it's the SpinalHDL Data type
     */
-  implicit class DataCarrierUtilsFactory[H <: Data](data: DataCarrier[H]) {
+  implicit class DataCarrierUtilsFactory[H <: Data](carrier: DataCarrier[H]) {
 
-    /** This function can be use to set DataCarrier's Stimulus Randomly
+    /** This function can be use to drive DataCarrier Randomly
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @return
       *   FlowDriver[H] or StreamDriver[H]
       */
     def setRandomDriver(clockDomain: ClockDomain) = {
-      data match {
+      carrier match {
         case flow: Flow[_] =>
           FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
             payload.randomize()
@@ -60,14 +74,14 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to set DataCarrier's zero Stimulus
+    /** This function can be use to drive DataCarrier to "Zero" state
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @return
       *   FlowDriver[H] or StreamDriver[H]
       */
     def setZeroDriver(clockDomain: ClockDomain) = {
-      data match {
+      carrier match {
         case flow: Flow[_] =>
           FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
             payload.flattenForeach(_.assignBigInt(0))
@@ -83,11 +97,11 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to set DataCarrier's Stimulus by input some testCases
+    /** This function can be use to drive DataCarrier by given stimulus
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @param stimulus
-      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention Queue, it will drive the ports in order
+      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
       * @tparam T
       *   the stimulus type
       * --- if the port is Bool, it must be Boolean
@@ -97,10 +111,9 @@ package object TestUtilsFactory {
       *   FlowDriver[H] or StreamDriver[H]
       */
     def setDriver[T](clockDomain: ClockDomain, stimulus: ArrayBuffer[T]*) = {
-      val driverCases = new ArrayBuffer[ArrayBuffer[T]]()
-      stimulus.copyToBuffer(driverCases)
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
 
-      data match {
+      carrier match {
         case flow: Flow[_] =>
           FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
             val payloads = payload.flatten
@@ -160,7 +173,7 @@ package object TestUtilsFactory {
       *   StreamReadyRandomizer[H]
       */
     def setRandomReady(clockDomain: ClockDomain) = {
-      data match {
+      carrier match {
         case flow: Flow[_]     => ???
         case stream: Stream[_] => StreamReadyRandomizer(stream.asInstanceOf[Stream[H]], clockDomain)
         case _                 => ???
@@ -168,11 +181,11 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to monitor the DataCarrier's output
+    /** This function can be use to monitor the DataCarrier's transaction
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @param results
-      *   the output data container
+      *   the transaction data container
       * @tparam T
       *   the data container's data type
       * --- if the port is Bool, it must be Boolean
@@ -182,7 +195,7 @@ package object TestUtilsFactory {
       *   FlowMonitor[H] or StreamMonitor[H]
       */
     def setMonitor[T](clockDomain: ClockDomain, results: ArrayBuffer[T]*) = {
-      data match {
+      carrier match {
         case flow: Flow[_] =>
           FlowMonitor(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
             val payloads = payload.flatten
@@ -222,7 +235,7 @@ package object TestUtilsFactory {
       *   SimStreamAssert[H]
       */
     def setAssert(clockDomain: ClockDomain) = {
-      data match {
+      carrier match {
         case flow: Flow[_] => ???
         case stream: Stream[_] =>
           new SimStreamAssert(stream.asInstanceOf[Stream[H]], clockDomain)
@@ -231,48 +244,136 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to halt DataCarrier's transaction
+    /** This function can be use to drive DataCarrier without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
+      * @param stimulus
+      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order, the stimulus's size
+      *   should be equal to port's size, because the function is drive same data for every hold cycle
+      * @tparam T
+      *   * the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
       */
-    def halt() = {
-      if (data.valid.isInput) {
-        data.valid #= false
-        data.payload.randomize()
+    def poke[T](clockDomain: ClockDomain, cycleCount: Int, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
+
+      if (carrier.valid.isInput) {
+        assert(driverCases.flatten.size == carrier.payload.flatten.size, "the stimulus's size is not match for poke !")
+        carrier.valid #= true
+        carrier.payload.flatten.zip(driverCases.flatten).foreach { case (baseType, driver) =>
+          baseType match {
+            case bool: Bool =>
+              bool #= driver.asInstanceOf[Boolean]
+            case bitVector: BitVector =>
+              bitVector #= driver.asInstanceOf[BigInt]
+            case enum: SpinalEnumCraft[_] =>
+              enum #= driver.asInstanceOf[SpinalEnumElement[SpinalEnum]]
+            case _ => ???
+          }
+        }
       } else {
-        data match {
-          case stream: Stream[_] => stream.ready #= false
+        carrier match {
+          case stream: Stream[_] => stream.ready #= true
           case _                 => ???
         }
       }
+      clockDomain.waitSampling(cycleCount)
     }
 
-    /** This function can be use to initiate the DataCarrier to "Zero"
+    /** This function can be use to drive DataCarrier randomly without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
       */
-    def clear() = {
-      if (data.valid.isInput) {
-        data.valid #= false
-        data.payload.flattenForeach(_.assignBigInt(0))
+    def pokeRandom(clockDomain: ClockDomain, cycleCount: Int = 1) = {
+      if (carrier.valid.isInput) {
+        carrier.valid #= true
+        carrier.payload.randomize()
       } else {
-        data match {
+        carrier match {
+          case stream: Stream[_] => stream.ready.randomize()
+          case _                 => ???
+        }
+      }
+      clockDomain.waitSampling(cycleCount)
+    }
+
+    /** This function can be use to drive "Zero" state to DataCarrier without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
+      */
+    def pokeZero(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+      if (carrier.valid.isInput) {
+        carrier.valid #= true
+        carrier.payload.flattenForeach(_.assignBigInt(0))
+      } else {
+        carrier match {
           case stream: Stream[_] => stream.ready #= false
           case _                 => ???
         }
       }
+      clockDomain.waitSampling(cyclesCount)
+    }
+
+    /** This function can be use to halt DataCarrier for any number of cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param cyclesCount
+      *   the number of cycle for halt DataCarrier
+      */
+    def halt(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+      if (carrier.valid.isInput) {
+        carrier.valid #= false
+        carrier.payload.randomize()
+      } else {
+        carrier match {
+          case stream: Stream[_] => stream.ready #= false
+          case _                 => ???
+        }
+      }
+      clockDomain.waitSampling(cyclesCount)
+    }
+
+    /** This function can be use to set the DataCarrier to "Zero" state for any number of cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param cyclesCount
+      *   the number of cycle for set DataCarrier to "Zero" state
+      */
+    def clear(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+      if (carrier.valid.isInput) {
+        carrier.valid #= false
+        carrier.payload.flattenForeach(_.assignBigInt(0))
+      } else {
+        carrier match {
+          case stream: Stream[_] => stream.ready #= false
+          case _                 => ???
+        }
+      }
+      clockDomain.waitSampling(cyclesCount)
     }
 
   }
 
-  implicit class DataUtilsFactory[D <: Data](data: D) {
+  implicit class DataUtilsFactory[D <: Data](signal: D) {
 
-    /** This function can be use to drive the Data type port randomly and it can set driver delay
+    /** This function can be use to drive the Data type port randomly and also can set drive delay
       * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
-      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      *   the drive delay, it means that drive once randomly for every drive delay (waitTime)
       * @return
       *   DataDriver[D]
       */
     def getRandomDriver(clockDomain: ClockDomain, waitTime: Int = -1) = {
-      DataDriver(data, clockDomain, waitTime) { payload =>
+      DataDriver(signal, clockDomain, waitTime) { payload =>
         payload.randomize()
         true
       }
@@ -285,18 +386,19 @@ package object TestUtilsFactory {
       *   DataDriver[D]
       */
     def getZeroDriver(clockDomain: ClockDomain) = {
-      DataDriver(data, clockDomain, -1) { payload =>
+      DataDriver(signal, clockDomain, -1) { payload =>
         payload.flattenForeach(_.assignBigInt(0))
         true
       }
     }
 
-    /** @param clockDomain
+    /** This function can be use to drive the Data type port by given stimulus and also can set drive delay
+      * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
-      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      *   the drive delay, it means that drive once by given stimulus for every drive cycle (waitTime)
       * @param stimulus
-      *   the stimulus to Data for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention Queue, it will drive the ports in order
+      *   the stimulus to Data for Simulation, if the Data type port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
       * @tparam T
       *   the stimulus type
       * --- if the port is Bool, it must be Boolean
@@ -306,10 +408,9 @@ package object TestUtilsFactory {
       *   DataDriver[D]
       */
     def getDriver[T](clockDomain: ClockDomain, waitTime: Int, stimulus: ArrayBuffer[T]*) = {
-      val driverCases = new ArrayBuffer[ArrayBuffer[T]]()
-      stimulus.copyToBuffer(driverCases)
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
 
-      DataDriver(data, clockDomain, waitTime) { payload =>
+      DataDriver(signal, clockDomain, waitTime) { payload =>
         val payloads = payload.flatten
         assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
         payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
@@ -334,10 +435,11 @@ package object TestUtilsFactory {
       }
     }
 
-    /** @param clockDomain
+    /** This function can be use to monitor the Data type port
+      * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
-      *   the driver delay, it means that wait waitTime cycle (drive zero) and then driver randomly for every driver cycle (waitTime + 1)
+      *   the monitor delay, it means that wait waitTime cycle (drive zero) and then monitor Data port for every cycle
       * @param results
       *   the output data container
       * @tparam T
@@ -349,7 +451,7 @@ package object TestUtilsFactory {
       *   DataMonitor[D]
       */
     def getMonitor[T](clockDomain: ClockDomain, waitTime: Int, results: ArrayBuffer[T]*) = {
-      DataMonitor(data, clockDomain, waitTime) { payload =>
+      DataMonitor(signal, clockDomain, waitTime) { payload =>
         val payloads = payload.flatten
         assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
         results.zip(payloads).foreach { case (result, baseType) =>
@@ -361,6 +463,63 @@ package object TestUtilsFactory {
           }
         }
       }
+    }
+
+    /** This function can be use to drive Data type port without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for Data type port Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
+      * @param stimulus
+      *   the stimulus to Data type port for Simulation, if the Data type port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order, the
+      *   stimulus's size should be equal to port's size, because the function is drive same data for every hold cycle
+      * @tparam T
+      *   * the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      */
+    def poke[T](clockDomain: ClockDomain, cycleCount: Int, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
+
+      assert(driverCases.flatten.size == signal.flatten.size, "the stimulus's size is not match for poke !")
+      signal.flatten.zip(driverCases.flatten).foreach { case (baseType, driver) =>
+        baseType match {
+          case bool: Bool =>
+            bool #= driver.asInstanceOf[Boolean]
+          case bitVector: BitVector =>
+            bitVector #= driver.asInstanceOf[BigInt]
+          case enum: SpinalEnumCraft[_] =>
+            enum #= driver.asInstanceOf[SpinalEnumElement[SpinalEnum]]
+          case _ => ???
+        }
+      }
+
+      clockDomain.waitSampling(cycleCount)
+    }
+
+    /** This function can be use to drive Data type port randomly without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for Data type port Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
+      */
+    def pokeRandom(clockDomain: ClockDomain, cycleCount: Int = 1) = {
+      signal.flattenForeach(_.randomize())
+
+      clockDomain.waitSampling(cycleCount)
+    }
+
+    /** This function can be use to drive "Zero" state to Data type port without delay and hold given cycle
+      * @param clockDomain
+      *   the input ClockDomain for Data type port Simulation
+      * @cycleCount
+      *   the number of cycle for hold drive
+      */
+    def pokeZero(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+      signal.flattenForeach(_.assignBigInt(0))
+
+      clockDomain.waitSampling(cyclesCount)
     }
 
   }
