@@ -1,6 +1,6 @@
 // Generator : SpinalHDL v1.7.0b    git head : 541894e01cf6b5ef03f924225e4f769fb167dea8
 // Component : SuperResolutionPart1
-// Git hash  : 6968eeab3a88e5bbd7b6c8a0ad2109baf04f4858
+// Git hash  : ff52db1e704c4e63bb498022240ed39576d2ed80
 
 `timescale 1ns/1ps
 
@@ -93,33 +93,33 @@ module SuperResolutionPart1 (
   wire       [8:0]    _zz_resultStage_pixelStream_payload_17;
   wire       [8:0]    _zz_resultStage_pixelStream_payload_18;
   wire       [8:0]    _zz_resultStage_pixelStream_payload_19;
-  wire       [2:0]    _zz_when_SuperResolutionPart1_l596;
   wire       [2:0]    _zz_when_SuperResolutionPart1_l597;
-  wire       [3:0]    _zz_when_SuperResolutionPart1_l616;
+  wire       [2:0]    _zz_when_SuperResolutionPart1_l598;
+  wire       [3:0]    _zz_when_SuperResolutionPart1_l617;
   wire       [7:0]    _zz_lineBufferTwo_port;
   wire                _zz_lineBufferTwo_port_1;
   wire       [7:0]    _zz_lineBufferOne_port;
   wire                _zz_lineBufferOne_port_1;
-  wire       [3:0]    _zz_switch_SuperResolutionPart1_l652;
-  wire       [3:0]    _zz_switch_SuperResolutionPart1_l655;
-  wire       [3:0]    _zz_switch_SuperResolutionPart1_l668;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l686;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l686_1;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l689;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l689_1;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l689_2;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l689_3;
-  wire       [2:0]    _zz_switch_SuperResolutionPart1_l689_4;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l709;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l709_1;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l709_2;
+  wire       [3:0]    _zz_switch_SuperResolutionPart1_l653;
+  wire       [3:0]    _zz_switch_SuperResolutionPart1_l656;
+  wire       [3:0]    _zz_switch_SuperResolutionPart1_l669;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l687;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l687_1;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l690;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l690_1;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l690_2;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l690_3;
+  wire       [2:0]    _zz_switch_SuperResolutionPart1_l690_4;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l710;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l710_1;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l710_2;
-  wire       [3:0]    _zz_switch_SuperResolutionPart1_l742;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l749;
-  wire       [3:0]    _zz_when_SuperResolutionPart1_l749_1;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l749_2;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l711;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l711_1;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l711_2;
+  wire       [3:0]    _zz_switch_SuperResolutionPart1_l743;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l750;
+  wire       [3:0]    _zz_when_SuperResolutionPart1_l750_1;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l750_2;
   wire       [3:0]    _zz_mainAddrOne;
   wire       [3:0]    _zz_counterAddrOne;
   wire       [4:0]    _zz_counterAddrOne_1;
@@ -133,19 +133,19 @@ module SuperResolutionPart1 (
   wire       [4:0]    _zz_counterAddrTwo_2;
   wire       [4:0]    _zz_counterAddrTwo_3;
   wire       [1:0]    _zz_counterAddrTwo_4;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l789;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l789_1;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l789_2;
-  wire       [4:0]    _zz_switch_SuperResolutionPart1_l789_3;
-  wire       [2:0]    _zz_switch_SuperResolutionPart1_l789_4;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l790;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l790_1;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l790_2;
+  wire       [4:0]    _zz_switch_SuperResolutionPart1_l790_3;
+  wire       [2:0]    _zz_switch_SuperResolutionPart1_l790_4;
   wire       [1:0]    _zz_controls_onceMode_1;
   wire       [1:0]    _zz_controls_onceMode_2;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l817;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l817_1;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l817_2;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l818;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l818_1;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l818_2;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l819;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l819_1;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l819_2;
   wire       [3:0]    _zz_mainAddrTwo_1;
   wire       [3:0]    _zz_mainAddrTwo_2;
   wire       [4:0]    _zz_counterAddrTwo_5;
@@ -182,27 +182,27 @@ module SuperResolutionPart1 (
   wire       [4:0]    _zz_counterAddrTwo_12;
   wire       [4:0]    _zz_counterAddrTwo_13;
   wire       [1:0]    _zz_counterAddrTwo_14;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l923;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l923_1;
-  wire       [4:0]    _zz_when_SuperResolutionPart1_l923_2;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l924;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l924_1;
   wire       [4:0]    _zz_when_SuperResolutionPart1_l924_2;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l925;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l925_1;
+  wire       [4:0]    _zz_when_SuperResolutionPart1_l925_2;
   reg                 inpDone;
   reg                 internalDone;
   reg                 startRead;
-  wire                when_SuperResolutionPart1_l80;
+  wire                when_SuperResolutionPart1_l81;
   reg                 slaveStart;
   wire                pixelsIn_fire;
-  wire                when_SuperResolutionPart1_l83;
+  wire                when_SuperResolutionPart1_l84;
   reg                 frameStart;
   wire                pixelsIn_fire_1;
-  wire                when_SuperResolutionPart1_l86;
+  wire                when_SuperResolutionPart1_l87;
   reg        [7:0]    inpThreshold;
   reg        [2:0]    bmpWidth;
   reg        [2:0]    bmpHeight;
   reg                 holdBuffer;
-  wire                when_SuperResolutionPart1_l98;
+  wire                when_SuperResolutionPart1_l99;
   reg                 bufferRowCount_willIncrement;
   reg                 bufferRowCount_willClear;
   reg        [2:0]    bufferRowCount_valueNext;
@@ -210,12 +210,12 @@ module SuperResolutionPart1 (
   wire                bufferRowCount_willOverflowIfInc;
   wire                bufferRowCount_willOverflow;
   reg                 bufferEnable;
-  wire                when_SuperResolutionPart1_l104;
-  wire                when_SuperResolutionPart1_l104_1;
+  wire                when_SuperResolutionPart1_l105;
+  wire                when_SuperResolutionPart1_l105_1;
   reg                 bufferSwitch;
-  wire                when_SuperResolutionPart1_l107;
+  wire                when_SuperResolutionPart1_l108;
   reg                 nextRowBuffer;
-  wire                when_SuperResolutionPart1_l110;
+  wire                when_SuperResolutionPart1_l111;
   reg                 bufferReuse;
   reg                 bufferWAddr_willIncrement;
   reg                 bufferWAddr_willClear;
@@ -358,16 +358,16 @@ module SuperResolutionPart1 (
   wire                when_Stream_l368_4;
   reg                 _zz_readStage_controlPipe_translated_payload_mainCompare;
   reg                 _zz_readStage_controlPipe_translated_payload_counterCompare;
-  wire                when_SuperResolutionPart1_l207;
-  wire                when_SuperResolutionPart1_l215;
-  wire                when_SuperResolutionPart1_l223;
-  wire                when_SuperResolutionPart1_l231;
-  wire                when_SuperResolutionPart1_l251;
-  wire                when_SuperResolutionPart1_l257;
-  wire                when_SuperResolutionPart1_l265;
-  wire                when_SuperResolutionPart1_l271;
-  wire                when_SuperResolutionPart1_l283;
-  wire                when_SuperResolutionPart1_l295;
+  wire                when_SuperResolutionPart1_l208;
+  wire                when_SuperResolutionPart1_l216;
+  wire                when_SuperResolutionPart1_l224;
+  wire                when_SuperResolutionPart1_l232;
+  wire                when_SuperResolutionPart1_l252;
+  wire                when_SuperResolutionPart1_l258;
+  wire                when_SuperResolutionPart1_l266;
+  wire                when_SuperResolutionPart1_l272;
+  wire                when_SuperResolutionPart1_l284;
+  wire                when_SuperResolutionPart1_l296;
   wire                readStage_controlPipe_translated_valid;
   reg                 readStage_controlPipe_translated_ready;
   wire                readStage_controlPipe_translated_payload_frameStart;
@@ -533,18 +533,18 @@ module SuperResolutionPart1 (
   wire                resultStage_pixelStream_valid;
   reg                 resultStage_pixelStream_ready;
   reg        [7:0]    resultStage_pixelStream_payload;
-  wire                when_SuperResolutionPart1_l451;
-  wire                when_SuperResolutionPart1_l459;
-  wire                when_SuperResolutionPart1_l467;
-  wire                when_SuperResolutionPart1_l475;
-  wire                when_SuperResolutionPart1_l495;
-  wire                switch_SuperResolutionPart1_l496;
-  wire                switch_SuperResolutionPart1_l505;
-  wire                when_SuperResolutionPart1_l517;
-  wire                switch_SuperResolutionPart1_l518;
-  wire                switch_SuperResolutionPart1_l527;
-  wire                when_SuperResolutionPart1_l543;
-  wire                when_SuperResolutionPart1_l555;
+  wire                when_SuperResolutionPart1_l452;
+  wire                when_SuperResolutionPart1_l460;
+  wire                when_SuperResolutionPart1_l468;
+  wire                when_SuperResolutionPart1_l476;
+  wire                when_SuperResolutionPart1_l496;
+  wire                switch_SuperResolutionPart1_l497;
+  wire                switch_SuperResolutionPart1_l506;
+  wire                when_SuperResolutionPart1_l518;
+  wire                switch_SuperResolutionPart1_l519;
+  wire                switch_SuperResolutionPart1_l528;
+  wire                when_SuperResolutionPart1_l544;
+  wire                when_SuperResolutionPart1_l556;
   wire                resultStage_resultStream_valid;
   wire                resultStage_resultStream_ready;
   wire       [7:0]    resultStage_resultStream_payload;
@@ -592,18 +592,18 @@ module SuperResolutionPart1 (
   wire                passPixels_payload_frameStart;
   wire                passPixels_payload_rowEnd;
   wire                passPixels_fire;
-  wire                when_SuperResolutionPart1_l596;
-  wire                passPixels_fire_1;
   wire                when_SuperResolutionPart1_l597;
+  wire                passPixels_fire_1;
+  wire                when_SuperResolutionPart1_l598;
   wire                passPixels_fire_2;
-  wire                when_SuperResolutionPart1_l600;
+  wire                when_SuperResolutionPart1_l601;
   wire                passPixels_fire_3;
-  wire                when_SuperResolutionPart1_l611;
-  wire                passPixels_fire_4;
   wire                when_SuperResolutionPart1_l612;
+  wire                passPixels_fire_4;
+  wire                when_SuperResolutionPart1_l613;
   wire                controlStream_fire;
-  wire                when_SuperResolutionPart1_l616;
-  wire                when_SuperResolutionPart1_l618;
+  wire                when_SuperResolutionPart1_l617;
+  wire                when_SuperResolutionPart1_l619;
   wire                passPixels_fire_5;
   wire                passPixels_fire_6;
   wire                passPixels_fire_7;
@@ -612,45 +612,45 @@ module SuperResolutionPart1 (
   wire                controlStateMachine_wantKill;
   reg        [2:0]    controlStateMachine_stateReg;
   reg        [2:0]    controlStateMachine_stateNext;
-  wire                switch_SuperResolutionPart1_l652;
+  wire                switch_SuperResolutionPart1_l653;
   wire                passPixels_fire_8;
-  wire                switch_SuperResolutionPart1_l655;
+  wire                switch_SuperResolutionPart1_l656;
   wire                passPixels_fire_9;
-  wire                switch_SuperResolutionPart1_l668;
+  wire                switch_SuperResolutionPart1_l669;
   wire                controlStream_fire_1;
-  wire                when_SuperResolutionPart1_l686;
+  wire                when_SuperResolutionPart1_l687;
   wire                passPixels_fire_10;
-  wire                switch_SuperResolutionPart1_l689;
+  wire                switch_SuperResolutionPart1_l690;
   wire                controlStream_fire_2;
-  wire                when_SuperResolutionPart1_l706;
+  wire                when_SuperResolutionPart1_l707;
   wire                controlStream_fire_3;
-  wire                when_SuperResolutionPart1_l709;
-  wire                controlStream_fire_4;
   wire                when_SuperResolutionPart1_l710;
+  wire                controlStream_fire_4;
+  wire                when_SuperResolutionPart1_l711;
   wire                controlStream_fire_5;
-  wire                when_SuperResolutionPart1_l712;
+  wire                when_SuperResolutionPart1_l713;
   wire                controlStream_fire_6;
-  wire                switch_SuperResolutionPart1_l742;
+  wire                switch_SuperResolutionPart1_l743;
   wire                controlStream_fire_7;
-  wire                when_SuperResolutionPart1_l749;
+  wire                when_SuperResolutionPart1_l750;
   wire                controlStream_fire_8;
   wire                passPixels_fire_11;
-  wire                switch_SuperResolutionPart1_l789;
+  wire                switch_SuperResolutionPart1_l790;
   wire                controlStream_fire_9;
-  wire                when_SuperResolutionPart1_l817;
-  wire                controlStream_fire_10;
   wire                when_SuperResolutionPart1_l818;
+  wire                controlStream_fire_10;
+  wire                when_SuperResolutionPart1_l819;
   wire                controlStream_fire_11;
-  wire                when_SuperResolutionPart1_l820;
+  wire                when_SuperResolutionPart1_l821;
   wire                controlStream_fire_12;
   wire                controlStream_fire_13;
-  wire                switch_SuperResolutionPart1_l855;
+  wire                switch_SuperResolutionPart1_l856;
   wire                controlStream_fire_14;
-  wire                when_SuperResolutionPart1_l923;
-  wire                controlStream_fire_15;
   wire                when_SuperResolutionPart1_l924;
+  wire                controlStream_fire_15;
+  wire                when_SuperResolutionPart1_l925;
   wire                controlStream_fire_16;
-  wire                when_SuperResolutionPart1_l926;
+  wire                when_SuperResolutionPart1_l927;
   wire                controlStream_fire_17;
   `ifndef SYNTHESIS
   reg [39:0] controlStateMachine_stateReg_string;
@@ -688,29 +688,29 @@ module SuperResolutionPart1 (
   assign _zz_resultStage_pixelStream_payload_17 = ({1'b0,diffStage_mainTwoPixelStream_payload} + {1'b0,diffStage_counterTwoPixelStream_payload});
   assign _zz_resultStage_pixelStream_payload_18 = (_zz_resultStage_pixelStream_payload_19 / 2'b10);
   assign _zz_resultStage_pixelStream_payload_19 = ({1'b0,diffStage_mainOnePixelStream_payload} + {1'b0,diffStage_counterOnePixelStream_payload});
-  assign _zz_when_SuperResolutionPart1_l596 = (bmpWidth - 3'b010);
-  assign _zz_when_SuperResolutionPart1_l597 = (bmpHeight - 3'b010);
-  assign _zz_when_SuperResolutionPart1_l616 = (outRowCount_value % 2'b10);
-  assign _zz_switch_SuperResolutionPart1_l652 = (outRowCount_value % 2'b10);
-  assign _zz_switch_SuperResolutionPart1_l655 = (outPixelAddr_value % 2'b10);
-  assign _zz_switch_SuperResolutionPart1_l668 = (outPixelAddr_value % 2'b10);
-  assign _zz_when_SuperResolutionPart1_l686 = {1'd0, outRowCount_value};
-  assign _zz_when_SuperResolutionPart1_l686_1 = (2'b10 * bufferRowCount_value);
-  assign _zz_switch_SuperResolutionPart1_l689 = {2'd0, bufferWAddr_value};
-  assign _zz_switch_SuperResolutionPart1_l689_1 = (_zz_switch_SuperResolutionPart1_l689_2 / 2'b10);
-  assign _zz_switch_SuperResolutionPart1_l689_2 = ({1'b0,outPixelAddr_value} + _zz_switch_SuperResolutionPart1_l689_3);
-  assign _zz_switch_SuperResolutionPart1_l689_4 = {1'b0,2'b10};
-  assign _zz_switch_SuperResolutionPart1_l689_3 = {2'd0, _zz_switch_SuperResolutionPart1_l689_4};
-  assign _zz_when_SuperResolutionPart1_l709 = {1'd0, outPixelAddr_value};
-  assign _zz_when_SuperResolutionPart1_l709_1 = (_zz_when_SuperResolutionPart1_l709_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l709_2 = (2'b10 * bmpWidth);
-  assign _zz_when_SuperResolutionPart1_l710 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l597 = (bmpWidth - 3'b010);
+  assign _zz_when_SuperResolutionPart1_l598 = (bmpHeight - 3'b010);
+  assign _zz_when_SuperResolutionPart1_l617 = (outRowCount_value % 2'b10);
+  assign _zz_switch_SuperResolutionPart1_l653 = (outRowCount_value % 2'b10);
+  assign _zz_switch_SuperResolutionPart1_l656 = (outPixelAddr_value % 2'b10);
+  assign _zz_switch_SuperResolutionPart1_l669 = (outPixelAddr_value % 2'b10);
+  assign _zz_when_SuperResolutionPart1_l687 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l687_1 = (2'b10 * bufferRowCount_value);
+  assign _zz_switch_SuperResolutionPart1_l690 = {2'd0, bufferWAddr_value};
+  assign _zz_switch_SuperResolutionPart1_l690_1 = (_zz_switch_SuperResolutionPart1_l690_2 / 2'b10);
+  assign _zz_switch_SuperResolutionPart1_l690_2 = ({1'b0,outPixelAddr_value} + _zz_switch_SuperResolutionPart1_l690_3);
+  assign _zz_switch_SuperResolutionPart1_l690_4 = {1'b0,2'b10};
+  assign _zz_switch_SuperResolutionPart1_l690_3 = {2'd0, _zz_switch_SuperResolutionPart1_l690_4};
+  assign _zz_when_SuperResolutionPart1_l710 = {1'd0, outPixelAddr_value};
   assign _zz_when_SuperResolutionPart1_l710_1 = (_zz_when_SuperResolutionPart1_l710_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l710_2 = (2'b10 * bmpHeight);
-  assign _zz_switch_SuperResolutionPart1_l742 = (outRowCount_value % 2'b10);
-  assign _zz_when_SuperResolutionPart1_l749_1 = (4'b0010 + outRowCount_value);
-  assign _zz_when_SuperResolutionPart1_l749 = {1'd0, _zz_when_SuperResolutionPart1_l749_1};
-  assign _zz_when_SuperResolutionPart1_l749_2 = (2'b10 * bufferRowCount_value);
+  assign _zz_when_SuperResolutionPart1_l710_2 = (2'b10 * bmpWidth);
+  assign _zz_when_SuperResolutionPart1_l711 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l711_1 = (_zz_when_SuperResolutionPart1_l711_2 - 5'h02);
+  assign _zz_when_SuperResolutionPart1_l711_2 = (2'b10 * bmpHeight);
+  assign _zz_switch_SuperResolutionPart1_l743 = (outRowCount_value % 2'b10);
+  assign _zz_when_SuperResolutionPart1_l750_1 = (4'b0010 + outRowCount_value);
+  assign _zz_when_SuperResolutionPart1_l750 = {1'd0, _zz_when_SuperResolutionPart1_l750_1};
+  assign _zz_when_SuperResolutionPart1_l750_2 = (2'b10 * bufferRowCount_value);
   assign _zz_mainAddrOne = (outPixelAddr_value - 4'b0001);
   assign _zz_counterAddrOne = (outPixelAddr_value - 4'b0001);
   assign _zz_counterAddrOne_1 = (_zz_counterAddrOne_2 / 2'b10);
@@ -724,19 +724,19 @@ module SuperResolutionPart1 (
   assign _zz_counterAddrTwo_2 = ({1'b0,outPixelAddr_value} + _zz_counterAddrTwo_3);
   assign _zz_counterAddrTwo_4 = {1'b0,1'b1};
   assign _zz_counterAddrTwo_3 = {3'd0, _zz_counterAddrTwo_4};
-  assign _zz_switch_SuperResolutionPart1_l789 = {2'd0, bufferWAddr_value};
-  assign _zz_switch_SuperResolutionPart1_l789_1 = (_zz_switch_SuperResolutionPart1_l789_2 / 2'b10);
-  assign _zz_switch_SuperResolutionPart1_l789_2 = ({1'b0,outPixelAddr_value} + _zz_switch_SuperResolutionPart1_l789_3);
-  assign _zz_switch_SuperResolutionPart1_l789_4 = {1'b0,2'b10};
-  assign _zz_switch_SuperResolutionPart1_l789_3 = {2'd0, _zz_switch_SuperResolutionPart1_l789_4};
+  assign _zz_switch_SuperResolutionPart1_l790 = {2'd0, bufferWAddr_value};
+  assign _zz_switch_SuperResolutionPart1_l790_1 = (_zz_switch_SuperResolutionPart1_l790_2 / 2'b10);
+  assign _zz_switch_SuperResolutionPart1_l790_2 = ({1'b0,outPixelAddr_value} + _zz_switch_SuperResolutionPart1_l790_3);
+  assign _zz_switch_SuperResolutionPart1_l790_4 = {1'b0,2'b10};
+  assign _zz_switch_SuperResolutionPart1_l790_3 = {2'd0, _zz_switch_SuperResolutionPart1_l790_4};
   assign _zz_controls_onceMode_1 = 2'b10;
   assign _zz_controls_onceMode_2 = 2'b11;
-  assign _zz_when_SuperResolutionPart1_l817 = {1'd0, outPixelAddr_value};
-  assign _zz_when_SuperResolutionPart1_l817_1 = (_zz_when_SuperResolutionPart1_l817_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l817_2 = (2'b10 * bmpWidth);
-  assign _zz_when_SuperResolutionPart1_l818 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l818 = {1'd0, outPixelAddr_value};
   assign _zz_when_SuperResolutionPart1_l818_1 = (_zz_when_SuperResolutionPart1_l818_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l818_2 = (2'b10 * bmpHeight);
+  assign _zz_when_SuperResolutionPart1_l818_2 = (2'b10 * bmpWidth);
+  assign _zz_when_SuperResolutionPart1_l819 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l819_1 = (_zz_when_SuperResolutionPart1_l819_2 - 5'h02);
+  assign _zz_when_SuperResolutionPart1_l819_2 = (2'b10 * bmpHeight);
   assign _zz_mainAddrTwo_1 = (outPixelAddr_value - 4'b0001);
   assign _zz_mainAddrTwo_2 = (outPixelAddr_value - 4'b0001);
   assign _zz_counterAddrTwo_5 = (_zz_counterAddrTwo_6 / 2'b10);
@@ -773,12 +773,12 @@ module SuperResolutionPart1 (
   assign _zz_counterAddrTwo_12 = ({1'b0,outPixelAddr_value} + _zz_counterAddrTwo_13);
   assign _zz_counterAddrTwo_14 = {1'b0,1'b1};
   assign _zz_counterAddrTwo_13 = {3'd0, _zz_counterAddrTwo_14};
-  assign _zz_when_SuperResolutionPart1_l923 = {1'd0, outPixelAddr_value};
-  assign _zz_when_SuperResolutionPart1_l923_1 = (_zz_when_SuperResolutionPart1_l923_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l923_2 = (2'b10 * bmpWidth);
-  assign _zz_when_SuperResolutionPart1_l924 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l924 = {1'd0, outPixelAddr_value};
   assign _zz_when_SuperResolutionPart1_l924_1 = (_zz_when_SuperResolutionPart1_l924_2 - 5'h02);
-  assign _zz_when_SuperResolutionPart1_l924_2 = (2'b10 * bmpHeight);
+  assign _zz_when_SuperResolutionPart1_l924_2 = (2'b10 * bmpWidth);
+  assign _zz_when_SuperResolutionPart1_l925 = {1'd0, outRowCount_value};
+  assign _zz_when_SuperResolutionPart1_l925_1 = (_zz_when_SuperResolutionPart1_l925_2 - 5'h02);
+  assign _zz_when_SuperResolutionPart1_l925_2 = (2'b10 * bmpHeight);
   assign _zz_lineBufferOne_port = passPixels_payload_pixel;
   assign _zz_lineBufferOne_port_1 = (passPixels_fire_6 && (! bufferSwitch));
   assign _zz_lineBufferTwo_port = passPixels_payload_pixel;
@@ -932,15 +932,15 @@ module SuperResolutionPart1 (
     inpDoneOut = inpDone;
   end
 
-  assign when_SuperResolutionPart1_l80 = (StartIn && (! internalDone));
+  assign when_SuperResolutionPart1_l81 = (StartIn && (! internalDone));
   assign pixelsIn_fire = (pixelsIn_valid && pixelsIn_ready);
-  assign when_SuperResolutionPart1_l83 = ((! inpTwoDoneIn) && pixelsIn_fire);
+  assign when_SuperResolutionPart1_l84 = ((! inpTwoDoneIn) && pixelsIn_fire);
   assign pixelsIn_fire_1 = (pixelsIn_valid && pixelsIn_ready);
-  assign when_SuperResolutionPart1_l86 = (pixelsIn_payload_frameStart && pixelsIn_fire_1);
-  assign when_SuperResolutionPart1_l98 = (! StartIn);
+  assign when_SuperResolutionPart1_l87 = (pixelsIn_payload_frameStart && pixelsIn_fire_1);
+  assign when_SuperResolutionPart1_l99 = (! StartIn);
   always @(*) begin
     bufferRowCount_willIncrement = 1'b0;
-    if(when_SuperResolutionPart1_l600) begin
+    if(when_SuperResolutionPart1_l601) begin
       if(!bufferReachFinalRow) begin
         bufferRowCount_willIncrement = 1'b1;
       end
@@ -949,7 +949,7 @@ module SuperResolutionPart1 (
 
   always @(*) begin
     bufferRowCount_willClear = 1'b0;
-    if(when_SuperResolutionPart1_l600) begin
+    if(when_SuperResolutionPart1_l601) begin
       if(bufferReachFinalRow) begin
         bufferRowCount_willClear = 1'b1;
       end
@@ -969,10 +969,10 @@ module SuperResolutionPart1 (
     end
   end
 
-  assign when_SuperResolutionPart1_l104 = (StartIn && (! holdBuffer));
-  assign when_SuperResolutionPart1_l104_1 = ((! StartIn) || holdBuffer);
-  assign when_SuperResolutionPart1_l107 = (! startRead);
-  assign when_SuperResolutionPart1_l110 = (! startRead);
+  assign when_SuperResolutionPart1_l105 = (StartIn && (! holdBuffer));
+  assign when_SuperResolutionPart1_l105_1 = ((! StartIn) || holdBuffer);
+  assign when_SuperResolutionPart1_l108 = (! startRead);
+  assign when_SuperResolutionPart1_l111 = (! startRead);
   always @(*) begin
     bufferWAddr_willIncrement = 1'b0;
     if(passPixels_fire_7) begin
@@ -1085,21 +1085,21 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_HOLD : begin
       end
       controlStateMachine_enumDef_PASS : begin
-        if(when_SuperResolutionPart1_l712) begin
+        if(when_SuperResolutionPart1_l713) begin
           if(!outReachFinalRow) begin
             outRowCount_willIncrement = 1'b1;
           end
         end
       end
       controlStateMachine_enumDef_ONCE : begin
-        if(when_SuperResolutionPart1_l820) begin
+        if(when_SuperResolutionPart1_l821) begin
           if(!outReachFinalRow) begin
             outRowCount_willIncrement = 1'b1;
           end
         end
       end
       controlStateMachine_enumDef_TWICE : begin
-        if(when_SuperResolutionPart1_l926) begin
+        if(when_SuperResolutionPart1_l927) begin
           if(!outReachFinalRow) begin
             outRowCount_willIncrement = 1'b1;
           end
@@ -1116,21 +1116,21 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_HOLD : begin
       end
       controlStateMachine_enumDef_PASS : begin
-        if(when_SuperResolutionPart1_l712) begin
+        if(when_SuperResolutionPart1_l713) begin
           if(outReachFinalRow) begin
             outRowCount_willClear = 1'b1;
           end
         end
       end
       controlStateMachine_enumDef_ONCE : begin
-        if(when_SuperResolutionPart1_l820) begin
+        if(when_SuperResolutionPart1_l821) begin
           if(outReachFinalRow) begin
             outRowCount_willClear = 1'b1;
           end
         end
       end
       controlStateMachine_enumDef_TWICE : begin
-        if(when_SuperResolutionPart1_l926) begin
+        if(when_SuperResolutionPart1_l927) begin
           if(outReachFinalRow) begin
             outRowCount_willClear = 1'b1;
           end
@@ -1162,7 +1162,7 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_PASS : begin
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             case(nextRowBuffer)
               1'b1 : begin
@@ -1218,7 +1218,7 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_PASS : begin
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             case(nextRowBuffer)
               1'b1 : begin
@@ -1275,7 +1275,7 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_PASS : begin
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             case(nextRowBuffer)
               1'b1 : begin
@@ -1331,7 +1331,7 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_PASS : begin
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             case(nextRowBuffer)
               1'b1 : begin
@@ -1475,7 +1475,7 @@ module SuperResolutionPart1 (
       controlStateMachine_enumDef_PASS : begin
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             case(nextRowBuffer)
               1'b1 : begin
@@ -1708,28 +1708,28 @@ module SuperResolutionPart1 (
     if(readStage_controlPipe_payload_onceValid) begin
       case(readStage_controlPipe_payload_onceMode)
         3'b000 : begin
-          if(when_SuperResolutionPart1_l207) begin
+          if(when_SuperResolutionPart1_l208) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
           end
         end
         3'b001 : begin
-          if(when_SuperResolutionPart1_l215) begin
+          if(when_SuperResolutionPart1_l216) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
           end
         end
         3'b010 : begin
-          if(when_SuperResolutionPart1_l223) begin
+          if(when_SuperResolutionPart1_l224) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
           end
         end
         3'b011 : begin
-          if(when_SuperResolutionPart1_l231) begin
+          if(when_SuperResolutionPart1_l232) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
@@ -1748,14 +1748,14 @@ module SuperResolutionPart1 (
     if(readStage_controlPipe_payload_twiceCompValid) begin
       case(readStage_controlPipe_payload_twiceMode)
         3'b000 : begin
-          if(when_SuperResolutionPart1_l251) begin
+          if(when_SuperResolutionPart1_l252) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
           end
         end
         3'b001 : begin
-          if(when_SuperResolutionPart1_l265) begin
+          if(when_SuperResolutionPart1_l266) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
@@ -1765,7 +1765,7 @@ module SuperResolutionPart1 (
           _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
         end
         3'b011 : begin
-          if(when_SuperResolutionPart1_l283) begin
+          if(when_SuperResolutionPart1_l284) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
@@ -1775,7 +1775,7 @@ module SuperResolutionPart1 (
           _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
         end
         3'b101 : begin
-          if(when_SuperResolutionPart1_l295) begin
+          if(when_SuperResolutionPart1_l296) begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_mainCompare = 1'b0;
@@ -1792,14 +1792,14 @@ module SuperResolutionPart1 (
     if(readStage_controlPipe_payload_twiceCompValid) begin
       case(readStage_controlPipe_payload_twiceMode)
         3'b000 : begin
-          if(when_SuperResolutionPart1_l257) begin
+          if(when_SuperResolutionPart1_l258) begin
             _zz_readStage_controlPipe_translated_payload_counterCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_counterCompare = 1'b0;
           end
         end
         3'b001 : begin
-          if(when_SuperResolutionPart1_l271) begin
+          if(when_SuperResolutionPart1_l272) begin
             _zz_readStage_controlPipe_translated_payload_counterCompare = 1'b1;
           end else begin
             _zz_readStage_controlPipe_translated_payload_counterCompare = 1'b0;
@@ -1811,16 +1811,16 @@ module SuperResolutionPart1 (
     end
   end
 
-  assign when_SuperResolutionPart1_l207 = (readStage_counterOnePixelStream_payload <= readStage_mainOnePixelStream_payload);
-  assign when_SuperResolutionPart1_l215 = (readStage_counterTwoPixelStream_payload <= readStage_mainTwoPixelStream_payload);
-  assign when_SuperResolutionPart1_l223 = (readStage_mainTwoPixelStream_payload <= readStage_mainOnePixelStream_payload);
-  assign when_SuperResolutionPart1_l231 = (readStage_mainOnePixelStream_payload <= readStage_mainTwoPixelStream_payload);
-  assign when_SuperResolutionPart1_l251 = (readStage_mainTwoPixelStream_payload <= readStage_mainOnePixelStream_payload);
-  assign when_SuperResolutionPart1_l257 = (readStage_counterOnePixelStream_payload <= readStage_counterTwoPixelStream_payload);
-  assign when_SuperResolutionPart1_l265 = (readStage_mainOnePixelStream_payload <= readStage_mainTwoPixelStream_payload);
-  assign when_SuperResolutionPart1_l271 = (readStage_counterTwoPixelStream_payload <= readStage_counterOnePixelStream_payload);
-  assign when_SuperResolutionPart1_l283 = (readStage_counterTwoPixelStream_payload <= readStage_mainTwoPixelStream_payload);
-  assign when_SuperResolutionPart1_l295 = (readStage_counterOnePixelStream_payload <= readStage_mainOnePixelStream_payload);
+  assign when_SuperResolutionPart1_l208 = (readStage_counterOnePixelStream_payload <= readStage_mainOnePixelStream_payload);
+  assign when_SuperResolutionPart1_l216 = (readStage_counterTwoPixelStream_payload <= readStage_mainTwoPixelStream_payload);
+  assign when_SuperResolutionPart1_l224 = (readStage_mainTwoPixelStream_payload <= readStage_mainOnePixelStream_payload);
+  assign when_SuperResolutionPart1_l232 = (readStage_mainOnePixelStream_payload <= readStage_mainTwoPixelStream_payload);
+  assign when_SuperResolutionPart1_l252 = (readStage_mainTwoPixelStream_payload <= readStage_mainOnePixelStream_payload);
+  assign when_SuperResolutionPart1_l258 = (readStage_counterOnePixelStream_payload <= readStage_counterTwoPixelStream_payload);
+  assign when_SuperResolutionPart1_l266 = (readStage_mainOnePixelStream_payload <= readStage_mainTwoPixelStream_payload);
+  assign when_SuperResolutionPart1_l272 = (readStage_counterTwoPixelStream_payload <= readStage_counterOnePixelStream_payload);
+  assign when_SuperResolutionPart1_l284 = (readStage_counterTwoPixelStream_payload <= readStage_mainTwoPixelStream_payload);
+  assign when_SuperResolutionPart1_l296 = (readStage_counterOnePixelStream_payload <= readStage_mainOnePixelStream_payload);
   assign readStage_controlPipe_translated_valid = readStage_controlPipe_valid;
   assign readStage_controlPipe_ready = readStage_controlPipe_translated_ready;
   assign readStage_controlPipe_translated_payload_frameStart = readStage_controlPipe_payload_frameStart;
@@ -2117,28 +2117,28 @@ module SuperResolutionPart1 (
     if(diffStage_controlPipe_fork_io_outputs_1_payload_onceValid) begin
       case(diffStage_controlPipe_fork_io_outputs_1_payload_onceMode)
         3'b000 : begin
-          if(when_SuperResolutionPart1_l451) begin
+          if(when_SuperResolutionPart1_l452) begin
             resultStage_pixelStream_payload = diffStage_mainOnePixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload[7:0];
           end
         end
         3'b001 : begin
-          if(when_SuperResolutionPart1_l459) begin
+          if(when_SuperResolutionPart1_l460) begin
             resultStage_pixelStream_payload = diffStage_mainTwoPixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_2[7:0];
           end
         end
         3'b010 : begin
-          if(when_SuperResolutionPart1_l467) begin
+          if(when_SuperResolutionPart1_l468) begin
             resultStage_pixelStream_payload = diffStage_mainOnePixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_4[7:0];
           end
         end
         3'b011 : begin
-          if(when_SuperResolutionPart1_l475) begin
+          if(when_SuperResolutionPart1_l476) begin
             resultStage_pixelStream_payload = diffStage_mainTwoPixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_6[7:0];
@@ -2157,8 +2157,8 @@ module SuperResolutionPart1 (
     if(diffStage_controlPipe_fork_io_outputs_1_payload_twiceCompValid) begin
       case(diffStage_controlPipe_fork_io_outputs_1_payload_twiceMode)
         3'b000 : begin
-          if(when_SuperResolutionPart1_l495) begin
-            case(switch_SuperResolutionPart1_l496)
+          if(when_SuperResolutionPart1_l496) begin
+            case(switch_SuperResolutionPart1_l497)
               1'b1 : begin
                 resultStage_pixelStream_payload = diffStage_mainOnePixelStream_payload;
               end
@@ -2167,7 +2167,7 @@ module SuperResolutionPart1 (
               end
             endcase
           end else begin
-            case(switch_SuperResolutionPart1_l505)
+            case(switch_SuperResolutionPart1_l506)
               1'b1 : begin
                 resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_8[7:0];
               end
@@ -2178,8 +2178,8 @@ module SuperResolutionPart1 (
           end
         end
         3'b001 : begin
-          if(when_SuperResolutionPart1_l517) begin
-            case(switch_SuperResolutionPart1_l518)
+          if(when_SuperResolutionPart1_l518) begin
+            case(switch_SuperResolutionPart1_l519)
               1'b1 : begin
                 resultStage_pixelStream_payload = diffStage_mainTwoPixelStream_payload;
               end
@@ -2188,7 +2188,7 @@ module SuperResolutionPart1 (
               end
             endcase
           end else begin
-            case(switch_SuperResolutionPart1_l527)
+            case(switch_SuperResolutionPart1_l528)
               1'b1 : begin
                 resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_12[7:0];
               end
@@ -2202,7 +2202,7 @@ module SuperResolutionPart1 (
           resultStage_pixelStream_payload = diffStage_mainTwoPixelStream_payload;
         end
         3'b011 : begin
-          if(when_SuperResolutionPart1_l543) begin
+          if(when_SuperResolutionPart1_l544) begin
             resultStage_pixelStream_payload = diffStage_mainTwoPixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_16[7:0];
@@ -2212,7 +2212,7 @@ module SuperResolutionPart1 (
           resultStage_pixelStream_payload = diffStage_mainOnePixelStream_payload;
         end
         3'b101 : begin
-          if(when_SuperResolutionPart1_l555) begin
+          if(when_SuperResolutionPart1_l556) begin
             resultStage_pixelStream_payload = diffStage_mainOnePixelStream_payload;
           end else begin
             resultStage_pixelStream_payload = _zz_resultStage_pixelStream_payload_18[7:0];
@@ -2224,18 +2224,18 @@ module SuperResolutionPart1 (
     end
   end
 
-  assign when_SuperResolutionPart1_l451 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l459 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l467 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l475 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l495 = ((inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff) && (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff));
-  assign switch_SuperResolutionPart1_l496 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign switch_SuperResolutionPart1_l505 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l517 = ((inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff) && (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff));
-  assign switch_SuperResolutionPart1_l518 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign switch_SuperResolutionPart1_l527 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l543 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
-  assign when_SuperResolutionPart1_l555 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l452 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l460 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l468 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l476 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l496 = ((inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff) && (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff));
+  assign switch_SuperResolutionPart1_l497 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign switch_SuperResolutionPart1_l506 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l518 = ((inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff) && (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff));
+  assign switch_SuperResolutionPart1_l519 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign switch_SuperResolutionPart1_l528 = (diffStage_controlPipe_fork_io_outputs_1_payload_counterDiff <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l544 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
+  assign when_SuperResolutionPart1_l556 = (inpThreshold <= diffStage_controlPipe_fork_io_outputs_1_payload_mainDiff);
   always @(*) begin
     resultStage_pixelStream_ready = resultStage_resultStream_ready;
     if(when_Stream_l368_16) begin
@@ -2301,18 +2301,18 @@ module SuperResolutionPart1 (
   assign passPixels_payload_rowEnd = pixelsIn_payload_rowEnd;
   assign passPixels_ready = 1'b1;
   assign passPixels_fire = (passPixels_valid && passPixels_ready);
-  assign when_SuperResolutionPart1_l596 = ((bufferWAddr_value == _zz_when_SuperResolutionPart1_l596) && passPixels_fire);
+  assign when_SuperResolutionPart1_l597 = ((bufferWAddr_value == _zz_when_SuperResolutionPart1_l597) && passPixels_fire);
   assign passPixels_fire_1 = (passPixels_valid && passPixels_ready);
-  assign when_SuperResolutionPart1_l597 = (((bufferRowCount_value == _zz_when_SuperResolutionPart1_l597) && bufferReachRowEnd) && passPixels_fire_1);
+  assign when_SuperResolutionPart1_l598 = (((bufferRowCount_value == _zz_when_SuperResolutionPart1_l598) && bufferReachRowEnd) && passPixels_fire_1);
   assign passPixels_fire_2 = (passPixels_valid && passPixels_ready);
-  assign when_SuperResolutionPart1_l600 = (passPixels_payload_rowEnd && passPixels_fire_2);
+  assign when_SuperResolutionPart1_l601 = (passPixels_payload_rowEnd && passPixels_fire_2);
   assign passPixels_fire_3 = (passPixels_valid && passPixels_ready);
-  assign when_SuperResolutionPart1_l611 = (passPixels_payload_rowEnd && passPixels_fire_3);
+  assign when_SuperResolutionPart1_l612 = (passPixels_payload_rowEnd && passPixels_fire_3);
   assign passPixels_fire_4 = (passPixels_valid && passPixels_ready);
-  assign when_SuperResolutionPart1_l612 = (((bufferRowCount_value != 3'b000) && passPixels_payload_rowEnd) && passPixels_fire_4);
+  assign when_SuperResolutionPart1_l613 = (((bufferRowCount_value != 3'b000) && passPixels_payload_rowEnd) && passPixels_fire_4);
   assign controlStream_fire = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l616 = (((_zz_when_SuperResolutionPart1_l616 == 4'b0001) && controlStream_payload_rowEnd) && controlStream_fire);
-  assign when_SuperResolutionPart1_l618 = 1'b1;
+  assign when_SuperResolutionPart1_l617 = (((_zz_when_SuperResolutionPart1_l617 == 4'b0001) && controlStream_payload_rowEnd) && controlStream_fire);
+  assign when_SuperResolutionPart1_l619 = 1'b1;
   assign passPixels_fire_5 = (passPixels_valid && passPixels_ready);
   assign passPixels_fire_6 = (passPixels_valid && passPixels_ready);
   assign passPixels_fire_7 = (passPixels_valid && passPixels_ready);
@@ -2339,10 +2339,10 @@ module SuperResolutionPart1 (
     controlStateMachine_stateNext = controlStateMachine_stateReg;
     case(controlStateMachine_stateReg)
       controlStateMachine_enumDef_HOLD : begin
-        case(switch_SuperResolutionPart1_l652)
+        case(switch_SuperResolutionPart1_l653)
           1'b1 : begin
             if(passPixels_fire_8) begin
-              case(switch_SuperResolutionPart1_l655)
+              case(switch_SuperResolutionPart1_l656)
                 1'b1 : begin
                   controlStateMachine_stateNext = controlStateMachine_enumDef_PASS;
                 end
@@ -2354,7 +2354,7 @@ module SuperResolutionPart1 (
           end
           default : begin
             if(passPixels_fire_9) begin
-              case(switch_SuperResolutionPart1_l668)
+              case(switch_SuperResolutionPart1_l669)
                 1'b1 : begin
                   controlStateMachine_stateNext = controlStateMachine_enumDef_ONCE;
                 end
@@ -2368,10 +2368,10 @@ module SuperResolutionPart1 (
       end
       controlStateMachine_enumDef_PASS : begin
         if(controlStream_fire_1) begin
-          if(when_SuperResolutionPart1_l686) begin
+          if(when_SuperResolutionPart1_l687) begin
             controlStateMachine_stateNext = controlStateMachine_enumDef_ONCE;
           end else begin
-            case(switch_SuperResolutionPart1_l689)
+            case(switch_SuperResolutionPart1_l690)
               1'b1 : begin
                 controlStateMachine_stateNext = controlStateMachine_enumDef_HOLD;
               end
@@ -2383,14 +2383,14 @@ module SuperResolutionPart1 (
         end
       end
       controlStateMachine_enumDef_ONCE : begin
-        case(switch_SuperResolutionPart1_l742)
+        case(switch_SuperResolutionPart1_l743)
           1'b1 : begin
             if(controlStream_fire_7) begin
               if(outReachRowEnd) begin
                 if(bufferReuse) begin
                   controlStateMachine_stateNext = controlStateMachine_enumDef_ONCE;
                 end else begin
-                  if(when_SuperResolutionPart1_l749) begin
+                  if(when_SuperResolutionPart1_l750) begin
                     controlStateMachine_stateNext = controlStateMachine_enumDef_HOLD;
                   end else begin
                     controlStateMachine_stateNext = controlStateMachine_enumDef_ONCE;
@@ -2406,7 +2406,7 @@ module SuperResolutionPart1 (
               if(bufferReuse) begin
                 controlStateMachine_stateNext = controlStateMachine_enumDef_TWICE;
               end else begin
-                case(switch_SuperResolutionPart1_l789)
+                case(switch_SuperResolutionPart1_l790)
                   1'b1 : begin
                     controlStateMachine_stateNext = controlStateMachine_enumDef_HOLD;
                   end
@@ -2425,7 +2425,7 @@ module SuperResolutionPart1 (
             if(bufferReuse) begin
               controlStateMachine_stateNext = controlStateMachine_enumDef_PASS;
             end else begin
-              case(switch_SuperResolutionPart1_l855)
+              case(switch_SuperResolutionPart1_l856)
                 1'b1 : begin
                   controlStateMachine_stateNext = controlStateMachine_enumDef_HOLD;
                 end
@@ -2450,45 +2450,45 @@ module SuperResolutionPart1 (
     end
   end
 
-  assign switch_SuperResolutionPart1_l652 = (_zz_switch_SuperResolutionPart1_l652 == 4'b0000);
+  assign switch_SuperResolutionPart1_l653 = (_zz_switch_SuperResolutionPart1_l653 == 4'b0000);
   assign passPixels_fire_8 = (passPixels_valid && passPixels_ready);
-  assign switch_SuperResolutionPart1_l655 = (_zz_switch_SuperResolutionPart1_l655 == 4'b0000);
+  assign switch_SuperResolutionPart1_l656 = (_zz_switch_SuperResolutionPart1_l656 == 4'b0000);
   assign passPixels_fire_9 = (passPixels_valid && passPixels_ready);
-  assign switch_SuperResolutionPart1_l668 = (_zz_switch_SuperResolutionPart1_l668 == 4'b0000);
+  assign switch_SuperResolutionPart1_l669 = (_zz_switch_SuperResolutionPart1_l669 == 4'b0000);
   assign controlStream_fire_1 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l686 = ((_zz_when_SuperResolutionPart1_l686 < _zz_when_SuperResolutionPart1_l686_1) || bufferReuse);
+  assign when_SuperResolutionPart1_l687 = ((_zz_when_SuperResolutionPart1_l687 < _zz_when_SuperResolutionPart1_l687_1) || bufferReuse);
   assign passPixels_fire_10 = (passPixels_valid && passPixels_ready);
-  assign switch_SuperResolutionPart1_l689 = ((_zz_switch_SuperResolutionPart1_l689 == _zz_switch_SuperResolutionPart1_l689_1) && (! passPixels_fire_10));
+  assign switch_SuperResolutionPart1_l690 = ((_zz_switch_SuperResolutionPart1_l690 == _zz_switch_SuperResolutionPart1_l690_1) && (! passPixels_fire_10));
   assign controlStream_fire_2 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l706 = (frameStart && controlStream_fire_2);
+  assign when_SuperResolutionPart1_l707 = (frameStart && controlStream_fire_2);
   assign controlStream_fire_3 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l709 = (controlStream_fire_3 && (_zz_when_SuperResolutionPart1_l709 == _zz_when_SuperResolutionPart1_l709_1));
+  assign when_SuperResolutionPart1_l710 = (controlStream_fire_3 && (_zz_when_SuperResolutionPart1_l710 == _zz_when_SuperResolutionPart1_l710_1));
   assign controlStream_fire_4 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l710 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l710 == _zz_when_SuperResolutionPart1_l710_1)) && controlStream_fire_4);
+  assign when_SuperResolutionPart1_l711 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l711 == _zz_when_SuperResolutionPart1_l711_1)) && controlStream_fire_4);
   assign controlStream_fire_5 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l712 = (controlStream_fire_5 && outReachRowEnd);
+  assign when_SuperResolutionPart1_l713 = (controlStream_fire_5 && outReachRowEnd);
   assign controlStream_fire_6 = (controlStream_valid && controlStream_ready);
-  assign switch_SuperResolutionPart1_l742 = (_zz_switch_SuperResolutionPart1_l742 == 4'b0000);
+  assign switch_SuperResolutionPart1_l743 = (_zz_switch_SuperResolutionPart1_l743 == 4'b0000);
   assign controlStream_fire_7 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l749 = ((bufferWAddr_value == 3'b000) && (_zz_when_SuperResolutionPart1_l749 == _zz_when_SuperResolutionPart1_l749_2));
+  assign when_SuperResolutionPart1_l750 = ((bufferWAddr_value == 3'b000) && (_zz_when_SuperResolutionPart1_l750 == _zz_when_SuperResolutionPart1_l750_2));
   assign controlStream_fire_8 = (controlStream_valid && controlStream_ready);
   assign passPixels_fire_11 = (passPixels_valid && passPixels_ready);
-  assign switch_SuperResolutionPart1_l789 = ((_zz_switch_SuperResolutionPart1_l789 == _zz_switch_SuperResolutionPart1_l789_1) && (! passPixels_fire_11));
+  assign switch_SuperResolutionPart1_l790 = ((_zz_switch_SuperResolutionPart1_l790 == _zz_switch_SuperResolutionPart1_l790_1) && (! passPixels_fire_11));
   assign controlStream_fire_9 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l817 = (controlStream_fire_9 && (_zz_when_SuperResolutionPart1_l817 == _zz_when_SuperResolutionPart1_l817_1));
+  assign when_SuperResolutionPart1_l818 = (controlStream_fire_9 && (_zz_when_SuperResolutionPart1_l818 == _zz_when_SuperResolutionPart1_l818_1));
   assign controlStream_fire_10 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l818 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l818 == _zz_when_SuperResolutionPart1_l818_1)) && controlStream_fire_10);
+  assign when_SuperResolutionPart1_l819 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l819 == _zz_when_SuperResolutionPart1_l819_1)) && controlStream_fire_10);
   assign controlStream_fire_11 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l820 = (controlStream_fire_11 && outReachRowEnd);
+  assign when_SuperResolutionPart1_l821 = (controlStream_fire_11 && outReachRowEnd);
   assign controlStream_fire_12 = (controlStream_valid && controlStream_ready);
   assign controlStream_fire_13 = (controlStream_valid && controlStream_ready);
-  assign switch_SuperResolutionPart1_l855 = (bufferWAddr_value == 3'b000);
+  assign switch_SuperResolutionPart1_l856 = (bufferWAddr_value == 3'b000);
   assign controlStream_fire_14 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l923 = (controlStream_fire_14 && (_zz_when_SuperResolutionPart1_l923 == _zz_when_SuperResolutionPart1_l923_1));
+  assign when_SuperResolutionPart1_l924 = (controlStream_fire_14 && (_zz_when_SuperResolutionPart1_l924 == _zz_when_SuperResolutionPart1_l924_1));
   assign controlStream_fire_15 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l924 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l924 == _zz_when_SuperResolutionPart1_l924_1)) && controlStream_fire_15);
+  assign when_SuperResolutionPart1_l925 = ((outReachRowEnd && (_zz_when_SuperResolutionPart1_l925 == _zz_when_SuperResolutionPart1_l925_1)) && controlStream_fire_15);
   assign controlStream_fire_16 = (controlStream_valid && controlStream_ready);
-  assign when_SuperResolutionPart1_l926 = (controlStream_fire_16 && outReachRowEnd);
+  assign when_SuperResolutionPart1_l927 = (controlStream_fire_16 && outReachRowEnd);
   assign controlStream_fire_17 = (controlStream_valid && controlStream_ready);
   always @(posedge clk or posedge reset) begin
     if(reset) begin
@@ -2547,35 +2547,35 @@ module SuperResolutionPart1 (
       if(inpDone) begin
         internalDone <= 1'b0;
       end
-      if(when_SuperResolutionPart1_l80) begin
+      if(when_SuperResolutionPart1_l81) begin
         startRead <= 1'b1;
       end
-      if(when_SuperResolutionPart1_l83) begin
+      if(when_SuperResolutionPart1_l84) begin
         slaveStart <= 1'b1;
       end
       if(inpTwoDoneIn) begin
         slaveStart <= 1'b0;
       end
-      if(when_SuperResolutionPart1_l86) begin
+      if(when_SuperResolutionPart1_l87) begin
         frameStart <= 1'b1;
       end
       inpThreshold <= thresholdIn;
       bmpWidth <= widthIn;
       bmpHeight <= heightIn;
-      if(when_SuperResolutionPart1_l98) begin
+      if(when_SuperResolutionPart1_l99) begin
         holdBuffer <= 1'b0;
       end
       bufferRowCount_value <= bufferRowCount_valueNext;
-      if(when_SuperResolutionPart1_l104) begin
+      if(when_SuperResolutionPart1_l105) begin
         bufferEnable <= 1'b1;
       end
-      if(when_SuperResolutionPart1_l104_1) begin
+      if(when_SuperResolutionPart1_l105_1) begin
         bufferEnable <= 1'b0;
       end
-      if(when_SuperResolutionPart1_l107) begin
+      if(when_SuperResolutionPart1_l108) begin
         bufferSwitch <= 1'b0;
       end
-      if(when_SuperResolutionPart1_l110) begin
+      if(when_SuperResolutionPart1_l111) begin
         nextRowBuffer <= 1'b1;
       end
       bufferWAddr_value <= bufferWAddr_valueNext;
@@ -2665,29 +2665,29 @@ module SuperResolutionPart1 (
       if(pixelsStream_s2mPipe_ready) begin
         pixelsStream_s2mPipe_rValid <= pixelsStream_s2mPipe_valid;
       end
-      if(when_SuperResolutionPart1_l596) begin
+      if(when_SuperResolutionPart1_l597) begin
         bufferReachRowEnd <= 1'b1;
       end
-      if(when_SuperResolutionPart1_l597) begin
+      if(when_SuperResolutionPart1_l598) begin
         bufferReachFinalRow <= 1'b1;
       end
-      if(when_SuperResolutionPart1_l600) begin
+      if(when_SuperResolutionPart1_l601) begin
         if(bufferReachFinalRow) begin
           bufferReuse <= 1'b1;
         end else begin
           bufferReachRowEnd <= 1'b0;
         end
       end
-      if(when_SuperResolutionPart1_l611) begin
+      if(when_SuperResolutionPart1_l612) begin
         bufferSwitch <= (! bufferSwitch);
       end
-      if(when_SuperResolutionPart1_l612) begin
+      if(when_SuperResolutionPart1_l613) begin
         holdBuffer <= 1'b1;
         bufferEnable <= 1'b0;
       end
-      if(when_SuperResolutionPart1_l616) begin
+      if(when_SuperResolutionPart1_l617) begin
         holdBuffer <= 1'b0;
-        if(when_SuperResolutionPart1_l618) begin
+        if(when_SuperResolutionPart1_l619) begin
           nextRowBuffer <= (! nextRowBuffer);
         end
       end
@@ -2699,16 +2699,16 @@ module SuperResolutionPart1 (
         controlStateMachine_enumDef_HOLD : begin
         end
         controlStateMachine_enumDef_PASS : begin
-          if(when_SuperResolutionPart1_l706) begin
+          if(when_SuperResolutionPart1_l707) begin
             frameStart <= 1'b0;
           end
-          if(when_SuperResolutionPart1_l709) begin
+          if(when_SuperResolutionPart1_l710) begin
             outReachRowEnd <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l710) begin
+          if(when_SuperResolutionPart1_l711) begin
             outReachFinalRow <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l712) begin
+          if(when_SuperResolutionPart1_l713) begin
             if(outReachFinalRow) begin
               startRead <= 1'b0;
               internalDone <= 1'b1;
@@ -2725,13 +2725,13 @@ module SuperResolutionPart1 (
           end
         end
         controlStateMachine_enumDef_ONCE : begin
-          if(when_SuperResolutionPart1_l817) begin
+          if(when_SuperResolutionPart1_l818) begin
             outReachRowEnd <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l818) begin
+          if(when_SuperResolutionPart1_l819) begin
             outReachFinalRow <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l820) begin
+          if(when_SuperResolutionPart1_l821) begin
             if(outReachFinalRow) begin
               startRead <= 1'b0;
               internalDone <= 1'b1;
@@ -2748,13 +2748,13 @@ module SuperResolutionPart1 (
           end
         end
         controlStateMachine_enumDef_TWICE : begin
-          if(when_SuperResolutionPart1_l923) begin
+          if(when_SuperResolutionPart1_l924) begin
             outReachRowEnd <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l924) begin
+          if(when_SuperResolutionPart1_l925) begin
             outReachFinalRow <= 1'b1;
           end
-          if(when_SuperResolutionPart1_l926) begin
+          if(when_SuperResolutionPart1_l927) begin
             if(outReachFinalRow) begin
               startRead <= 1'b0;
               internalDone <= 1'b1;

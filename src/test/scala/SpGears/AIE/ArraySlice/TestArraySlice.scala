@@ -44,10 +44,10 @@ object simFunc {
       import dut.{inputStreamArrayData, outputStreamArrayData}
 
       val returnResult = ArrayBuffer.fill(outputStreamArrayData.size)(new ArrayBuffer[BigInt]())
-      inputStreamArrayData.setDriver(dut.clockDomain, testCases)
+      inputStreamArrayData.setMasterDriver(dut.clockDomain, testCases)
       (0 until dut.outputStreamArrayData.size).foreach { i =>
-        outputStreamArrayData(i).setRandomReady(dut.clockDomain)
-        outputStreamArrayData(i).setMonitor(dut.clockDomain, returnResult(i))
+        outputStreamArrayData(i).setSlaveRandomReady(dut.clockDomain)
+        outputStreamArrayData(i).setStreamMonitor(dut.clockDomain, returnResult(i))
       }
 
       val refResult = genRefResult(testCases, H, W, M, N, ifmH, ifmW, ofmH, ofmW)
@@ -109,8 +109,7 @@ object simFunc {
     }
   }
 
-  def genRefResult(testCases: ArrayBuffer[BigInt], H: Int, W: Int, M: Int, N: Int, ifmH: Int, ifmW: Int, ofmH: Int, ofmW: Int)
-      : ArrayBuffer[ArrayBuffer[BigInt]] = {
+  def genRefResult(testCases: ArrayBuffer[BigInt], H: Int, W: Int, M: Int, N: Int, ifmH: Int, ifmW: Int, ofmH: Int, ofmW: Int): ArrayBuffer[ArrayBuffer[BigInt]] = {
 
     val WPaddingValue = ifmW % (N * ofmW) match {
       case 0 => 0

@@ -3,7 +3,9 @@ package SpGears
 import spinal.lib._
 import spinal.core._
 import spinal.core.sim._
-import spinal.lib.sim._
+
+import SpGears.TestUtilsFactory.DataCarrierUtils._
+import SpGears.TestUtilsFactory.DataUtils._
 import SpGears.Backend._
 
 import scala.collection.mutable._
@@ -51,21 +53,21 @@ package object TestUtilsFactory {
     */
   implicit class DataCarrierUtilsFactory[H <: Data](carrier: DataCarrier[H]) {
 
-    /** This function can be use to drive DataCarrier Randomly
+    /** This function can be use to drive DataCarrier randomly
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @return
       *   FlowDriver[H] or StreamDriver[H]
       */
-    def setRandomDriver(clockDomain: ClockDomain) = {
+    def setMasterRandomDriver(clockDomain: ClockDomain) = {
       carrier match {
         case flow: Flow[_] =>
-          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], false, true) { payload =>
             payload.randomize()
             true
           }
         case stream: Stream[_] =>
-          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], false, true) { payload =>
             payload.randomize()
             true
           }
@@ -74,21 +76,69 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to drive DataCarrier to "Zero" state
+    /** This function can be use to drive DataCarrier when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterRandomDriverWhen(clockDomain: ClockDomain, driveWhen: => Boolean) = {
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, driveWhen) { payload =>
+            payload.randomize()
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, driveWhen) { payload =>
+            payload.randomize()
+            true
+          }
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to drive DataCarrier in every free cycle
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @return
       *   FlowDriver[H] or StreamDriver[H]
       */
-    def setZeroDriver(clockDomain: ClockDomain) = {
+    def setMasterRandomDriverAlways(clockDomain: ClockDomain) = {
       carrier match {
         case flow: Flow[_] =>
-          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, true) { payload =>
+            payload.randomize()
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, true) { payload =>
+            payload.randomize()
+            true
+          }
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to drive DataCarrier to "Zero" state randomly
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterZeroDriver(clockDomain: ClockDomain) = {
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], false, true) { payload =>
             payload.flattenForeach(_.assignBigInt(0))
             true
           }
         case stream: Stream[_] =>
-          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], false, true) { payload =>
             payload.flattenForeach(_.assignBigInt(0))
             true
           }
@@ -97,7 +147,55 @@ package object TestUtilsFactory {
 
     }
 
-    /** This function can be use to drive DataCarrier by given stimulus
+    /** This function can be use to drive DataCarrier to "Zero" state when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterZeroDriverWhen(clockDomain: ClockDomain, driveWhen: => Boolean) = {
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, driveWhen) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, driveWhen) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to drive DataCarrier to "Zero" state in every free cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterZeroDriverAlways(clockDomain: ClockDomain) = {
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, true) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, true) { payload =>
+            payload.flattenForeach(_.assignBigInt(0))
+            true
+          }
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to drive DataCarrier randomly by given stimulus
       * @param clockDomain
       *   the input ClockDomain for DataCarrier Simulation
       * @param stimulus
@@ -110,12 +208,12 @@ package object TestUtilsFactory {
       * @return
       *   FlowDriver[H] or StreamDriver[H]
       */
-    def setDriver[T](clockDomain: ClockDomain, stimulus: ArrayBuffer[T]*) = {
+    def setMasterDriver[T](clockDomain: ClockDomain, stimulus: ArrayBuffer[T]*) = {
       val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
 
       carrier match {
         case flow: Flow[_] =>
-          FlowDriver(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], false, true) { payload =>
             val payloads = payload.flatten
             assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
             payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
@@ -139,7 +237,147 @@ package object TestUtilsFactory {
             true
           }
         case stream: Stream[_] =>
-          StreamDriver(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], false, true) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
+            }
+            true
+          }
+        case _ => ???
+      }
+    }
+
+    /** This function can be use to drive DataCarrier by given stimulus when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @param stimulus
+      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
+      * @tparam T
+      *   the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterDriverWhen[T](clockDomain: ClockDomain, driveWhen: => Boolean, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
+
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, driveWhen) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
+            }
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, driveWhen) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
+            }
+            true
+          }
+        case _ => ???
+      }
+    }
+
+    /** This function can be use to drive DataCarrier by given stimulus in every free cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param stimulus
+      *   the stimulus to DataCarrier for Simulation, if the port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
+      * @tparam T
+      *   the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   FlowDriver[H] or StreamDriver[H]
+      */
+    def setMasterDriverAlways[T](clockDomain: ClockDomain, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
+
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMasterDriver(clockDomain, flow.asInstanceOf[Flow[H]], true, true) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+            payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+              if (driverCase.isEmpty) {
+                baseType.assignBigInt(0)
+              } else {
+                baseType match {
+                  case bool: Bool =>
+                    bool #= driverCase(0).asInstanceOf[Boolean]
+                    driverCase.remove(0)
+                  case bitVector: BitVector =>
+                    bitVector #= driverCase(0).asInstanceOf[BigInt]
+                    driverCase.remove(0)
+                  case enum: SpinalEnumCraft[_] =>
+                    enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                    driverCase.remove(0)
+                  case _ => ???
+                }
+              }
+            }
+            true
+          }
+        case stream: Stream[_] =>
+          StreamMasterDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, true) { payload =>
             val payloads = payload.flatten
             assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
             payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
@@ -172,10 +410,42 @@ package object TestUtilsFactory {
       * @return
       *   StreamReadyRandomizer[H]
       */
-    def setRandomReady(clockDomain: ClockDomain) = {
+    def setSlaveRandomReady(clockDomain: ClockDomain) = {
       carrier match {
         case flow: Flow[_]     => ???
-        case stream: Stream[_] => StreamReadyRandomizer(stream.asInstanceOf[Stream[H]], clockDomain)
+        case stream: Stream[_] => StreamSlaveDriver(clockDomain, stream.asInstanceOf[Stream[H]], false, true)
+        case _                 => ???
+      }
+
+    }
+
+    /** This function can be use to drive the DataCarrier's ready valid in every cycle
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @return
+      *   StreamReadyRandomizer[H]
+      */
+    def setSlaveReadyAlways(clockDomain: ClockDomain) = {
+      carrier match {
+        case flow: Flow[_]     => ???
+        case stream: Stream[_] => StreamSlaveDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, true)
+        case _                 => ???
+      }
+
+    }
+
+    /** This function can be use to drive the DataCarrier's ready valid when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @return
+      *   StreamReadyRandomizer[H]
+      */
+    def setSlaveReadyWhen(clockDomain: ClockDomain, driveWhen: => Boolean) = {
+      carrier match {
+        case flow: Flow[_]     => ???
+        case stream: Stream[_] => StreamSlaveDriver(clockDomain, stream.asInstanceOf[Stream[H]], true, driveWhen)
         case _                 => ???
       }
 
@@ -194,10 +464,10 @@ package object TestUtilsFactory {
       * @return
       *   FlowMonitor[H] or StreamMonitor[H]
       */
-    def setMonitor[T](clockDomain: ClockDomain, results: ArrayBuffer[T]*) = {
+    def setStreamMonitor[T](clockDomain: ClockDomain, results: ArrayBuffer[T]*) = {
       carrier match {
         case flow: Flow[_] =>
-          FlowMonitor(flow.asInstanceOf[Flow[H]], clockDomain) { payload =>
+          FlowMonitor(clockDomain, flow.asInstanceOf[Flow[H]], true) { payload =>
             val payloads = payload.flatten
             assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
             results.zip(payloads).foreach { case (result, baseType) =>
@@ -211,7 +481,56 @@ package object TestUtilsFactory {
             }
           }
         case stream: Stream[_] =>
-          StreamMonitor(stream.asInstanceOf[Stream[H]], clockDomain) { payload =>
+          StreamMonitor(clockDomain, stream.asInstanceOf[Stream[H]], true) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+            results.zip(payloads).foreach { case (result, baseType) =>
+              baseType match {
+                case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+                case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+                case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+                case _                        => ???
+              }
+            }
+          }
+        case _ => ???
+      }
+
+    }
+
+    /** This function can be use to monitor the DataCarrier's transaction when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for DataCarrier Simulation
+      * @param monitorWhen
+      *   the monitor condition
+      * @param results
+      *   the transaction data container
+      * @tparam T
+      *   the data container's data type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   FlowMonitor[H] or StreamMonitor[H]
+      */
+    def setStreamMonitorWhen[T](clockDomain: ClockDomain, monitorWhen: => Boolean, results: ArrayBuffer[T]*) = {
+      carrier match {
+        case flow: Flow[_] =>
+          FlowMonitor(clockDomain, flow.asInstanceOf[Flow[H]], monitorWhen) { payload =>
+            val payloads = payload.flatten
+            assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+            results.zip(payloads).foreach { case (result, baseType) =>
+              baseType match {
+                case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+                case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+                case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+                case _                        => ???
+              }
+
+            }
+          }
+        case stream: Stream[_] =>
+          StreamMonitor(clockDomain, stream.asInstanceOf[Stream[H]], monitorWhen) { payload =>
             val payloads = payload.flatten
             assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
             results.zip(payloads).foreach { case (result, baseType) =>
@@ -234,11 +553,11 @@ package object TestUtilsFactory {
       * @return
       *   SimStreamAssert[H]
       */
-    def setAssert(clockDomain: ClockDomain) = {
+    def setStreamAssert(clockDomain: ClockDomain) = {
       carrier match {
         case flow: Flow[_] => ???
         case stream: Stream[_] =>
-          new SimStreamAssert(stream.asInstanceOf[Stream[H]], clockDomain)
+          new StreamTransactionAssert(clockDomain, stream.asInstanceOf[Stream[H]])
         case _ => ???
       }
 
@@ -258,7 +577,7 @@ package object TestUtilsFactory {
       * --- if the port is BitVector, it must be BigInt
       * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
       */
-    def poke[T](clockDomain: ClockDomain, cycleCount: Int, stimulus: ArrayBuffer[T]*) = {
+    def pokeOneShot[T](clockDomain: ClockDomain, cycleCount: Int, stimulus: ArrayBuffer[T]*) = {
       val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
 
       if (carrier.valid.isInput) {
@@ -282,6 +601,15 @@ package object TestUtilsFactory {
         }
       }
       clockDomain.waitSampling(cycleCount)
+      if (carrier.valid.isInput) {
+        carrier.valid #= false
+      } else {
+        carrier match {
+          case stream: Stream[_] => stream.ready #= false
+          case _                 => ???
+        }
+      }
+
     }
 
     /** This function can be use to drive DataCarrier randomly without delay and hold given cycle
@@ -290,7 +618,7 @@ package object TestUtilsFactory {
       * @cycleCount
       *   the number of cycle for hold drive
       */
-    def pokeRandom(clockDomain: ClockDomain, cycleCount: Int = 1) = {
+    def pokeOneShotRandom(clockDomain: ClockDomain, cycleCount: Int = 1) = {
       if (carrier.valid.isInput) {
         carrier.valid #= true
         carrier.payload.randomize()
@@ -301,6 +629,14 @@ package object TestUtilsFactory {
         }
       }
       clockDomain.waitSampling(cycleCount)
+      if (carrier.valid.isInput) {
+        carrier.valid #= false
+      } else {
+        carrier match {
+          case stream: Stream[_] => stream.ready #= false
+          case _                 => ???
+        }
+      }
     }
 
     /** This function can be use to drive "Zero" state to DataCarrier without delay and hold given cycle
@@ -309,7 +645,7 @@ package object TestUtilsFactory {
       * @cycleCount
       *   the number of cycle for hold drive
       */
-    def pokeZero(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+    def pokeOneShotZero(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
       if (carrier.valid.isInput) {
         carrier.valid #= true
         carrier.payload.flattenForeach(_.assignBigInt(0))
@@ -320,6 +656,14 @@ package object TestUtilsFactory {
         }
       }
       clockDomain.waitSampling(cyclesCount)
+      if (carrier.valid.isInput) {
+        carrier.valid #= false
+      } else {
+        carrier match {
+          case stream: Stream[_] => stream.ready #= false
+          case _                 => ???
+        }
+      }
     }
 
     /** This function can be use to halt DataCarrier for any number of cycle
@@ -328,7 +672,7 @@ package object TestUtilsFactory {
       * @param cyclesCount
       *   the number of cycle for halt DataCarrier
       */
-    def halt(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+    def haltCycles(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
       if (carrier.valid.isInput) {
         carrier.valid #= false
         carrier.payload.randomize()
@@ -347,7 +691,7 @@ package object TestUtilsFactory {
       * @param cyclesCount
       *   the number of cycle for set DataCarrier to "Zero" state
       */
-    def clear(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
+    def clearCycles(clockDomain: ClockDomain, cyclesCount: Int = 1) = {
       if (carrier.valid.isInput) {
         carrier.valid #= false
         carrier.payload.flattenForeach(_.assignBigInt(0))
@@ -368,12 +712,27 @@ package object TestUtilsFactory {
       * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
-      *   the drive delay, it means that drive once randomly for every drive delay (waitTime)
+      *   the drive delay, it means that drive once randomly for every drive delay (waitTime); -1 means that random delay
       * @return
       *   DataDriver[D]
       */
-    def getRandomDriver(clockDomain: ClockDomain, waitTime: Int = -1) = {
-      DataDriver(signal, clockDomain, waitTime) { payload =>
+    def setRandomDriver(clockDomain: ClockDomain, waitTime: Int = -1) = {
+      DataDriver(clockDomain, signal, waitTime, true) { payload =>
+        payload.randomize()
+        true
+      }
+    }
+
+    /** This function can be use to drive the Data type port randomly when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @return
+      *   DataDriver[D]
+      */
+    def setRandomDriverWhen(clockDomain: ClockDomain, driveWhen: => Boolean) = {
+      DataDriver(clockDomain, signal, 0, driveWhen) { payload =>
         payload.randomize()
         true
       }
@@ -385,8 +744,8 @@ package object TestUtilsFactory {
       * @return
       *   DataDriver[D]
       */
-    def getZeroDriver(clockDomain: ClockDomain) = {
-      DataDriver(signal, clockDomain, -1) { payload =>
+    def setZeroDriver(clockDomain: ClockDomain) = {
+      DataDriver(clockDomain, signal, -1, true) { payload =>
         payload.flattenForeach(_.assignBigInt(0))
         true
       }
@@ -396,7 +755,7 @@ package object TestUtilsFactory {
       * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
-      *   the drive delay, it means that drive once by given stimulus for every drive cycle (waitTime)
+      *   the drive delay, it means that drive once by given stimulus for every drive cycle (waitTime); -1 means that random delay
       * @param stimulus
       *   the stimulus to Data for Simulation, if the Data type port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
       * @tparam T
@@ -407,10 +766,10 @@ package object TestUtilsFactory {
       * @return
       *   DataDriver[D]
       */
-    def getDriver[T](clockDomain: ClockDomain, waitTime: Int, stimulus: ArrayBuffer[T]*) = {
+    def setDriver[T](clockDomain: ClockDomain, waitTime: Int, stimulus: ArrayBuffer[T]*) = {
       val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
 
-      DataDriver(signal, clockDomain, waitTime) { payload =>
+      DataDriver(clockDomain, signal, waitTime, true) { payload =>
         val payloads = payload.flatten
         assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
         payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
@@ -435,7 +794,50 @@ package object TestUtilsFactory {
       }
     }
 
-    /** This function can be use to monitor the Data type port
+    /** This function can be use to drive the Data type port by given stimulus when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param driveWhen
+      *   the drive condition
+      * @param stimulus
+      *   the stimulus to Data for Simulation, if the Data type port have more than one port, the stimulus should be a muti-Dimention ArraryBuffer, it will drive the ports in order
+      * @tparam T
+      *   the stimulus type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   DataDriver[D]
+      */
+    def setDriverWhen[T](clockDomain: ClockDomain, driveWhen: => Boolean, stimulus: ArrayBuffer[T]*) = {
+      val driverCases = stimulus.map(arrayBuffer => arrayBuffer.map(element => element))
+
+      DataDriver(clockDomain, signal, 0, driveWhen) { payload =>
+        val payloads = payload.flatten
+        assert(payloads.size == driverCases.size, s"the testCase size ${driverCases.size} is not match !")
+        payloads.zip(driverCases).foreach { case (baseType, driverCase) =>
+          if (driverCase.isEmpty) {
+            baseType.assignBigInt(0)
+          } else {
+            baseType match {
+              case bool: Bool =>
+                bool #= driverCase(0).asInstanceOf[Boolean]
+                driverCase.remove(0)
+              case bitVector: BitVector =>
+                bitVector #= driverCase(0).asInstanceOf[BigInt]
+                driverCase.remove(0)
+              case enum: SpinalEnumCraft[_] =>
+                enum #= driverCase(0).asInstanceOf[SpinalEnumElement[SpinalEnum]]
+                driverCase.remove(0)
+              case _ => ???
+            }
+          }
+        }
+        true
+      }
+    }
+
+    /** This function can be use to monitor the Data type port and also can set the monitor delay
       * @param clockDomain
       *   the input ClockDomain for Data Simulation
       * @param waitTime
@@ -450,8 +852,38 @@ package object TestUtilsFactory {
       * @return
       *   DataMonitor[D]
       */
-    def getMonitor[T](clockDomain: ClockDomain, waitTime: Int, results: ArrayBuffer[T]*) = {
-      DataMonitor(signal, clockDomain, waitTime) { payload =>
+    def setMonitor[T](clockDomain: ClockDomain, waitTime: Int, results: ArrayBuffer[T]*) = {
+      DataMonitor(clockDomain, signal, waitTime, true) { payload =>
+        val payloads = payload.flatten
+        assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
+        results.zip(payloads).foreach { case (result, baseType) =>
+          baseType match {
+            case bool: Bool               => result += bool.toBoolean.asInstanceOf[T]
+            case bitVector: BitVector     => result += bitVector.toBigInt.asInstanceOf[T]
+            case enum: SpinalEnumCraft[_] => result += enum.toEnum.asInstanceOf[T]
+            case _                        => ???
+          }
+        }
+      }
+    }
+
+    /** This function can be use to monitor the Data type port when condition valid
+      * @param clockDomain
+      *   the input ClockDomain for Data Simulation
+      * @param monitorWhen
+      *   the monitor condition
+      * @param results
+      *   the output data container
+      * @tparam T
+      *   the data container's data type
+      * --- if the port is Bool, it must be Boolean
+      * --- if the port is BitVector, it must be BigInt
+      * --- if the port is SpinalEnumCraft, it must be SpinalEnumElement[SpinalEnum]
+      * @return
+      *   DataMonitor[D]
+      */
+    def setMonitorWhen[T](clockDomain: ClockDomain, monitorWhen: => Boolean, results: ArrayBuffer[T]*) = {
+      DataMonitor(clockDomain, signal, 0, monitorWhen) { payload =>
         val payloads = payload.flatten
         assert(payloads.size == results.size, s"the Monitor Container size ${results.size} is not match !")
         results.zip(payloads).foreach { case (result, baseType) =>

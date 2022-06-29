@@ -34,6 +34,7 @@ case class ControlSignal(config: IPConfig) extends Bundle {
   val twiceCompValid = Bool()
   val twiceMode      = UInt(3 bits)
 }
+
 case class SuperResolutionPart1(config: IPConfig) extends Component {
   def dW = config.dataW
 
