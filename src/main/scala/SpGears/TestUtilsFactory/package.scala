@@ -557,7 +557,7 @@ package object TestUtilsFactory {
       carrier match {
         case flow: Flow[_] => ???
         case stream: Stream[_] =>
-          new StreamTransactionAssert(clockDomain, stream.asInstanceOf[Stream[H]])
+          StreamTransactionAssert(clockDomain, stream.asInstanceOf[Stream[H]])
         case _ => ???
       }
 

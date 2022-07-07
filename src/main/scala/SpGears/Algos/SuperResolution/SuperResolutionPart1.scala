@@ -11,10 +11,10 @@ case class PixelData(config: IPConfig, isInternal: Boolean = false) extends Bund
   val pixel      = UInt(dW bits)
   val frameStart = Bool()
   val rowEnd     = Bool()
-  val inpValid   = if (isInternal) Bool() else null
+  val inpValid   = isInternal generate Bool()
 }
 
-case class ControlSignal(config: IPConfig) extends Bundle {
+case class ControlSignal(config: IPConfig, withInpValid: Boolean = false) extends Bundle {
   def dW = config.dataW
   def sW = config.srcW
 
@@ -33,6 +33,8 @@ case class ControlSignal(config: IPConfig) extends Bundle {
   val counterDiff    = UInt(dW bits)
   val twiceCompValid = Bool()
   val twiceMode      = UInt(3 bits)
+
+  val inpValidFlag = withInpValid generate Bool()
 }
 
 case class SuperResolutionPart1(config: IPConfig) extends Component {
@@ -69,19 +71,17 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   /* set the initial state */
   io.setInvalid()
 
-  /* register the start work signal */
-//  val masterStart = RegNext(io.StartIn).init(False)
   /* the signal indicate last interpolation is complete */
-  val inpDone = RegInit(False).setWhen(io.inpThreeDoneIn).clearWhen(io.StartIn)
+  val inpDone = RegInit(False).setWhen(io.inpThreeDoneIn && io.inpTwoDoneIn).clearWhen(io.StartIn.rise())
 
-  /* indicate this component complete interpolation and begin wait slave's complete signal */
-  val internalDone = RegInit(False).clearWhen(inpDone)
+  /* this signal can be use to hold the startRead signal */
+  val readDone = RegInit(False).clearWhen(inpDone || io.StartIn.fall())
 
   /* the signal which start read buffer */
-  val startRead = RegInit(False).setWhen(io.StartIn && !internalDone)
+  val startRead = RegInit(False).setWhen(io.StartIn && !readDone).clearWhen(io.StartIn.fall())
 
   /* register the startOut signal */
-  val slaveStart = RegInit(False).setWhen(!io.inpTwoDoneIn && io.pixelsIn.fire).clearWhen(io.inpTwoDoneIn)
+  val slaveStart = RegInit(False).setWhen(!io.inpTwoDoneIn && io.pixelsIn.fire).clearWhen(io.inpTwoDoneIn || io.StartIn.fall())
 
   /* register the frame start signal */
   val frameStart = RegInit(False).setWhen(io.pixelsIn.frameStart && io.pixelsIn.fire)
@@ -96,13 +96,16 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   val bmpHeight = RegNext(io.heightIn).init(U(sH, log2Up(sH + 1) bits))
 
   /* this signal can be use to halt the dataIn */
-  val holdBuffer = RegInit(False).clearWhen(!io.StartIn)
+  val holdBuffer = RegInit(False).clearWhen(!io.StartIn || inpDone)
+
+  /* indicate write buffer done for given size */
+  val writeDone = RegInit(False).clearWhen(inpDone)
 
   /* record the number of row which is buffered */
   val bufferRowCount = Counter(sH + 1)
 
   /* the write enable signal of lineBuffer*/
-  val bufferEnable = RegInit(False).setWhen(io.StartIn && !holdBuffer).clearWhen(!io.StartIn || holdBuffer)
+  val bufferEnable = RegInit(False).setWhen(io.StartIn && !holdBuffer && !writeDone).clearWhen(!io.StartIn || holdBuffer || writeDone)
 
   /* when this signal is True, it means that the dataIn should be store in lineBufferTwo when we can receive dataIn */
   val bufferSwitch = RegInit(False).clearWhen(!startRead)
@@ -111,8 +114,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   val nextRowBuffer = RegInit(True).setWhen(!startRead)
 
   /* indicate buffer reuse for padding */
-  val bufferReuse = RegInit(False)
-//  val activateReuse = RegInit(False)
+  val bufferReuse = RegInit(False).clearWhen(inpDone)
 
   /* address Counter for write data to buffer */
   val bufferWAddr = Counter(sW)
@@ -135,15 +137,15 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   val lineBufferTwo = Mem(UInt(dW bits), sW).init(Seq.fill(sW)(U(0).resized))
 
   /* the address for read lineBufferOne and lineBufferTwo */
-  val mainAddrOne    = UInt(log2Up(2 * sW) bits)
-  val counterAddrOne = UInt(log2Up(2 * sW) bits)
-  val mainAddrTwo    = UInt(log2Up(2 * sW) bits)
-  val counterAddrTwo = UInt(log2Up(2 * sW) bits)
+  val mainAddrOne    = UInt(log2Up(sW) bits)
+  val counterAddrOne = UInt(log2Up(sW) bits)
+  val mainAddrTwo    = UInt(log2Up(sW) bits)
+  val counterAddrTwo = UInt(log2Up(sW) bits)
 
-  mainAddrOne    := outPixelAddr / U(2)
-  counterAddrOne := outPixelAddr / U(2)
-  mainAddrTwo    := outPixelAddr / U(2)
-  counterAddrTwo := outPixelAddr / U(2)
+  mainAddrOne    := (outPixelAddr / U(2)).resized
+  counterAddrOne := (outPixelAddr / U(2)).resized
+  mainAddrTwo    := (outPixelAddr / U(2)).resized
+  counterAddrTwo := (outPixelAddr / U(2)).resized
 
   /* define a drive stream for valid */
   val validStream = Event
@@ -168,16 +170,16 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   val counterAddrTwoStream = Stream(UInt(log2Up(sW) bits))
 
   mainAddrOneStream.translateFrom(validStream.continueWhen(startRead)) { (addr, _) =>
-    addr := mainAddrOne.resized
+    addr := mainAddrOne
   }
   counterAddrOneStream.translateFrom(validStream.continueWhen(startRead)) { (addr, _) =>
-    addr := counterAddrOne.resized
+    addr := counterAddrOne
   }
   mainAddrTwoStream.translateFrom(validStream.continueWhen(startRead)) { (addr, _) =>
-    addr := mainAddrTwo.resized
+    addr := mainAddrTwo
   }
   counterAddrTwoStream.translateFrom(validStream.continueWhen(startRead)) { (addr, _) =>
-    addr := counterAddrTwo.resized
+    addr := counterAddrTwo
   }
 
   /** *************************** interpolation pipeline ****************************************
@@ -602,6 +604,8 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
     when(bufferReachFinalRow) {
       bufferRowCount.clear()
       bufferReuse.set()
+      bufferReachRowEnd.clear()
+      bufferReachFinalRow.clear()
     }.otherwise {
       bufferRowCount.increment()
       bufferReachRowEnd.clear()
@@ -613,6 +617,9 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   when(bufferRowCount =/= U(0) && passPixels.rowEnd && passPixels.fire) {
     holdBuffer.set()
     bufferEnable.clear()
+    when(bufferRowCount === bmpHeight - U(1)) {
+      writeDone.set()
+    }
   }
   when(outRowCount % U(2) === U(1) && controlStream.rowEnd && controlStream.fire) {
     holdBuffer.clear()
@@ -635,7 +642,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
   lineBufferOne.write(bufferWAddr, passPixels.pixel, passPixels.fire && !bufferSwitch)
 
   when(passPixels.fire) {
-    when(io.pixelsIn.rowEnd) {
+    when(passPixels.rowEnd) {
       bufferWAddr.clear()
     }.otherwise {
       bufferWAddr.increment()
@@ -714,7 +721,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         when(outReachFinalRow) {
           outRowCount.clear()
           startRead.clear()
-          internalDone.set()
+          readDone.set()
           outReachRowEnd.clear()
           outReachFinalRow.clear()
         }.otherwise {
@@ -761,9 +768,9 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
           switch(nextRowBuffer) {
             is(True) {
               controls.onceMode := U(0).resized
-              mainAddrOne       := (outPixelAddr - U(1)) / U(2)
+              mainAddrOne       := ((outPixelAddr - U(1)) / U(2)).resized
               when(outReachRowEnd) {
-                counterAddrOne := (outPixelAddr - U(1)) / U(2)
+                counterAddrOne := ((outPixelAddr - U(1)) / U(2)).resized
               }.otherwise {
                 counterAddrOne := ((outPixelAddr +^ U(1)) / U(2)).resized
               }
@@ -771,9 +778,9 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
 
             is(False) {
               controls.onceMode := U(1).resized
-              mainAddrTwo       := (outPixelAddr - U(1)) / U(2)
+              mainAddrTwo       := ((outPixelAddr - U(1)) / U(2)).resized
               when(outReachRowEnd) {
-                counterAddrTwo := (outPixelAddr - U(1)) / U(2)
+                counterAddrTwo := ((outPixelAddr - U(1)) / U(2)).resized
               }.otherwise {
                 counterAddrTwo := ((outPixelAddr +^ U(1)) / U(2)).resized
               }
@@ -810,8 +817,8 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
             }
           }
 
-          mainAddrOne := outPixelAddr / U(2)
-          mainAddrTwo := outPixelAddr / U(2)
+          mainAddrOne := (outPixelAddr / U(2)).resized
+          mainAddrTwo := (outPixelAddr / U(2)).resized
         }
       }
 
@@ -822,7 +829,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         when(outReachFinalRow) {
           outRowCount.clear()
           startRead.clear()
-          internalDone.set()
+          readDone.set()
           outReachRowEnd.clear()
           outReachFinalRow.clear()
         }.otherwise {
@@ -872,10 +879,10 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
           is(False) {
             when(outReachRowEnd) {
               controls.twiceMode := U(2)
-              mainAddrTwo        := (outPixelAddr - U(1)) / U(2)
+              mainAddrTwo        := ((outPixelAddr - U(1)) / U(2)).resized
             }.otherwise {
               controls.twiceMode := U(3)
-              mainAddrTwo        := (outPixelAddr - U(1)) / U(2)
+              mainAddrTwo        := ((outPixelAddr - U(1)) / U(2)).resized
               counterAddrTwo     := ((outPixelAddr +^ U(1)) / U(2)).resized
             }
           }
@@ -883,10 +890,10 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
           is(True) {
             when(outReachRowEnd) {
               controls.twiceMode := U(4)
-              mainAddrOne        := (outPixelAddr - U(1)) / U(2)
+              mainAddrOne        := ((outPixelAddr - U(1)) / U(2)).resized
             }.otherwise {
               controls.twiceMode := U(5)
-              mainAddrOne        := (outPixelAddr - U(1)) / U(2)
+              mainAddrOne        := ((outPixelAddr - U(1)) / U(2)).resized
               counterAddrOne     := ((outPixelAddr +^ U(1)) / U(2)).resized
             }
           }
@@ -895,11 +902,11 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         switch(nextRowBuffer) {
           is(True) {
             controls.twiceMode := U(0)
-            mainAddrOne        := (outPixelAddr - U(1)) / U(2)
-            counterAddrTwo     := (outPixelAddr - U(1)) / U(2)
+            mainAddrOne        := ((outPixelAddr - U(1)) / U(2)).resized
+            counterAddrTwo     := ((outPixelAddr - U(1)) / U(2)).resized
             when(outReachRowEnd) {
-              mainAddrTwo    := (outPixelAddr - U(1)) / U(2)
-              counterAddrOne := (outPixelAddr - U(1)) / U(2)
+              mainAddrTwo    := ((outPixelAddr - U(1)) / U(2)).resized
+              counterAddrOne := ((outPixelAddr - U(1)) / U(2)).resized
             }.otherwise {
               mainAddrTwo    := ((outPixelAddr +^ U(1)) / U(2)).resized
               counterAddrOne := ((outPixelAddr +^ U(1)) / U(2)).resized
@@ -908,11 +915,11 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
 
           is(False) {
             controls.twiceMode := U(1)
-            mainAddrTwo        := (outPixelAddr - U(1)) / U(2)
-            counterAddrOne     := (outPixelAddr - U(1)) / U(2)
+            mainAddrTwo        := ((outPixelAddr - U(1)) / U(2)).resized
+            counterAddrOne     := ((outPixelAddr - U(1)) / U(2)).resized
             when(outReachRowEnd) {
-              mainAddrOne    := (outPixelAddr - U(1)) / U(2)
-              counterAddrTwo := (outPixelAddr - U(1)) / U(2)
+              mainAddrOne    := ((outPixelAddr - U(1)) / U(2)).resized
+              counterAddrTwo := ((outPixelAddr - U(1)) / U(2)).resized
             }.otherwise {
               mainAddrOne    := ((outPixelAddr +^ U(1)) / U(2)).resized
               counterAddrTwo := ((outPixelAddr +^ U(1)) / U(2)).resized
@@ -928,7 +935,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         when(outReachFinalRow) {
           outRowCount.clear()
           startRead.clear()
-          internalDone.set()
+          readDone.set()
           outReachRowEnd.clear()
           outReachFinalRow.clear()
         }.otherwise {

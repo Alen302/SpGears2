@@ -110,6 +110,10 @@ object DataCarrierUtils {
     }
   }
 
+  object StreamTransactionAssert {
+    def apply[T <: Data](clockDomain: ClockDomain, stream: Stream[T]) = new StreamTransactionAssert(clockDomain, stream)
+  }
+
   class StreamTransactionAssert[T <: Data](clockDomain: ClockDomain, stream: Stream[T]) {
     var valid            = false
     var payload: SimData = null

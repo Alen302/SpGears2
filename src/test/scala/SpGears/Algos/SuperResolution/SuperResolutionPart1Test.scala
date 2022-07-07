@@ -38,13 +38,17 @@ object sim1Funcs {
       io.StartIn             #= false
       io.widthIn             #= 1
       io.heightIn            #= 1
+      io.inpThreeDoneIn      #= false
+      io.inpTwoDoneIn        #= false
       clockDomain.waitSampling(3)
       io.widthIn     #= sW
       io.heightIn    #= sH
       io.thresholdIn #= threshold
       io.StartIn     #= true
       clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 4)
-      io.StartIn #= false
+      io.StartIn        #= false
+      io.inpThreeDoneIn #= true
+      io.inpTwoDoneIn   #= true
       dut.clockDomain.waitSampling(2)
 
       println(s" sim done at ${simTime()}")
@@ -187,5 +191,8 @@ class SuperResolutionPart1Test extends AnyFunSuite {
     val thd       = 144
     val testCases = ArrayBuffer.fill(h * w)(BigInt(nextInt(255)))
     sim1Funcs.startSim(thd, h, w, testCases, sim1Funcs.getGolden(thd, h, w, testCases), true)
+  }
+  test("get vivado home") {
+    println(sys.env.get("VIVADO_HOME"))
   }
 }
