@@ -37,13 +37,13 @@ case class IPWithAXILite(config: IPConfig, axiLiteConfig: AxiLite4Config) extend
   axiLiteInst.io.ap_done := upSamplingInst.io.inpCompleteOut
 
   io.dataIn                      >> upSamplingInst.io.dataIn
-  upSamplingInst.io.StartIn      := axiLiteInst.io.ap_start
+  upSamplingInst.io.StartIn      := axiLiteInst.io.apStart
   upSamplingInst.io.frameStartIn := io.frameStartIn
   upSamplingInst.io.rowEndIn     := io.rowEndIn
 
   upSamplingInst.io.thresholdIn := axiLiteInst.io.threshold
-  upSamplingInst.io.widthIn     := axiLiteInst.io.src_Width
-  upSamplingInst.io.heightIn    := axiLiteInst.io.src_Height
+  upSamplingInst.io.widthIn     := axiLiteInst.io.srcWidth
+  upSamplingInst.io.heightIn    := axiLiteInst.io.srcHeight
 
   upSamplingInst.io.dataOut >> io.dataOut
   io.startOut               := upSamplingInst.io.startOut

@@ -6,5 +6,6 @@
 /simWaves/
 /simWorkspace/
 /tmp/
-/.idea/libraries/
+/.idea/
+/.bsp/
 
