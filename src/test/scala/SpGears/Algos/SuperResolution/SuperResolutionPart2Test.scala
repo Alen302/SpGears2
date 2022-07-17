@@ -1,5 +1,6 @@
 package SpGears.Algos.SuperResolution
 
+import SpGears.TestUtilsFactory._
 import org.scalatest.funsuite._
 import org.slf4j._
 import spinal.core.sim._
@@ -8,113 +9,89 @@ import scala.collection.mutable._
 import scala.util.Random._
 
 object sim2Funcs {
-  def startSim(threshold: Int, sH: Int, sW: Int, testCases: ArrayBuffer[Int], golden: ArrayBuffer[Int], isPrint: Boolean = false) = {
-    val compiled   = SimConfig.withFstWave.compile(InterpolationStep2(IPConfig(sH, sW)))
-    val results    = ArrayBuffer[Int]()
-    val rowEndOuts = ArrayBuffer[Boolean]()
-    val validOuts  = ArrayBuffer[Boolean]()
-    var inCount    = -1
+  def startSim(threshold: Int, sH: Int, sW: Int, testCases: ArrayBuffer[BigInt], golden: ArrayBuffer[BigInt], isPrint: Boolean = false) = {
+    val compiled         = SimConfig.withFstWave.compile(SuperResolutionPart2(IPConfig(sH, sW)))
+    val pixelOuts        = ArrayBuffer[BigInt]()
+    val frameStartOuts   = ArrayBuffer[Boolean]()
+    val rowEndOuts       = ArrayBuffer[Boolean]()
+    val inpValidOuts     = ArrayBuffer[Boolean]()
+    val frameStartIns    = true +: ArrayBuffer.fill(testCases.size - 1)(false)
+    val rowEndIns        = ArrayBuffer.fill(testCases.size)(false).zipWithIndex.map { case (bool, i) => if ((i + 1) % (2 * sW) == 0) true else false }
+    val getTestCasesIns  = ArrayBuffer[BigInt]()
+    val getFrameStartIns = ArrayBuffer[Boolean]()
+    val getRowEndIns     = ArrayBuffer[Boolean]()
+
     compiled.doSimUntilVoid { dut =>
-      val logger = LoggerFactory.getLogger(s"Test : InterpolationStep2")
+      val logger = LoggerFactory.getLogger(s"Test : SuperResolutionPart2Test")
 
-      dut.io.dataOut.ready #= false
-      dut.io.rowEndIn      #= false
-      dut.io.frameStartIn  #= false
-      dut.io.StartIn       #= false
-      dut.io.widthIn       #= 1
-      dut.io.heightIn      #= 1
+      import dut.{clockDomain, io}
+      clockDomain.forkStimulus(2)
+      io.pixelsIn.setMasterDriver(clockDomain, Seq(testCases, frameStartIns, rowEndIns): _*)
+      io.pixelsIn.setStreamMonitor(clockDomain, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
+      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts, inpValidOuts): _*)
+      io.pixelsOut.setSlaveRandomReady(clockDomain)
+      io.pixelsIn.rowEnd     #= false
+      io.pixelsIn.frameStart #= false
+      io.startIn             #= false
+      io.widthIn             #= 1
+      io.heightIn            #= 1
+      io.inpThreeDoneIn      #= false
+      clockDomain.waitSampling(3)
+      io.widthIn     #= sW
+      io.heightIn    #= sH
+      io.thresholdIn #= threshold
+      io.startIn     #= true
+      clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 4)
+      io.startIn        #= false
+      io.inpThreeDoneIn #= true
+      dut.clockDomain.waitSampling(2)
 
-      val monitor = fork {
-        while (true) {
-          if (dut.io.dataOut.valid.toBoolean && dut.io.dataOut.ready.toBoolean) {
-            results += dut.io.dataOut.payload.toInt
-            rowEndOuts += dut.io.rowEndOut.toBoolean
-            validOuts += dut.io.inpValidOut.toBoolean
-          }
-          sleep(2)
-        }
+      println(s" sim done at ${simTime()}")
+
+      if (isPrint) {
+        val formatTestCases      = testCases.map(_.toString.padTo(5, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatGolden         = golden.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatResults        = pixelOuts.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatRowEndOuts     = rowEndOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatFrameStartOuts = frameStartOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatInpValidOuts   = inpValidOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        logger.info(
+          s"\n"
+            + "testCases : \n"
+            + formatTestCases
+            + s"\n"
+            + "golden : \n"
+            + formatGolden
+            + s"\n"
+            + s"results : \n"
+            + formatResults
+            + s"\n"
+            + s"rowEndOuts : \n"
+            + formatRowEndOuts
+            + s"\n"
+            + s"frameStartOuts: \n"
+            + formatFrameStartOuts
+            + s"\n"
+            + s"inpValidOuts: \n"
+            + formatInpValidOuts
+            + s"\n"
+        )
       }
-
-      dut.clockDomain.forkStimulus(2)
-      val interpolation = fork {
-        dut.clockDomain.waitSampling(5)
-        dut.io.dataOut.ready #= true
-        dut.io.widthIn       #= sW
-        dut.io.heightIn      #= sH
-        dut.io.thresholdIn   #= threshold
-        dut.clockDomain.waitSampling()
-        dut.io.StartIn #= true
-        inCount = 0
-        testCases.foreach { testCase =>
-          dut.io.dataIn.payload #= testCase
-          dut.io.dataIn.valid   #= true
-          if (inCount == 0) {
-            dut.io.frameStartIn #= true
-          } else {
-            dut.io.frameStartIn #= false
-          }
-          if ((inCount + 1) % (2 * sW) == 0) {
-            dut.io.rowEndIn #= true
-          } else {
-            dut.io.rowEndIn #= false
-          }
-          dut.clockDomain.waitSamplingWhere(dut.io.dataIn.valid.toBoolean && dut.io.dataIn.ready.toBoolean)
-          inCount += 1
-          if (inCount == 4 * sW * sH) { dut.io.rowEndIn #= false }
-        }
-
+      if (compareResults(pixelOuts, golden)) {
+        simSuccess()
+      } else {
+        simFailure("test fail !")
       }
-
-      val getSimResult = fork {
-        while (true) {
-          if (results.length == 16 * sH * sW) {
-            dut.io.inpThreeCompleteIn #= true
-            dut.io.StartIn            #= false
-            dut.clockDomain.waitSampling(2)
-            if (isPrint) {
-              val formatTestCases  = testCases.map(_.toString.padTo(5, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
-              val formatGolden     = golden.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
-              val formatResults    = results.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
-              val formatRowEndOuts = rowEndOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
-              logger.info(
-                s"\n"
-                  + "testCases : \n"
-                  + formatTestCases
-                  + s"\n"
-                  + "golden : \n"
-                  + formatGolden
-                  + s"\n"
-                  + s"results : \n"
-                  + formatResults
-                  + s"\n"
-                  + s"rowEndOuts : \n"
-                  + formatRowEndOuts
-                  + s"\n"
-              )
-            }
-            if (compareResults(results, golden)) {
-              simSuccess()
-            } else {
-              simFailure("test fail !")
-            }
-          } else {
-            dut.io.inpThreeCompleteIn #= false
-          }
-          //sleep(2)
-          dut.clockDomain.waitSampling()
-        }
-      }
-
     }
   }
 
-  def getGolden(threshold: Int, sH: Int, sW: Int, testCases: ArrayBuffer[Int], isPrint: Boolean = false) = {
-    val golden          = ArrayBuffer[Int]()
+  def getGolden(threshold: Int, sH: Int, sW: Int, testCases: ArrayBuffer[BigInt], isPrint: Boolean = false) = {
+    val golden          = ArrayBuffer[BigInt]()
     val rows            = testCases.grouped(2 * sW).toBuffer
-    val inpFirstPixels  = ArrayBuffer.fill(sH)(ArrayBuffer[Int]())
-    val inpSecondPixels = ArrayBuffer.fill(sH)(ArrayBuffer[Int]())
-    val inpThirdPixels  = ArrayBuffer.fill(sH)(ArrayBuffer[Int]())
-    val inpFourthPixels = ArrayBuffer.fill(sH)(ArrayBuffer[Int]())
+    val inpFirstPixels  = ArrayBuffer.fill(sH)(ArrayBuffer[BigInt]())
+    val inpSecondPixels = ArrayBuffer.fill(sH)(ArrayBuffer[BigInt]())
+    val inpThirdPixels  = ArrayBuffer.fill(sH)(ArrayBuffer[BigInt]())
+    val inpFourthPixels = ArrayBuffer.fill(sH)(ArrayBuffer[BigInt]())
 
     Range(0, sH).foreach { fIdx =>
       val lastRow = 2 * fIdx
@@ -230,29 +207,26 @@ object sim2Funcs {
     golden
   }
 
-  def compareResults(utArray: ArrayBuffer[Int], refArray: ArrayBuffer[Int]) = {
+  def compareResults(utArray: ArrayBuffer[BigInt], refArray: ArrayBuffer[BigInt]) = {
     require(utArray.size == refArray.size, "two array's size is not match !")
     var ret = true
-    utArray.foreach { i =>
-      if (utArray(i) != refArray(i)) {
-        ret = false
-      }
-    }
+    utArray.zip(refArray).foreach { case (int, int1) => if (int != int1) ret = false }
     ret
   }
+
 }
 
 class InterpolationStep2Test extends AnyFunSuite {
-  test("Test InterpolationStep2 5 * 5 ") {
-    val testCases = ArrayBuffer.fill(10 * 10)(nextInt(32) + 1)
+  test("Test SuperResolutionPart2 5 * 5 ") {
+    val testCases = ArrayBuffer.fill(10 * 10)(BigInt(nextInt(32) + 1))
     sim2Funcs.startSim(16, 5, 5, testCases, sim2Funcs.getGolden(16, 5, 5, testCases), true)
 
   }
-  test("Test InterpolationStep2 Randomly !") {
+  test("Test SuperResolutionPart2 Randomly !") {
     val h         = nextInt(541)
     val w         = nextInt(961)
     val thd       = nextInt(201)
-    val testCases = ArrayBuffer.fill(4 * h * w)(nextInt(255) + 1)
+    val testCases = ArrayBuffer.fill(4 * h * w)(BigInt(nextInt(255) + 1))
     sim2Funcs.startSim(thd, h, w, testCases, sim2Funcs.getGolden(thd, h, w, testCases), true)
   }
 }

@@ -14,28 +14,24 @@ object sim1Funcs {
     val pixelOuts        = ArrayBuffer[BigInt]()
     val frameStartOuts   = ArrayBuffer[Boolean]()
     val rowEndOuts       = ArrayBuffer[Boolean]()
-    val inpValidOuts     = ArrayBuffer[Boolean]()
     val frameStartIns    = true +: ArrayBuffer.fill(testCases.size - 1)(false)
     val rowEndIns        = ArrayBuffer.fill(testCases.size)(false).zipWithIndex.map { case (bool, i) => if ((i + 1) % sW == 0) true else false }
     val getTestCasesIns  = ArrayBuffer[BigInt]()
     val getFrameStartIns = ArrayBuffer[Boolean]()
     val getRowEndIns     = ArrayBuffer[Boolean]()
-    var inCount          = -1
+
     compiled.doSimUntilVoid { dut =>
-      val logger = LoggerFactory.getLogger(s"Test : InterpolationSep1")
+      val logger = LoggerFactory.getLogger(s"Test : SuperResolutionPart1Test")
 
       import dut.{clockDomain, io}
       clockDomain.forkStimulus(2)
-//      println(testCases.size)
-//      val formatTestCases = testCases.map(_.toString.padTo(5, ' ')).grouped(sW).toSeq.map(_.mkString("")).mkString("\n")
-//      println(formatTestCases)
       io.pixelsIn.setMasterDriver(clockDomain, Seq(testCases, frameStartIns, rowEndIns): _*)
       io.pixelsIn.setStreamMonitor(clockDomain, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
-      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts, inpValidOuts): _*)
+      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
       io.pixelsOut.setSlaveRandomReady(clockDomain)
       io.pixelsIn.rowEnd     #= false
       io.pixelsIn.frameStart #= false
-      io.StartIn             #= false
+      io.startIn             #= false
       io.widthIn             #= 1
       io.heightIn            #= 1
       io.inpThreeDoneIn      #= false
@@ -44,9 +40,9 @@ object sim1Funcs {
       io.widthIn     #= sW
       io.heightIn    #= sH
       io.thresholdIn #= threshold
-      io.StartIn     #= true
+      io.startIn     #= true
       clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 4)
-      io.StartIn        #= false
+      io.startIn        #= false
       io.inpThreeDoneIn #= true
       io.inpTwoDoneIn   #= true
       dut.clockDomain.waitSampling(2)

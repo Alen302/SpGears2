@@ -1,0 +1,10 @@
+*.v
+*.bin
+*.xml
+/target/
+/project/
+/simWaves/
+/simWorkspace/
+/tmp/
+/.idea/libraries/
+

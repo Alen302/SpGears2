@@ -2,17 +2,15 @@ package SpGears.Algos.SuperResolution
 
 import spinal.core._
 import spinal.lib._
-import spinal.lib.bus.amba4.axilite.{AxiLite4, AxiLite4Config}
+import spinal.lib.bus.amba4.axilite._
 
-case class IPWithAXILite(config: IPConfig, Aw: Int, Dw: Int) extends Component {
+case class IPWithAXILite(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
 
   def dW = config.dataW
 
   def sW = config.srcW
 
   def sH = config.srcH
-
-  val axiLiteConfig = AxiLite4Config(addressWidth = Aw, dataWidth = Dw)
 
   val io = new Bundle {
     val axiLiteSignal = slave(AxiLite4(axiLiteConfig))
@@ -31,7 +29,7 @@ case class IPWithAXILite(config: IPConfig, Aw: Int, Dw: Int) extends Component {
 
   }
 
-  val axiLiteInst    = OutConfig_L(config, Aw, Dw)
+  val axiLiteInst    = InpConfig(config, axiLiteConfig)
   val upSamplingInst = Interpolation(config)
 
   io.inpDone             := upSamplingInst.io.inpCompleteOut
@@ -56,5 +54,5 @@ case class IPWithAXILite(config: IPConfig, Aw: Int, Dw: Int) extends Component {
 }
 
 object GenIPWithAXILite extends App {
-  SpinalVerilog(IPWithAXILite(IPConfig(5, 10, 8), 32, 32)).printPruned()
+  SpinalVerilog(IPWithAXILite(IPConfig(5, 10, 8), AxiLite4Config(32, 32))).printPruned()
 }

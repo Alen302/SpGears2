@@ -3,23 +3,22 @@ package SpGears.Algos.SuperResolution
 import spinal.core._
 import spinal.core.sim._
 import spinal.lib._
-import spinal.lib.bus.amba4.axilite.{AxiLite4, AxiLite4Config}
+import spinal.lib.bus.amba4.axilite._
 
-case class OutConfig_L(config: IPConfig, Dw: Int, Aw: Int) extends Component {
+case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
   def dW = config.dataW
 
   def sW = config.srcW
 
   def sH = config.srcH
 
-  val axiLiteConfig = AxiLite4Config(addressWidth = Aw, dataWidth = Dw)
   val io = new Bundle {
     val axiLiteSignal = slave(AxiLite4(axiLiteConfig))
     val ap_done       = in Bool ()
-    val src_Width     = out UInt (log2Up(sW + 1) bits)
-    val src_Height    = out UInt (log2Up(sH + 1) bits)
+    val srcWidth      = out UInt (log2Up(sW + 1) bits)
+    val srcHeight     = out UInt (log2Up(sH + 1) bits)
     val threshold     = out UInt (dW bits)
-    val ap_start      = out Bool ()
+    val apStart       = out Bool ()
   }
   noIoPrefix()
   val regSrcW      = Reg(UInt(log2Up(sW + 1) bits)) init (0)
@@ -50,16 +49,16 @@ case class OutConfig_L(config: IPConfig, Dw: Int, Aw: Int) extends Component {
 
   when(io.axiLiteSignal.w.fire) {
     switch(regWrAddr) {
-      is(0 * Dw / 8) {
+      is(0 * axiLiteConfig.dataWidth / 8) {
         regSrcW := io.axiLiteSignal.w.payload.data(log2Up(sW + 1) - 1 downto 0).asUInt
       }
-      is(1 * Dw / 8) {
+      is(1 * axiLiteConfig.dataWidth / 8) {
         regSrcH := io.axiLiteSignal.w.payload.data(log2Up(sH + 1) - 1 downto 0).asUInt
       }
-      is(2 * Dw / 8) {
+      is(2 * axiLiteConfig.dataWidth / 8) {
         regThreshold := io.axiLiteSignal.w.payload.data(dW - 1 downto 0).asUInt
       }
-      is(3 * Dw / 8) {
+      is(3 * axiLiteConfig.dataWidth / 8) {
         regApStart := io.axiLiteSignal.w.payload.data(0 downto 0).asBool
       }
     }
@@ -91,16 +90,16 @@ case class OutConfig_L(config: IPConfig, Dw: Int, Aw: Int) extends Component {
   when(!updateRAdrr) {
     io.axiLiteSignal.r.valid := True
     switch(regRAddr) {
-      is(0 * Dw / 8) {
+      is(0 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regSrcW.asBits.resized
       }
-      is(1 * Dw / 8) {
+      is(1 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regSrcH.asBits.resized
       }
-      is(2 * Dw / 8) {
+      is(2 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regThreshold.asBits.resized
       }
-      is(3 * Dw / 8) {
+      is(3 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regApStart.asBits.resized
       }
       default {
@@ -115,13 +114,13 @@ case class OutConfig_L(config: IPConfig, Dw: Int, Aw: Int) extends Component {
     regApStart := False
   }
   //io.src_Width := 0
-  io.src_Width  := regSrcW
-  io.src_Height := regSrcH
-  io.threshold  := regThreshold
-  io.ap_start   := regApStart
+  io.srcWidth  := regSrcW
+  io.srcHeight := regSrcH
+  io.threshold := regThreshold
+  io.apStart   := regApStart
 }
 
-object OutConfigSim_L extends App {
+object InpConfig extends App {
   val DW         = 32
   val AW         = 32
   val list_addr  = List(0, 4, 8, 12)
@@ -132,7 +131,7 @@ object OutConfigSim_L extends App {
   var idr        = 0
   var idp        = 0
   //SpinalVerilog(OutConfig_L(DW,AW))
-  val compiled = SimConfig.withFstWave.allOptimisation.compile(OutConfig_L(IPConfig(960, 540, 8), DW, AW))
+  val compiled = SimConfig.withFstWave.allOptimisation.compile(InpConfig(IPConfig(960, 540, 8), AxiLite4Config(addressWidth = AW, dataWidth = DW)))
   compiled.doSim { dut =>
     import dut.{clockDomain, io}
     clockDomain.forkStimulus(10)
