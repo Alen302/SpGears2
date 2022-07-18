@@ -58,8 +58,8 @@ case class SuperResolutionCore(config: IPConfig, axiLiteConfig: AxiLite4Config) 
   channelDispatcher.gPixelChannelOut >> gChannelPart1Core.io.pixelsIn
   channelDispatcher.bPixelChannelOut >> bChannelPart1Core.io.pixelsIn
 
-  ipConfig             >> inpConfig.io.axiLiteSignal
-  inpConfig.io.ap_done := allChannelDone
+  ipConfig            >> inpConfig.io.axiLiteSignal
+  inpConfig.io.apDone := allChannelDone
 
   rChannelPart1Core.io.widthIn := inpConfig.io.srcWidth
   gChannelPart1Core.io.widthIn := inpConfig.io.srcWidth

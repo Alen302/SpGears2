@@ -14,105 +14,72 @@ case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Co
 
   val io = new Bundle {
     val axiLiteSignal = slave(AxiLite4(axiLiteConfig))
-    val ap_done       = in Bool ()
+    val apDone        = in Bool ()
     val srcWidth      = out UInt (log2Up(sW + 1) bits)
     val srcHeight     = out UInt (log2Up(sH + 1) bits)
     val threshold     = out UInt (dW bits)
     val apStart       = out Bool ()
   }
   noIoPrefix()
-  val regSrcW      = Reg(UInt(log2Up(sW + 1) bits)) init (0)
-  val regSrcH      = Reg(UInt(log2Up(sH + 1) bits)) init (0)
-  val regThreshold = Reg(UInt(dW bits)) init (255)
-  val regApStart   = Reg(Bool()) init (False)
+  val regSrcW      = RegInit(U(0, log2Up(sW + 1) bits))
+  val regSrcH      = RegInit(U(0, log2Up(sH + 1) bits))
+  val regThreshold = RegInit(U(255, dW bits))
+  val regApStart   = RegInit(False)
 
-  val regWrAddr    = Reg(UInt(8 bits)) init (255)
-  val regRAddr     = Reg(UInt(8 bits)) init (255)
-  val updateWrAdrr = Reg(Bool()) init (true)
-  val updateRAdrr  = Reg(Bool()) init (true)
-  val writeSuccess = Reg(Bool()) init (false)
+  val regWrAddr    = RegInit(U(255, 8 bits))
+  val regRAddr     = RegInit(U(255, 8 bits))
+  val updateWrAddr = RegInit(True)
+  val updateRAddr  = RegInit(True)
+  val writeSuccess = RegInit(False)
 
   //--------------------------AXI-LITE write logic, address bus -------------------------
-  io.axiLiteSignal.aw.ready := updateWrAdrr
-  when(io.axiLiteSignal.aw.fire) {
-    regWrAddr := io.axiLiteSignal.aw.payload.addr(7 downto 0)
-  }
+  io.axiLiteSignal.aw.ready := updateWrAddr
+  when(io.axiLiteSignal.aw.fire) { regWrAddr := io.axiLiteSignal.aw.payload.addr(7 downto 0) }
 
-  when(io.axiLiteSignal.aw.fire) {
-    updateWrAdrr := False
-  } elsewhen (io.axiLiteSignal.w.fire) {
-    updateWrAdrr := True
-  }
+  when(io.axiLiteSignal.aw.fire) { updateWrAddr.clear() }
+    .elsewhen(io.axiLiteSignal.w.fire) { updateWrAddr.set() }
 
   //--------------------------AXI-LITE write logic, data bus -------------------------
-  io.axiLiteSignal.w.ready := !updateWrAdrr
+  io.axiLiteSignal.w.ready := !updateWrAddr
 
   when(io.axiLiteSignal.w.fire) {
     switch(regWrAddr) {
-      is(1 * axiLiteConfig.dataWidth / 8) {
-        regSrcW := io.axiLiteSignal.w.payload.data(log2Up(sW + 1) - 1 downto 0).asUInt
-      }
-      is(2 * axiLiteConfig.dataWidth / 8) {
-        regSrcH := io.axiLiteSignal.w.payload.data(log2Up(sH + 1) - 1 downto 0).asUInt
-      }
-      is(3 * axiLiteConfig.dataWidth / 8) {
-        regThreshold := io.axiLiteSignal.w.payload.data(dW - 1 downto 0).asUInt
-      }
-      is(4 * axiLiteConfig.dataWidth / 8) {
-        regApStart := io.axiLiteSignal.w.payload.data(0 downto 0).asBool
-      }
+      is(U(1 * axiLiteConfig.bytePerWord)) { regSrcW := io.axiLiteSignal.w.payload.data(log2Up(sW + 1) - 1 downto 0).asUInt }
+      is(U(2 * axiLiteConfig.bytePerWord)) { regSrcH := io.axiLiteSignal.w.payload.data(log2Up(sH + 1) - 1 downto 0).asUInt }
+      is(U(3 * axiLiteConfig.bytePerWord)) { regThreshold := io.axiLiteSignal.w.payload.data(dW - 1 downto 0).asUInt }
+      is(U(4 * axiLiteConfig.bytePerWord)) { regApStart := io.axiLiteSignal.w.payload.data(0 downto 0).asBool }
     }
   }
 
-  when(io.axiLiteSignal.w.fire) {
-    writeSuccess := True
-  } elsewhen (io.axiLiteSignal.b.fire) {
-    writeSuccess := False
-  }
+  when(io.axiLiteSignal.w.fire) { writeSuccess.set() }
+    .elsewhen(io.axiLiteSignal.b.fire) { writeSuccess.clear() }
 
   //--------------------------AXI-LITE write logic, b bus -------------------------
-  io.axiLiteSignal.b.valid        := writeSuccess
-  io.axiLiteSignal.b.payload.resp := 0
+  io.axiLiteSignal.b.valid := writeSuccess
+  io.axiLiteSignal.b.payload.resp.clearAll()
 
   //--------------------------AXI-LITE read logic, address bus -------------------------
-  io.axiLiteSignal.ar.ready := updateRAdrr
-  when(io.axiLiteSignal.ar.fire) {
-    regRAddr := io.axiLiteSignal.ar.payload.addr(7 downto 0)
+  io.axiLiteSignal.ar.ready := updateRAddr
+  when(io.axiLiteSignal.ar.fire) { regRAddr := io.axiLiteSignal.ar.payload.addr(7 downto 0) }
+  when(io.axiLiteSignal.ar.fire) { updateRAddr.clear() }
+    .elsewhen(io.axiLiteSignal.r.fire) { updateRAddr.set() }
 
-  }
-  when(io.axiLiteSignal.ar.fire) {
-    updateRAdrr := False
-  } elsewhen (io.axiLiteSignal.r.fire) {
-    updateRAdrr := True
-  }
   //--------------------------AXI-LITE read logic, data bus -------------------------
-  io.axiLiteSignal.r.payload.resp := 0
-  when(!updateRAdrr) {
-    io.axiLiteSignal.r.valid := True
+  io.axiLiteSignal.r.payload.resp.clearAll()
+  when(!updateRAddr) {
+    io.axiLiteSignal.r.valid.set()
     switch(regRAddr) {
-      is(1 * axiLiteConfig.dataWidth / 8) {
-        io.axiLiteSignal.r.payload.data := regSrcW.asBits.resized
-      }
-      is(2 * axiLiteConfig.dataWidth / 8) {
-        io.axiLiteSignal.r.payload.data := regSrcH.asBits.resized
-      }
-      is(3 * axiLiteConfig.dataWidth / 8) {
-        io.axiLiteSignal.r.payload.data := regThreshold.asBits.resized
-      }
-      is(4 * axiLiteConfig.dataWidth / 8) {
-        io.axiLiteSignal.r.payload.data := regApStart.asBits.resized
-      }
-      default {
-        io.axiLiteSignal.r.payload.data := 0
-      }
+      is(U(1 * axiLiteConfig.bytePerWord)) { io.axiLiteSignal.r.payload.data := regSrcW.asBits.resized }
+      is(U(2 * axiLiteConfig.bytePerWord)) { io.axiLiteSignal.r.payload.data := regSrcH.asBits.resized }
+      is(U(3 * axiLiteConfig.bytePerWord)) { io.axiLiteSignal.r.payload.data := regThreshold.asBits.resized }
+      is(U(4 * axiLiteConfig.bytePerWord)) { io.axiLiteSignal.r.payload.data := regApStart.asBits.resized }
+      default { io.axiLiteSignal.r.payload.data.clearAll() }
     }
   } otherwise {
-    io.axiLiteSignal.r.valid        := False
-    io.axiLiteSignal.r.payload.data := 0
+    io.axiLiteSignal.r.valid.set()
+    io.axiLiteSignal.r.payload.data.clearAll()
   }
-  when(io.ap_done) {
-    regApStart := False
-  }
+  when(io.apDone) { regApStart.clear() }
   //io.src_Width := 0
   io.srcWidth  := regSrcW
   io.srcHeight := regSrcH
@@ -121,15 +88,15 @@ case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Co
 }
 
 object InpConfig extends App {
-  val DW         = 32
-  val AW         = 32
-  val list_addr  = List(4, 8, 12, 16)
-  val list_wdata = List(0, 1, 2, 3)
-  var idx        = 0
-  var idy        = 0
-  var idz        = 0
-  var idr        = 0
-  var idp        = 0
+  val DW        = 32
+  val AW        = 32
+  val listAddr  = List(4, 8, 12, 16)
+  val listWData = List(0, 1, 2, 3)
+  var idx       = 0
+  var idy       = 0
+  var idz       = 0
+  var idr       = 0
+  var idp       = 0
   //SpinalVerilog(OutConfig_L(DW,AW))
   val compiled = SimConfig.withFstWave.allOptimisation.compile(InpConfig(IPConfig(960, 540, 8), AxiLite4Config(addressWidth = AW, dataWidth = DW)))
   compiled.doSim { dut =>
@@ -141,7 +108,7 @@ object InpConfig extends App {
     while (true) {
       clockDomain.waitSampling()
       if (idz <= 5) {
-        io.ap_done               #= false
+        io.apDone                #= false
         io.axiLiteSignal.b.ready #= true
         io.axiLiteSignal.aw.valid.randomize()
         if (dut.io.axiLiteSignal.aw.valid.toBoolean && dut.io.axiLiteSignal.aw.ready.toBoolean) {
@@ -151,7 +118,7 @@ object InpConfig extends App {
             idx = idx
           }
         }
-        io.axiLiteSignal.aw.payload.addr #= list_addr(idx)
+        io.axiLiteSignal.aw.payload.addr #= listAddr(idx)
         io.axiLiteSignal.w.valid.randomize()
         if (io.axiLiteSignal.w.valid.toBoolean & io.axiLiteSignal.w.ready.toBoolean) {
           if (idy != 3) {
@@ -161,7 +128,7 @@ object InpConfig extends App {
           }
           idz = idz + 1
         }
-        io.axiLiteSignal.w.payload.data #= list_wdata(idy)
+        io.axiLiteSignal.w.payload.data #= listWData(idy)
         //      if(idz == 5){
         //        simSuccess()
         //      }
@@ -174,7 +141,7 @@ object InpConfig extends App {
             idr = idr
           }
         }
-        io.axiLiteSignal.ar.payload.addr #= list_addr(idr)
+        io.axiLiteSignal.ar.payload.addr #= listAddr(idr)
         io.axiLiteSignal.r.ready.randomize()
         if (io.axiLiteSignal.r.valid.toBoolean & io.axiLiteSignal.r.ready.toBoolean) {
           println(io.axiLiteSignal.r.payload.data.toBigInt)
