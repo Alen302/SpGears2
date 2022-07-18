@@ -1175,7 +1175,7 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
       when(controlStream.fire) {
         when(writeDone) { goto(PASS) }
           .elsewhen(outReachRowEnd) {
-            when(outRowCount === U(0)) { goto(PASS) }
+            when(bufferRowCount === U(3) + outRowCount || bufferWAddr > U(1) || bufferWAddr === U(1) && passPixels.fire) { goto(PASS) }
               .otherwise { goto(HOLD) }
           }
           .otherwise {
@@ -1222,7 +1222,8 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
       when(outReachRowEnd) { controls.rowEnd.set() }
 
       when(controlStream.rowEnd && controlStream.fire) {
-        holdBuffer.clear()
+        when(outRowCount =/= U(0)) { holdBuffer.clear() }
+
         when(currentRowBuffer === U(2)) { currentRowBuffer := U(0).resized }
           .otherwise { currentRowBuffer := currentRowBuffer + U(1) }
         when(nextRowBuffer === U(2)) { nextRowBuffer := U(0).resized }

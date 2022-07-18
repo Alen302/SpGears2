@@ -415,7 +415,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
 
   /* control the write process by bufferEnable */
   io.pixelsIn.ready.allowOverride
-  val passPixels = io.pixelsIn.pipelined(true, s2m = true).continueWhen(bufferEnable)
+  val passPixels = io.pixelsIn.pipelined(m2s = true, s2m = true).continueWhen(bufferEnable)
   passPixels.freeRun()
 
   bufferReachRowEnd.setWhen(bufferWAddr === bmpWidth - U(2) && passPixels.fire)

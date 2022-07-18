@@ -1,4 +1,4 @@
-//package SpGears.Algos.SuperResolution
+package SpGears.Algos.SuperResolution
 //
 //import org.scalatest.funsuite._
 //import org.slf4j._

@@ -49,16 +49,16 @@ case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Co
 
   when(io.axiLiteSignal.w.fire) {
     switch(regWrAddr) {
-      is(0 * axiLiteConfig.dataWidth / 8) {
+      is(1 * axiLiteConfig.dataWidth / 8) {
         regSrcW := io.axiLiteSignal.w.payload.data(log2Up(sW + 1) - 1 downto 0).asUInt
       }
-      is(1 * axiLiteConfig.dataWidth / 8) {
+      is(2 * axiLiteConfig.dataWidth / 8) {
         regSrcH := io.axiLiteSignal.w.payload.data(log2Up(sH + 1) - 1 downto 0).asUInt
       }
-      is(2 * axiLiteConfig.dataWidth / 8) {
+      is(3 * axiLiteConfig.dataWidth / 8) {
         regThreshold := io.axiLiteSignal.w.payload.data(dW - 1 downto 0).asUInt
       }
-      is(3 * axiLiteConfig.dataWidth / 8) {
+      is(4 * axiLiteConfig.dataWidth / 8) {
         regApStart := io.axiLiteSignal.w.payload.data(0 downto 0).asBool
       }
     }
@@ -90,16 +90,16 @@ case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Co
   when(!updateRAdrr) {
     io.axiLiteSignal.r.valid := True
     switch(regRAddr) {
-      is(0 * axiLiteConfig.dataWidth / 8) {
+      is(1 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regSrcW.asBits.resized
       }
-      is(1 * axiLiteConfig.dataWidth / 8) {
+      is(2 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regSrcH.asBits.resized
       }
-      is(2 * axiLiteConfig.dataWidth / 8) {
+      is(3 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regThreshold.asBits.resized
       }
-      is(3 * axiLiteConfig.dataWidth / 8) {
+      is(4 * axiLiteConfig.dataWidth / 8) {
         io.axiLiteSignal.r.payload.data := regApStart.asBits.resized
       }
       default {
@@ -123,7 +123,7 @@ case class InpConfig(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Co
 object InpConfig extends App {
   val DW         = 32
   val AW         = 32
-  val list_addr  = List(0, 4, 8, 12)
+  val list_addr  = List(4, 8, 12, 16)
   val list_wdata = List(0, 1, 2, 3)
   var idx        = 0
   var idy        = 0

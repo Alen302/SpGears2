@@ -19,11 +19,15 @@ object simCoreFunc {
     val frameStartOuts  = ArrayBuffer[Boolean]()
     val rowEndOuts      = ArrayBuffer[Boolean]()
     val inpDoneOuts     = ArrayBuffer[Boolean]()
-    val axiLiteResp     = ArrayBuffer[Boolean]()
+    val axiLiteRespOuts = ArrayBuffer[Boolean]()
     val getTestCasesIns = ArrayBuffer[BigInt]()
+    val getAxiLiteAw    = ArrayBuffer[BigInt]()
+    val getAxiLiteProt  = ArrayBuffer[BigInt]()
+    val getAxiLIteW     = ArrayBuffer[BigInt]()
+    val getAxiLiteStrb  = ArrayBuffer[BigInt]()
 
-    val ipConfigAddr = mutable.Queue(BigInt(0), BigInt(4), BigInt(8), BigInt(12))
-    val ipConfigData = mutable.Queue((BigInt(sW), BigInt(sH), BigInt(threshold), BigInt(1)))
+    val ipConfigAddr = ArrayBuffer(BigInt(4), BigInt(8), BigInt(12), BigInt(16))
+    val ipConfigData = ArrayBuffer(BigInt(sW), BigInt(sH), BigInt(threshold), BigInt(1))
 
     compiled.doSimUntilVoid { dut =>
       val logger = LoggerFactory.getLogger(s"Test : SuperResolutionCoreTest")
@@ -42,25 +46,28 @@ object simCoreFunc {
       dut.inpDone.setMonitor(dut.clockDomain, waitTime = 0, inpDoneOuts)
       dut.inpDataOut.setSlaveRandomReady(dut.clockDomain)
       dut.inpDataOut.setStreamMonitor(dut.clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
-      dut.ipConfig.aw.setMasterDriverWhen(dut.clockDomain, !ipConfigAddr.isEmpty, Seq(ArrayBuffer(ipConfigAddr.dequeue()), ArrayBuffer(BigInt(0))): _*)
-      dut.ipConfig.w.setMasterDriverWhen(dut.clockDomain, !ipConfigData.isEmpty, Seq(ArrayBuffer(ipConfigData.dequeue()), ArrayBuffer(BigInt(15))): _*)
-      dut.ipConfig.b.setStreamMonitor(dut.clockDomain, axiLiteResp)
+      dut.ipConfig.aw.setStreamMonitor(dut.clockDomain, Seq(getAxiLiteAw, getAxiLiteProt): _*)
+      dut.ipConfig.aw.setMasterDriver(dut.clockDomain, Seq(ipConfigAddr, ArrayBuffer.fill(4)(BigInt(0))): _*)
+      dut.ipConfig.w.setStreamMonitor(dut.clockDomain, Seq(getAxiLIteW, getAxiLiteStrb): _*)
+      dut.ipConfig.w.setMasterDriver(dut.clockDomain, Seq(ipConfigData, ArrayBuffer.fill(4)(BigInt(15))): _*)
+      dut.ipConfig.b.setStreamMonitor(dut.clockDomain, axiLiteRespOuts)
       dut.ipConfig.b.setSlaveReadyAlways(dut.clockDomain)
 
-      dut.clockDomain.waitSamplingWhere(ipConfigAddr.isEmpty && ipConfigData.isEmpty)
+      dut.clockDomain.waitSamplingWhere(getAxiLiteAw.size == 4 && getAxiLIteW.size == 4)
       println(s"ip config successful in time : ${simTime()} !")
 
-      dut.clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 4)
+      dut.clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 16)
       println(s"interpolate successful in time : ${simTime()} !")
 
       dut.clockDomain.waitSampling(2)
 
       if (isPrint) {
         val formatTestCases      = testCases.map(_.toString.padTo(5, ' ')).grouped(sW).toSeq.map(_.mkString("")).mkString("\n")
-        val formatGolden         = golden.map(_.toString.padTo(5, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
-        val formatResults        = pixelOuts.map(_.toString.padTo(5, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
-        val formatRowEndOuts     = rowEndOuts.map(_.toString.padTo(7, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
-        val formatFrameStartOuts = frameStartOuts.map(_.toString.padTo(7, ' ')).grouped(2 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatGolden         = golden.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatResults        = pixelOuts.map(_.toString.padTo(5, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatRowEndOuts     = rowEndOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatFrameStartOuts = frameStartOuts.map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
+        val formatDiff           = showDiff(pixelOuts, golden).map(_.toString.padTo(7, ' ')).grouped(4 * sW).toSeq.map(_.mkString("")).mkString("\n")
         logger.info(
           s"\n"
             + "testCases : \n"
@@ -77,6 +84,9 @@ object simCoreFunc {
             + s"\n"
             + s"frameStartOuts: \n"
             + formatFrameStartOuts
+            + s"\n"
+            + s"diff: \n"
+            + formatDiff
             + s"\n"
         )
       }
@@ -95,13 +105,20 @@ object simCoreFunc {
     ret
   }
 
+  def showDiff(utArray: ArrayBuffer[BigInt], refArray: ArrayBuffer[BigInt]) = {
+    require(utArray.size == refArray.size, "two array's size is not match !")
+    val ret = ArrayBuffer[Boolean]()
+    utArray.zip(refArray).foreach { case (int, int1) => if (int != int1) ret += false else ret += true }
+    ret
+  }
+
 }
 
 class SuperResolutionCoreTest extends AnyFunSuite {
   test("Test SuperResolutionCore 5 * 5 ") {
     val testCases = ArrayBuffer.fill(5 * 5)(BigInt(nextInt(32) + 1))
     val golden    = sim3Funcs.getGolden(16, 5, 5, sim2Funcs.getGolden(16, 5, 5, sim1Funcs.getGolden(16, 5, 5, testCases), true), true)
-    simCoreFunc.startSim(16, 5, 5, testCases, golden, false)
+    simCoreFunc.startSim(16, 5, 5, testCases, golden, true)
   }
   test("Test SuperResolutionCore Randomly !") {
     val h         = nextInt(541)
