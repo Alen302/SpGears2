@@ -10,7 +10,7 @@ import scala.language.postfixOps
 case class PixelData(config: IPConfig, isInternal: Boolean = false, allChannel: Boolean = false) extends Bundle {
   def dW = config.dataW
 
-  val pixel      = if (!allChannel) UInt(dW bits) else UInt(3 * dW bits)
+  val pixel      = if (!allChannel) UInt(dW bits) else UInt(4 * dW bits)
   val frameStart = Bool()
   val rowEnd     = Bool()
   val inpValid   = isInternal generate Bool()
@@ -183,18 +183,18 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
 
   // read Stage
   val readStage = new Area {
-    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream)
-    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream)
-    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream)
-    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream)
-    val controlPipe           = controlStream.stage()
+    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream).pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream).pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val controlPipe           = controlStream.pipelined(true, true).stage()
   }
 
   val compareStage = new Area {
-    val mainOnePixelStream    = readStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = readStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = readStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = readStage.counterTwoPixelStream.stage()
+    val mainOnePixelStream    = readStage.mainOnePixelStream.pipelined(true, true)
+    val counterOnePixelStream = readStage.counterOnePixelStream.pipelined(true, true)
+    val mainTwoPixelStream    = readStage.mainTwoPixelStream.pipelined(true, true)
+    val counterTwoPixelStream = readStage.counterTwoPixelStream.pipelined(true, true)
     val controlPipe = readStage.controlPipe
       .translateWith {
         val comparedControl = ControlSignal(config)
@@ -250,14 +250,14 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         }
         comparedControl
       }
-      .stage()
+      .pipelined(true, true)
   }
 
   val diffStage = new Area {
-    val mainOnePixelStream    = compareStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = compareStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = compareStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = compareStage.counterTwoPixelStream.stage()
+    val mainOnePixelStream    = compareStage.mainOnePixelStream.pipelined(true, true)
+    val counterOnePixelStream = compareStage.counterOnePixelStream.pipelined(true, true)
+    val mainTwoPixelStream    = compareStage.mainTwoPixelStream.pipelined(true, true)
+    val counterTwoPixelStream = compareStage.counterTwoPixelStream.pipelined(true, true)
     val controlPipe = compareStage.controlPipe
       .translateWith {
         val diffedControl = ControlSignal(config)
@@ -314,16 +314,16 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         }
         diffedControl
       }
-      .stage()
+      .pipelined(true, true)
   }
 
   val resultStage = new Area {
-    val mainOnePixelStream    = diffStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = diffStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = diffStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = diffStage.counterTwoPixelStream.stage()
+    val mainOnePixelStream    = diffStage.mainOnePixelStream.pipelined(true, true)
+    val counterOnePixelStream = diffStage.counterOnePixelStream.pipelined(true, true)
+    val mainTwoPixelStream    = diffStage.mainTwoPixelStream.pipelined(true, true)
+    val counterTwoPixelStream = diffStage.counterTwoPixelStream.pipelined(true, true)
     val forkControlPipe       = StreamFork(diffStage.controlPipe, 2, synchronous = true)
-    val controlPipe           = forkControlPipe(0).stage()
+    val controlPipe           = forkControlPipe(0).pipelined(true, true)
     val pixelStream           = Stream(UInt(dW bits))
     val resultStream = pixelStream
       .translateFrom(forkControlPipe(1)) { (pixel, control) =>
@@ -389,7 +389,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
           }
         }
       }
-      .stage()
+      .pipelined(true, true)
   }
 
   /* the pixelsOut logic */
@@ -497,7 +497,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
       when(controlStream.fire) {
         when(U(2) * bufferRowCount > outRowCount || bufferReuse) { goto(ONCE) }
           .otherwise {
-            when(bufferWAddr === (outPixelAddr +^ U(2)) / U(2) && !passPixels.fire) { goto(HOLD) }
+            when(U(2) * bufferWAddr === outPixelAddr +^ U(2) && !passPixels.fire) { goto(HOLD) }
               .otherwise { goto(ONCE) }
           }
       }

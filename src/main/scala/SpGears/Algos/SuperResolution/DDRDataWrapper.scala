@@ -12,7 +12,7 @@ case class DDRDataWrapper(config: IPConfig) extends Component {
 
   def sW = config.srcW
 
-  val ddrIn     = slave Stream UInt(3 * dW bits)
+  val ddrIn     = slave Stream UInt(4 * dW bits)
   val pixelsOut = master Stream PixelData(config, allChannel = true)
   val inpDone   = in Bool ()
   val bmpWidth  = in UInt (log2Up(sW + 1) bits)

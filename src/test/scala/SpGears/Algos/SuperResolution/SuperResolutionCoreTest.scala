@@ -56,7 +56,10 @@ object simCoreFunc {
       dut.clockDomain.waitSamplingWhere(getAxiLiteAw.size == 4 && getAxiLIteW.size == 4)
       println(s"ip config successful in time : ${simTime()} !")
 
-      dut.clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size * 16)
+      dut.clockDomain.waitSamplingWhere {
+        println(s"pixelsOuts size : ${pixelOuts.size}")
+        pixelOuts.size == testCases.size * 16
+      }
       println(s"interpolate successful in time : ${simTime()} !")
 
       dut.clockDomain.waitSampling(2)
@@ -121,9 +124,9 @@ class SuperResolutionCoreTest extends AnyFunSuite {
     simCoreFunc.startSim(16, 5, 5, testCases, golden, true)
   }
   test("Test SuperResolutionCore Randomly !") {
-    val h         = nextInt(541)
-    val w         = nextInt(961)
-    val thd       = nextInt(201)
+    val h         = 540
+    val w         = 960
+    val thd       = 144
     val testCases = ArrayBuffer.fill(h * w)(BigInt(nextInt(255) + 1))
     val golden    = sim3Funcs.getGolden(thd, h, w, sim2Funcs.getGolden(thd, h, w, sim1Funcs.getGolden(thd, h, w, testCases, true), true), true)
     simCoreFunc.startSim(thd, h, w, testCases, golden, true)

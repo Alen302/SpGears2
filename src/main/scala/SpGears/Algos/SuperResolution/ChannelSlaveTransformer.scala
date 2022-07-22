@@ -13,7 +13,7 @@ case class ChannelSlaveTransformer(config: IPConfig) extends Component {
 
   allPixelChannelOut <-/< pixelChannelJoin.translateWith {
     val allPixelChannel = Stream(allPixelChannelOut.payloadType)
-    allPixelChannel.pixel      := (pixelChannelJoin.payload(2).pixel ## pixelChannelJoin.payload(1).pixel ## pixelChannelJoin.payload(0).pixel).asUInt
+    allPixelChannel.pixel      := (U(0, config.dataW bits) ## pixelChannelJoin.payload(2).pixel ## pixelChannelJoin.payload(1).pixel ## pixelChannelJoin.payload(0).pixel).asUInt
     allPixelChannel.frameStart := pixelChannelJoin.payload(2).frameStart
     allPixelChannel.rowEnd     := pixelChannelJoin.payload(2).rowEnd
     allPixelChannel

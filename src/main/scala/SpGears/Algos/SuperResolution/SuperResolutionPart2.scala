@@ -69,7 +69,10 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
   /* record the number of row which is buffered */
   val bufferRowCount = Counter(2 * sH + 1)
 
-  /* the write enable signal of lineBuffer*/
+  /* indicate buffer reuse for padding */
+  val bufferReuse = RegInit(False).clearWhen(inpTwoDone)
+
+  /* the write enable signal of lineBuffer */
   val bufferEnable = RegInit(False).setWhen(io.startIn && !holdBuffer && !writeDone).clearWhen(!io.startIn || holdBuffer || writeDone)
 
   /* when this signal is True, it means that the dataIn should be store in lineBufferTwo when we can receive dataIn */
@@ -93,6 +96,24 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
 
   val bufferReachRowEnd   = RegInit(False)
   val bufferReachFinalRow = RegInit(False)
+
+  val zeroInFourOutPixelAddr  = RegInit(True).setWhen(io.startIn.fall() || inpTwoDone)
+  val oneInFourOutPixelAddr   = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val twoInFourOutPixelAddr   = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val threeInFourOutPixelAddr = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+
+  val zeroInFourOutRow  = RegInit(True).setWhen(io.startIn.fall() || inpTwoDone)
+  val oneInFourOutRow   = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val twoInFourOutRow   = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val threeInFourOutRow = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+
+  val currentState = UInt(3 bits)
+
+  val willHoldToTwice           = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val willPassToHoldCaseOne     = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val willPassToHoldCaseTwo     = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val holdWillPassToHoldCaseTwo = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
+  val willOnceToHoldCaseOne     = RegInit(False).clearWhen(io.startIn.fall() || inpTwoDone)
 
   /* the following lineBuffer is used to store three line pixels of source bmp */
   val lineBufferOne = Mem(UInt(dW bits), 2 * sW).init(Seq.fill(2 * sW)(U(0).resized))
@@ -156,6 +177,7 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
       bufferRowCount.clear()
       bufferReachRowEnd.clear()
       bufferReachFinalRow.clear()
+      bufferReuse.set()
     }.otherwise {
       bufferRowCount.increment()
       bufferReachRowEnd.clear()
@@ -214,20 +236,20 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
 
   // read Stage
   val readStage = new Area {
-    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream)
-    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream)
-    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream)
-    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream)
-    val oddRowPixelStream     = lineBufferOdd.streamReadSync(oddAddrStream)
-    val controlPipe           = controlStream.stage()
+    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream).pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream).pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val oddRowPixelStream     = lineBufferOdd.streamReadSync(oddAddrStream).pipelined(m2s = true, s2m = true)
+    val controlPipe           = controlStream.pipelined(m2s = true, s2m = true).stage()
   }
 
   val compareStage = new Area {
-    val mainOnePixelStream    = readStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = readStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = readStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = readStage.counterTwoPixelStream.stage()
-    val oddRowPixelStream     = readStage.oddRowPixelStream.stage()
+    val mainOnePixelStream    = readStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = readStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = readStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = readStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val oddRowPixelStream     = readStage.oddRowPixelStream.pipelined(m2s = true, s2m = true)
     val controlPipe = readStage.controlPipe
       .translateWith {
         val comparedControl = ControlSignal(config, withInpValid = true, withOddFlag = true)
@@ -283,15 +305,15 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
         }
         comparedControl
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
   }
 
   val diffStage = new Area {
-    val mainOnePixelStream    = compareStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = compareStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = compareStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = compareStage.counterTwoPixelStream.stage()
-    val oddRowPixelStream     = compareStage.oddRowPixelStream.stage()
+    val mainOnePixelStream    = compareStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = compareStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = compareStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = compareStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val oddRowPixelStream     = compareStage.oddRowPixelStream.pipelined(m2s = true, s2m = true)
     val controlPipe = compareStage.controlPipe
       .translateWith {
         val diffedControl = ControlSignal(config, withInpValid = true, withOddFlag = true)
@@ -348,15 +370,15 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
         }
         diffedControl
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
   }
 
   val resultStage = new Area {
-    val mainOnePixelStream    = diffStage.mainOnePixelStream.stage()
-    val counterOnePixelStream = diffStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream    = diffStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream = diffStage.counterTwoPixelStream.stage()
-    val oddRowPixelStream     = diffStage.oddRowPixelStream.stage()
+    val mainOnePixelStream    = diffStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = diffStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = diffStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = diffStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val oddRowPixelStream     = diffStage.oddRowPixelStream.pipelined(m2s = true, s2m = true)
     val forkControlPipe       = StreamFork(diffStage.controlPipe, 2, synchronous = true)
     val controlPipe = forkControlPipe(0)
       .translateWith {
@@ -381,7 +403,7 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
         }
         resultControl
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
     val pixelStream = Stream(UInt(dW bits))
     val resultStream = pixelStream
       .translateFrom(forkControlPipe(1)) { (pixel, control) =>
@@ -447,7 +469,7 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
           }
         }
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
   }
 
   /* the pixelsOut logic */
@@ -482,23 +504,40 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
 
     HOLD.whenIsActive {
       controls.inpValidFlag.set()
-      switch(outRowCount % U(4)) {
-        is(U(0)) {
-          when(passPixels.fire) {
-            when(outPixelAddr % U(4) === U(3)) { goto(ONCE) }
-              .otherwise { goto(PASS) }
+
+      when(zeroInFourOutRow) {
+        when(passPixels.fire) {
+          when(threeInFourOutPixelAddr) {
+            goto(ONCE)
+//            when(U(2) * bufferRowCount === U(1) +^ outRowCount) { willOnceToHoldCaseOne.set() }
+          }
+            .otherwise {
+              goto(PASS)
+              holdWillPassToHoldCaseTwo.set()
+            }
+        }
+      }.elsewhen(twoInFourOutRow) {
+        when(passPixels.fire) {
+          goto(PASS)
+          holdWillPassToHoldCaseTwo.set()
+        }
+      }.elsewhen(threeInFourOutRow) {
+        when(passPixels.fire) {
+          when(threeInFourOutPixelAddr) {
+            when(willHoldToTwice) {
+              goto(TWICE)
+              willHoldToTwice.clear()
+            }
+          }.otherwise {
+            goto(ONCE)
+//            when(U(2) * bufferRowCount === U(1) +^ outRowCount) { willOnceToHoldCaseOne.set() }
           }
         }
-        is(U(2)) {
-          when(passPixels.fire) { goto(PASS) }
-        }
-        is(U(3)) {
-          when(passPixels.fire) {
-            when(outPixelAddr % U(4) === U(3)) {
-              when(bufferWAddr === (outPixelAddr +^ U(2)) / U(2)) { goto(TWICE) }
-            }.otherwise { goto(ONCE) }
-          }
-        }
+      }
+
+      when(passPixels.fire) {
+        when(U(2) * bufferWAddr === outPixelAddr) { willHoldToTwice.set() }
+          .otherwise { willHoldToTwice.clear() }
       }
 
     }
@@ -507,36 +546,57 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
       controls.inpValidFlag.set()
 
       when(controlStream.fire) {
-        when(outPixelAddr % U(4) === U(1)) {
-          when(outRowCount % U(4) === U(1)) { goto(PASS) }
+        when(oneInFourOutPixelAddr) {
+          when(oneInFourOutRow) { goto(PASS) }
             .otherwise {
-              when(U(2) * bufferWAddr === U(1) +^ outPixelAddr && !passPixels.fire) { goto(HOLD) }
-                .otherwise { goto(PASS) }
+              when(willPassToHoldCaseOne && !passPixels.fire) {
+                goto(HOLD)
+              }.otherwise { goto(PASS) }
             }
-        }.elsewhen(outPixelAddr % U(4) === U(2)) {
-          when(outRowCount % U(4) === U(1)) { goto(ONCE) }
+        }.elsewhen(twoInFourOutPixelAddr) {
+          when(oneInFourOutRow) {
+            goto(ONCE)
+//            when(U(2) * bufferRowCount === U(1) +^ outRowCount) { willOnceToHoldCaseOne.set() }
+          }
             .otherwise {
-              when(outRowCount === U(2) * bufferRowCount && U(2) * bufferWAddr === U(2) +^ outPixelAddr && !passPixels.fire) { goto(HOLD) }
-                .otherwise { goto(ONCE) }
+              when(outRowCount === U(2) * bufferRowCount && (willPassToHoldCaseTwo || holdWillPassToHoldCaseTwo) && !passPixels.fire) {
+                goto(HOLD)
+                holdWillPassToHoldCaseTwo.clear()
+              }.otherwise {
+                goto(ONCE)
+//                when(U(2) * bufferRowCount === U(1) +^ outRowCount) { willOnceToHoldCaseOne.set() }
+              }
             }
         }.otherwise { goto(PASS) }
+
+        willPassToHoldCaseOne.clear()
+        willPassToHoldCaseTwo.clear() // when hold -> pass this should set need fix
+
       }
 
-      when(outRowCount % U(4) === U(2)) {
+      when(controlStream.fire && !bufferReuse) {
+        when(!passPixels.fire) { when(U(2) * bufferWAddr === U(2) +^ outPixelAddr) { willPassToHoldCaseOne.set() } }
+          .otherwise { when(U(2) * bufferWAddr === outPixelAddr) { willPassToHoldCaseOne.set() } }
+
+        when(!passPixels.fire) { when(U(2) * bufferWAddr === U(3) +^ outPixelAddr) { willPassToHoldCaseTwo.set() } }
+          .otherwise { when(U(2) * bufferWAddr === U(1) +^ outPixelAddr) { willPassToHoldCaseTwo.set() } }
+      }
+
+      when(twoInFourOutRow) {
         when(outPixelAddr % U(2) === U(0)) { controls.oddValid.set() }
           .otherwise {
             controls.passValid.set()
             when(nextRowBuffer) { controls.passMode.clear() }
               .otherwise { controls.passMode.set() }
           }
-      }.elsewhen(outRowCount % U(4) === U(1)) {
+      }.elsewhen(oneInFourOutRow) {
         controls.passValid.set()
         when(nextRowBuffer) {
           controls.passMode.clear()
-          when(outPixelAddr % U(4) === U(2)) { mainAddrOne := ((outPixelAddr - U(2)) / U(2)).resized }
+          when(twoInFourOutPixelAddr) { mainAddrOne := ((outPixelAddr - U(2)) / U(2)).resized }
         }.otherwise {
           controls.passMode.set()
-          when(outPixelAddr % U(4) === U(2)) { mainAddrTwo := ((outPixelAddr - U(2)) / U(2)).resized }
+          when(twoInFourOutPixelAddr) { mainAddrTwo := ((outPixelAddr - U(2)) / U(2)).resized }
         }
       }.otherwise {
         controls.passValid.set()
@@ -547,30 +607,6 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
       when(frameStart && controlStream.fire) { frameStart := False }
       when(frameStart) { controls.frameStart.set() }
 
-      outReachRowEnd.setWhen(controlStream.fire && outPixelAddr === U(4) * bmpWidth - U(2))
-      outReachFinalRow.setWhen(outReachRowEnd && outRowCount === U(4) * bmpHeight - U(2) && controlStream.fire)
-
-      when(controlStream.fire && outReachRowEnd) {
-        when(outReachFinalRow) {
-          outRowCount.clear()
-          startRead.clear()
-          readDone.set()
-          outReachRowEnd.clear()
-          outReachFinalRow.clear()
-        }.otherwise {
-          outRowCount.increment()
-          outReachRowEnd.clear()
-        }
-      }
-
-      when(controlStream.fire) {
-        when(outReachRowEnd) {
-          outPixelAddr.clear()
-          outReachRowEnd.clear()
-        }.otherwise { outPixelAddr.increment() }
-      }
-      when(outReachRowEnd) { controls.rowEnd.set() }
-
     }
 
     ONCE.whenIsActive {
@@ -578,27 +614,36 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
       controls.onceValid.set()
 
       when(controlStream.fire) {
-        when(outRowCount % U(4) === U(0)) { goto(PASS) }
-          .elsewhen(outRowCount % U(4) === U(1)) {
-            when(outReachRowEnd && U(2) * bufferRowCount === U(1) +^ outRowCount && bufferWAddr === U(0) && !passPixels.fire) { goto(HOLD) }
+        when(zeroInFourOutRow) { goto(PASS) }
+          .elsewhen(oneInFourOutRow) {
+            when(outReachRowEnd && willOnceToHoldCaseOne && bufferWAddr === U(0) && !passPixels.fire) { goto(HOLD) }
               .otherwise { goto(PASS) }
           }
-          .elsewhen(outRowCount % U(4) === U(2)) {
+          .elsewhen(twoInFourOutRow) {
             when(outReachRowEnd) {
               when(bufferWAddr === U(0) && !passPixels.fire && U(2) * bufferRowCount === U(2) + outRowCount) { goto(HOLD) }
                 .otherwise { goto(ONCE) }
             }.otherwise { goto(PASS) }
           }
           .otherwise {
-            when(outPixelAddr % U(4) === U(2)) {
-              when(bufferWAddr === (outPixelAddr +^ U(2)) / U(2) && !passPixels.fire) { goto(HOLD) }
+            when(twoInFourOutPixelAddr) {
+              when(U(2) * bufferWAddr === U(2) + outPixelAddr && !passPixels.fire) { goto(HOLD) }
                 .otherwise { goto(TWICE) }
             }.otherwise { goto(ONCE) }
           }
+        willOnceToHoldCaseOne.clear()
       }
 
-      when(outRowCount % U(4) === U(3)) {
-        when(outPixelAddr % U(4) === U(2)) {
+      when(controlStream.fire && outReachRowEnd && zeroInFourOutRow) {
+        when(passPixels.fire && bufferReachRowEnd) {
+          when(U(2) * bufferRowCount === outRowCount) { willOnceToHoldCaseOne.set() }
+        }.otherwise {
+          when(U(2) * bufferRowCount === U(2) +^ outRowCount) { willOnceToHoldCaseOne.set() }
+        }
+      }
+
+      when(threeInFourOutRow) {
+        when(twoInFourOutPixelAddr) {
           mainAddrOne := ((outPixelAddr - U(2)) / U(2)).resized
           mainAddrTwo := ((outPixelAddr - U(2)) / U(2)).resized
         }
@@ -622,30 +667,6 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
             .otherwise { counterAddrTwo := ((U(1) + outPixelAddr) / U(2)).resized }
         }
       }
-
-      outReachRowEnd.setWhen(controlStream.fire && outPixelAddr === U(4) * bmpWidth - U(2))
-      outReachFinalRow.setWhen(outReachRowEnd && outRowCount === U(4) * bmpHeight - U(2) && controlStream.fire)
-
-      when(controlStream.fire && outReachRowEnd) {
-        when(outReachFinalRow) {
-          outRowCount.clear()
-          startRead.clear()
-          readDone.set()
-          outReachRowEnd.clear()
-          outReachFinalRow.clear()
-        }.otherwise {
-          outRowCount.increment()
-          outReachRowEnd.clear()
-        }
-      }
-
-      when(controlStream.fire) {
-        when(outReachRowEnd) {
-          outPixelAddr.clear()
-          outReachRowEnd.clear()
-        }.otherwise { outPixelAddr.increment() }
-      }
-      when(outReachRowEnd) { controls.rowEnd.set() }
 
     }
 
@@ -704,32 +725,57 @@ case class SuperResolutionPart2(config: IPConfig) extends Component {
         }
       }
 
-      outReachRowEnd.setWhen(controlStream.fire && outPixelAddr === U(4) * bmpWidth - U(2))
-      outReachFinalRow.setWhen(outReachRowEnd && outRowCount === U(4) * bmpHeight - U(2) && controlStream.fire)
-
-      when(controlStream.fire && outReachRowEnd) {
-        when(outReachFinalRow) {
-          outRowCount.clear()
-          startRead.clear()
-          readDone.set()
-          outReachRowEnd.clear()
-          outReachFinalRow.clear()
-        }.otherwise {
-          outRowCount.increment()
-          outReachRowEnd.clear()
-        }
-      }
-
-      when(controlStream.fire) {
-        when(outReachRowEnd) {
-          outPixelAddr.clear()
-          outReachRowEnd.clear()
-        }.otherwise { outPixelAddr.increment() }
-      }
-      when(outReachRowEnd) { controls.rowEnd.set() }
-
     }
 
+  }
+
+  addPrePopTask(() => currentState.assignFromBits(controlStateMachine.stateReg.asBits))
+  when(currentState === U(2) || currentState === U(3) || currentState === U(4)) {
+
+    outReachRowEnd.setWhen(controlStream.fire && outPixelAddr === U(4) * bmpWidth - U(2))
+    outReachFinalRow.setWhen(outReachRowEnd && outRowCount === U(4) * bmpHeight - U(2) && controlStream.fire)
+
+    when(controlStream.fire && outReachRowEnd) {
+      when(outReachFinalRow) {
+        outRowCount.clear()
+        startRead.clear()
+        readDone.set()
+        outReachRowEnd.clear()
+        outReachFinalRow.clear()
+      }.otherwise {
+        outRowCount.increment()
+        outReachRowEnd.clear()
+      }
+    }
+
+    when(controlStream.fire) {
+      when(outReachRowEnd) {
+        outPixelAddr.clear()
+        outReachRowEnd.clear()
+        when(outRowCount % U(4) === U(0)) { oneInFourOutRow.set() }
+          .otherwise { oneInFourOutRow.clear() }
+        when(outRowCount % U(4) === U(1)) { twoInFourOutRow.set() }
+          .otherwise { twoInFourOutRow.clear() }
+        when(outRowCount % U(4) === U(2)) { threeInFourOutRow.set() }
+          .otherwise { threeInFourOutRow.clear() }
+        when(outRowCount % U(4) === U(3)) { zeroInFourOutRow.set() }
+          .otherwise { zeroInFourOutRow.clear() }
+      }.otherwise { outPixelAddr.increment() }
+
+      when(outPixelAddr % U(4) === U(0)) { oneInFourOutPixelAddr.set() }
+      when(oneInFourOutPixelAddr) { oneInFourOutPixelAddr.clear() }
+
+      when(outPixelAddr % U(4) === U(1)) { twoInFourOutPixelAddr.set() }
+      when(twoInFourOutPixelAddr) { twoInFourOutPixelAddr.clear() }
+
+      when(outPixelAddr % U(4) === U(2)) { threeInFourOutPixelAddr.set() }
+      when(threeInFourOutPixelAddr) { threeInFourOutPixelAddr.clear() }
+
+      when(outPixelAddr % U(4) === U(3)) { zeroInFourOutPixelAddr.set() }
+      when(zeroInFourOutPixelAddr) { zeroInFourOutPixelAddr.clear() }
+
+    }
+    when(outReachRowEnd) { controls.rowEnd.set() }
   }
 
 }

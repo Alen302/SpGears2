@@ -216,16 +216,16 @@ object sim2Funcs {
 
 }
 
-class InterpolationStep2Test extends AnyFunSuite {
+class SuperResolutionPart2Test extends AnyFunSuite {
   test("Test SuperResolutionPart2 5 * 5 ") {
     val testCases = ArrayBuffer.fill(10 * 10)(BigInt(nextInt(32) + 1))
     sim2Funcs.startSim(16, 5, 5, testCases, sim2Funcs.getGolden(16, 5, 5, testCases), true)
 
   }
   test("Test SuperResolutionPart2 Randomly !") {
-    val h         = nextInt(541)
-    val w         = nextInt(961)
-    val thd       = nextInt(201)
+    val h         = 540
+    val w         = 960
+    val thd       = 144
     val testCases = ArrayBuffer.fill(4 * h * w)(BigInt(nextInt(255) + 1))
     sim2Funcs.startSim(thd, h, w, testCases, sim2Funcs.getGolden(thd, h, w, testCases), true)
   }

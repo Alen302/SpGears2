@@ -98,7 +98,7 @@ object InpConfig extends App {
   var idr       = 0
   var idp       = 0
   //SpinalVerilog(OutConfig_L(DW,AW))
-  val compiled = SimConfig.withFstWave.allOptimisation.compile(InpConfig(IPConfig(960, 540, 8), AxiLite4Config(addressWidth = AW, dataWidth = DW)))
+  val compiled = SimConfig.withFstWave.allOptimisation.compile(InpConfig(IPConfig(540, 960, 8), AxiLite4Config(addressWidth = AW, dataWidth = DW)))
   compiled.doSim { dut =>
     import dut.{clockDomain, io}
     clockDomain.forkStimulus(10)

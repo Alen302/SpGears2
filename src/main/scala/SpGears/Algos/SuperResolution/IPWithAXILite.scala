@@ -32,9 +32,9 @@ case class IPWithAXILite(config: IPConfig, axiLiteConfig: AxiLite4Config) extend
   val axiLiteInst    = InpConfig(config, axiLiteConfig)
   val upSamplingInst = Interpolation(config)
 
-  io.inpDone             := upSamplingInst.io.inpCompleteOut
-  io.axiLiteSignal       >> axiLiteInst.io.axiLiteSignal
-  axiLiteInst.io.ap_done := upSamplingInst.io.inpCompleteOut
+  io.inpDone            := upSamplingInst.io.inpCompleteOut
+  io.axiLiteSignal      >> axiLiteInst.io.axiLiteSignal
+  axiLiteInst.io.apDone := upSamplingInst.io.inpCompleteOut
 
   io.dataIn                      >> upSamplingInst.io.dataIn
   upSamplingInst.io.StartIn      := axiLiteInst.io.apStart

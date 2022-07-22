@@ -191,4 +191,10 @@ class SuperResolutionPart1Test extends AnyFunSuite {
   test("get vivado home") {
     println(sys.env.get("VIVADO_HOME"))
   }
+  test("get path") {
+    println(sys.env.get("PATH"))
+  }
+  test("get ld_library_path") {
+    println(sys.env.get("LD_LIBRARY_PATH"))
+  }
 }

@@ -280,37 +280,37 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
 
   // read Stage
   val readStage = new Area {
-    val mainOnePixelStream      = lineBufferOne.streamReadSync(mainPixelAddrOneStream)
-    val counterOnePixelStream   = lineBufferOne.streamReadSync(counterPixelAddrOneStream)
-    val mainTwoPixelStream      = lineBufferTwo.streamReadSync(mainPixelAddrTwoStream)
-    val counterTwoPixelStream   = lineBufferTwo.streamReadSync(counterPixelAddrTwoStream)
-    val mainThreePixelStream    = lineBufferThree.streamReadSync(mainPixelAddrThreeStream)
-    val counterThreePixelStream = lineBufferThree.streamReadSync(counterPixelAddrThreeStream)
+    val mainOnePixelStream      = lineBufferOne.streamReadSync(mainPixelAddrOneStream).pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream   = lineBufferOne.streamReadSync(counterPixelAddrOneStream).pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream      = lineBufferTwo.streamReadSync(mainPixelAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream   = lineBufferTwo.streamReadSync(counterPixelAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val mainThreePixelStream    = lineBufferThree.streamReadSync(mainPixelAddrThreeStream).pipelined(m2s = true, s2m = true)
+    val counterThreePixelStream = lineBufferThree.streamReadSync(counterPixelAddrThreeStream).pipelined(m2s = true, s2m = true)
 
-    val mainOneValidStream      = validBufferOne.streamReadSync(mainValidAddrOneStream)
-    val counterOneValidStream   = validBufferOne.streamReadSync(counterValidAddrOneStream)
-    val mainTwoValidStream      = validBufferTwo.streamReadSync(mainValidAddrTwoStream)
-    val counterTwoValidStream   = validBufferTwo.streamReadSync(counterValidAddrTwoStream)
-    val mainThreeValidStream    = validBufferThree.streamReadSync(mainValidAddrThreeStream)
-    val counterThreeValidStream = validBufferThree.streamReadSync(counterValidAddrThreeStream)
+    val mainOneValidStream      = validBufferOne.streamReadSync(mainValidAddrOneStream).pipelined(m2s = true, s2m = true)
+    val counterOneValidStream   = validBufferOne.streamReadSync(counterValidAddrOneStream).pipelined(m2s = true, s2m = true)
+    val mainTwoValidStream      = validBufferTwo.streamReadSync(mainValidAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val counterTwoValidStream   = validBufferTwo.streamReadSync(counterValidAddrTwoStream).pipelined(m2s = true, s2m = true)
+    val mainThreeValidStream    = validBufferThree.streamReadSync(mainValidAddrThreeStream).pipelined(m2s = true, s2m = true)
+    val counterThreeValidStream = validBufferThree.streamReadSync(counterValidAddrThreeStream).pipelined(m2s = true, s2m = true)
 
-    val controlPipe = controlStream.stage()
+    val controlPipe = controlStream.pipelined(m2s = true, s2m = true).stage()
   }
 
   val compareStage = new Area {
-    val mainOnePixelStream      = readStage.mainOnePixelStream.stage()
-    val counterOnePixelStream   = readStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream      = readStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream   = readStage.counterTwoPixelStream.stage()
-    val mainThreePixelStream    = readStage.mainThreePixelStream.stage()
-    val counterThreePixelStream = readStage.counterThreePixelStream.stage()
+    val mainOnePixelStream      = readStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream   = readStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream      = readStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream   = readStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val mainThreePixelStream    = readStage.mainThreePixelStream.pipelined(m2s = true, s2m = true)
+    val counterThreePixelStream = readStage.counterThreePixelStream.pipelined(m2s = true, s2m = true)
 
-    val mainOneValidStream      = readStage.mainOneValidStream.stage()
-    val counterOneValidStream   = readStage.counterOneValidStream.stage()
-    val mainTwoValidStream      = readStage.mainTwoValidStream.stage()
-    val counterTwoValidStream   = readStage.counterTwoValidStream.stage()
-    val mainThreeValidStream    = readStage.mainThreeValidStream.stage()
-    val counterThreeValidStream = readStage.counterThreeValidStream.stage()
+    val mainOneValidStream      = readStage.mainOneValidStream.pipelined(m2s = true, s2m = true)
+    val counterOneValidStream   = readStage.counterOneValidStream.pipelined(m2s = true, s2m = true)
+    val mainTwoValidStream      = readStage.mainTwoValidStream.pipelined(m2s = true, s2m = true)
+    val counterTwoValidStream   = readStage.counterTwoValidStream.pipelined(m2s = true, s2m = true)
+    val mainThreeValidStream    = readStage.mainThreeValidStream.pipelined(m2s = true, s2m = true)
+    val counterThreeValidStream = readStage.counterThreeValidStream.pipelined(m2s = true, s2m = true)
 
     val controlPipe = readStage.controlPipe
       .translateWith {
@@ -599,23 +599,23 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
         }
         comparedControl
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
   }
 
   val diffStage = new Area {
-    val mainOnePixelStream      = compareStage.mainOnePixelStream.stage()
-    val counterOnePixelStream   = compareStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream      = compareStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream   = compareStage.counterTwoPixelStream.stage()
-    val mainThreePixelStream    = compareStage.mainThreePixelStream.stage()
-    val counterThreePixelStream = compareStage.counterThreePixelStream.stage()
+    val mainOnePixelStream      = compareStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream   = compareStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream      = compareStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream   = compareStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val mainThreePixelStream    = compareStage.mainThreePixelStream.pipelined(m2s = true, s2m = true)
+    val counterThreePixelStream = compareStage.counterThreePixelStream.pipelined(m2s = true, s2m = true)
 
-    val mainOneValidStream      = compareStage.mainOneValidStream.stage()
-    val counterOneValidStream   = compareStage.counterOneValidStream.stage()
-    val mainTwoValidStream      = compareStage.mainTwoValidStream.stage()
-    val counterTwoValidStream   = compareStage.counterTwoValidStream.stage()
-    val mainThreeValidStream    = compareStage.mainThreeValidStream.stage()
-    val counterThreeValidStream = compareStage.counterThreeValidStream.stage()
+    val mainOneValidStream      = compareStage.mainOneValidStream.pipelined(m2s = true, s2m = true)
+    val counterOneValidStream   = compareStage.counterOneValidStream.pipelined(m2s = true, s2m = true)
+    val mainTwoValidStream      = compareStage.mainTwoValidStream.pipelined(m2s = true, s2m = true)
+    val counterTwoValidStream   = compareStage.counterTwoValidStream.pipelined(m2s = true, s2m = true)
+    val mainThreeValidStream    = compareStage.mainThreeValidStream.pipelined(m2s = true, s2m = true)
+    val counterThreeValidStream = compareStage.counterThreeValidStream.pipelined(m2s = true, s2m = true)
 
     val controlPipe = compareStage.controlPipe
       .translateWith {
@@ -734,23 +734,23 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
 
         diffedControl
       }
-      .stage()
+      .pipelined(m2s = true, s2m = true)
   }
 
   val resultStage = new Area {
-    val mainOnePixelStream      = diffStage.mainOnePixelStream.stage()
-    val counterOnePixelStream   = diffStage.counterOnePixelStream.stage()
-    val mainTwoPixelStream      = diffStage.mainTwoPixelStream.stage()
-    val counterTwoPixelStream   = diffStage.counterTwoPixelStream.stage()
-    val mainThreePixelStream    = diffStage.mainThreePixelStream.stage()
-    val counterThreePixelStream = diffStage.counterThreePixelStream.stage()
+    val mainOnePixelStream      = diffStage.mainOnePixelStream.pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream   = diffStage.counterOnePixelStream.pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream      = diffStage.mainTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream   = diffStage.counterTwoPixelStream.pipelined(m2s = true, s2m = true)
+    val mainThreePixelStream    = diffStage.mainThreePixelStream.pipelined(m2s = true, s2m = true)
+    val counterThreePixelStream = diffStage.counterThreePixelStream.pipelined(m2s = true, s2m = true)
 
-    val mainOneValidStream      = diffStage.mainOneValidStream.stage()
-    val counterOneValidStream   = diffStage.counterOneValidStream.stage()
-    val mainTwoValidStream      = diffStage.mainTwoValidStream.stage()
-    val counterTwoValidStream   = diffStage.counterTwoValidStream.stage()
-    val mainThreeValidStream    = diffStage.mainThreeValidStream.stage()
-    val counterThreeValidStream = diffStage.counterThreeValidStream.stage()
+    val mainOneValidStream      = diffStage.mainOneValidStream.pipelined(m2s = true, s2m = true)
+    val counterOneValidStream   = diffStage.counterOneValidStream.pipelined(m2s = true, s2m = true)
+    val mainTwoValidStream      = diffStage.mainTwoValidStream.pipelined(m2s = true, s2m = true)
+    val counterTwoValidStream   = diffStage.counterTwoValidStream.pipelined(m2s = true, s2m = true)
+    val mainThreeValidStream    = diffStage.mainThreeValidStream.pipelined(m2s = true, s2m = true)
+    val counterThreeValidStream = diffStage.counterThreeValidStream.pipelined(m2s = true, s2m = true)
 
     val forkControlPipe = StreamFork(diffStage.controlPipe, 2, synchronous = true)
 
@@ -808,7 +808,7 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
         resultControl
       }
 
-    val controlPipe = controlPipeBeforePipe.stage()
+    val controlPipe = controlPipeBeforePipe.pipelined(m2s = true, s2m = true)
 
     val pixelStream = Stream(UInt(dW bits))
     val resultStreamBeforePipe = pixelStream
@@ -1088,7 +1088,7 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
         }
       }
 
-    val resultStream = resultStreamBeforePipe.stage()
+    val resultStream = resultStreamBeforePipe.pipelined(m2s = true, s2m = true)
 
     when(!controlPipeBeforePipe.finalResult) {
       isHorizontalDirection := controlPipeBeforePipe.isHorizontalMin

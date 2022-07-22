@@ -5,7 +5,7 @@ import spinal.core._
 import spinal.lib.bus.amba4.axilite._
 
 case class SuperResolutionCore(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
-  val ddrDataIn  = slave Stream UInt(3 * config.dataW bits)
+  val ddrDataIn  = slave Stream UInt(4 * config.dataW bits)
   val ipConfig   = slave(AxiLite4(axiLiteConfig))
   val inpDone    = out Bool ()
   val inpDataOut = master Stream PixelData(config, allChannel = true)
