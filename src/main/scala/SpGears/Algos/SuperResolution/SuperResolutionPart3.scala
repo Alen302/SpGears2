@@ -280,21 +280,21 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
 
   // read Stage
   val readStage = new Area {
-    val mainOnePixelStream      = lineBufferOne.streamReadSync(mainPixelAddrOneStream).pipelined(m2s = true, s2m = true)
-    val counterOnePixelStream   = lineBufferOne.streamReadSync(counterPixelAddrOneStream).pipelined(m2s = true, s2m = true)
-    val mainTwoPixelStream      = lineBufferTwo.streamReadSync(mainPixelAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val counterTwoPixelStream   = lineBufferTwo.streamReadSync(counterPixelAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val mainThreePixelStream    = lineBufferThree.streamReadSync(mainPixelAddrThreeStream).pipelined(m2s = true, s2m = true)
-    val counterThreePixelStream = lineBufferThree.streamReadSync(counterPixelAddrThreeStream).pipelined(m2s = true, s2m = true)
+    val mainOnePixelStream      = lineBufferOne.streamReadSync(mainPixelAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream   = lineBufferOne.streamReadSync(counterPixelAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream      = lineBufferTwo.streamReadSync(mainPixelAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream   = lineBufferTwo.streamReadSync(counterPixelAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val mainThreePixelStream    = lineBufferThree.streamReadSync(mainPixelAddrThreeStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterThreePixelStream = lineBufferThree.streamReadSync(counterPixelAddrThreeStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
 
-    val mainOneValidStream      = validBufferOne.streamReadSync(mainValidAddrOneStream).pipelined(m2s = true, s2m = true)
-    val counterOneValidStream   = validBufferOne.streamReadSync(counterValidAddrOneStream).pipelined(m2s = true, s2m = true)
-    val mainTwoValidStream      = validBufferTwo.streamReadSync(mainValidAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val counterTwoValidStream   = validBufferTwo.streamReadSync(counterValidAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val mainThreeValidStream    = validBufferThree.streamReadSync(mainValidAddrThreeStream).pipelined(m2s = true, s2m = true)
-    val counterThreeValidStream = validBufferThree.streamReadSync(counterValidAddrThreeStream).pipelined(m2s = true, s2m = true)
+    val mainOneValidStream      = validBufferOne.streamReadSync(mainValidAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterOneValidStream   = validBufferOne.streamReadSync(counterValidAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val mainTwoValidStream      = validBufferTwo.streamReadSync(mainValidAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterTwoValidStream   = validBufferTwo.streamReadSync(counterValidAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val mainThreeValidStream    = validBufferThree.streamReadSync(mainValidAddrThreeStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterThreeValidStream = validBufferThree.streamReadSync(counterValidAddrThreeStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
 
-    val controlPipe = controlStream.pipelined(m2s = true, s2m = true).stage()
+    val controlPipe = controlStream.pipelined(m2s = true, s2m = true).stage().pipelined(m2s = true, s2m = true)
   }
 
   val compareStage = new Area {
@@ -1133,7 +1133,7 @@ case class SuperResolutionPart3(config: IPConfig) extends Component {
 
     HOLD.whenIsActive {
       when(passPixels.fire) {
-        when(bufferRowCount === U(1) + outRowCount && bufferWAddr === U(1) + outPixelAddr) { goto(PASS) }
+        when(bufferRowCount > outRowCount && bufferWAddr > outPixelAddr) { goto(PASS) }
       }
     }
 

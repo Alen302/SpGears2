@@ -4,22 +4,16 @@ import spinal.lib._
 import spinal.core._
 import spinal.lib.bus.amba4.axilite._
 
-case class SuperResolutionCoreDemo1(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
-  val ddrDataIn = slave Stream UInt(3 * config.dataW bits)
-  val ipConfig  = slave(AxiLite4(axiLiteConfig))
-//  val inpDone    = out Bool ()
-  val inpDataOut = master Stream PixelData(config, allChannel = true)
-
-  /* initiate DDRDataWrapper to get PixelData type Stream */
-  val ddrDataWrapper = DDRDataWrapper(config)
-
-  /* initiate dispatcher to transform the rgb channel data to interpolate component */
-  val channelDispatcher = ChannelMasterTransformer(config)
+case class SuperResolutionCoreDemo2(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
+  val ddrDataIn  = slave Stream PixelData(config)
+  val ipConfig   = slave(AxiLite4(axiLiteConfig))
+  val inpDone    = out Bool ()
+  val inpDataOut = master Stream PixelData(config)
 
   /* initiate the interpolate component compute core */
-//  val bChannelPart1Core = SuperResolutionPart1(config)
-//  val bChannelPart2Core = SuperResolutionPart2(config)
-//  val bChannelPart3Core = SuperResolutionPart3(config)
+  val bChannelPart1Core = SuperResolutionPart1(config)
+  val bChannelPart2Core = SuperResolutionPart2(config)
+  val bChannelPart3Core = SuperResolutionPart3(config)
 
 //  val gChannelPart1Core = SuperResolutionPart1(config)
 //  val gChannelPart2Core = SuperResolutionPart2(config)
@@ -28,9 +22,6 @@ case class SuperResolutionCoreDemo1(config: IPConfig, axiLiteConfig: AxiLite4Con
 //  val rChannelPart1Core = SuperResolutionPart1(config)
 //  val rChannelPart2Core = SuperResolutionPart2(config)
 //  val rChannelPart3Core = SuperResolutionPart3(config)
-
-  /* initiate the combiner to transform the rgb channel data to single channel to ddr */
-  val channelCombiner = ChannelSlaveTransformer(config)
 
   /* initiate the axiLite config component to set ip config */
   val inpConfig = InpConfig(config, axiLiteConfig)
@@ -48,59 +39,59 @@ case class SuperResolutionCoreDemo1(config: IPConfig, axiLiteConfig: AxiLite4Con
 
   /* connect components */
 //  inpDone := bChannelPart1Core.io.inpDoneOut
-//
-  ddrDataIn               >> ddrDataWrapper.ddrIn
-  ddrDataWrapper.bmpWidth := inpConfig.io.srcWidth
-  ddrDataWrapper.inpDone.clear()
+  inpDone := bChannelPart1Core.io.inpDoneOut
 
-  ddrDataWrapper.pixelsOut >> channelDispatcher.allPixelChannelIn
-//  channelDispatcher.rPixelChannelOut.freeRun()
-//  channelDispatcher.gPixelChannelOut.freeRun()
-//  channelDispatcher.bPixelChannelOut >> bChannelPart1Core.io.pixelsIn
-//
   ipConfig >> inpConfig.io.axiLiteSignal
-  inpConfig.io.apDone.clear()
+//  inpConfig.io.apDone := bChannelPart1Core.io.inpDoneOut
+  inpConfig.io.apDone := bChannelPart1Core.io.inpDoneOut
+
+//  ddrDataIn >> bChannelPart1Core.io.pixelsIn
+  ddrDataIn                      >> bChannelPart1Core.io.pixelsIn
+  bChannelPart1Core.io.pixelsOut >> bChannelPart2Core.io.pixelsIn
+  bChannelPart2Core.io.pixelsOut >> bChannelPart3Core.io.pixelsIn
+
 ////
 ////  rChannelPart1Core.io.widthIn := inpConfig.io.srcWidth
 ////  gChannelPart1Core.io.widthIn := inpConfig.io.srcWidth
-//  bChannelPart1Core.io.widthIn := inpConfig.io.srcWidth
+  bChannelPart1Core.io.widthIn := inpConfig.io.srcWidth
 
 //  rChannelPart2Core.io.widthIn := inpConfig.io.srcWidth
 //  gChannelPart2Core.io.widthIn := inpConfig.io.srcWidth
-//  bChannelPart2Core.io.widthIn := inpConfig.io.srcWidth
+  bChannelPart2Core.io.widthIn := inpConfig.io.srcWidth
 //
 //  rChannelPart3Core.io.widthIn := inpConfig.io.srcWidth
 //  gChannelPart3Core.io.widthIn := inpConfig.io.srcWidth
-//  bChannelPart3Core.io.widthIn := inpConfig.io.srcWidth
+  bChannelPart3Core.io.widthIn := inpConfig.io.srcWidth
 
 //  rChannelPart1Core.io.heightIn := inpConfig.io.srcHeight
 //  gChannelPart1Core.io.heightIn := inpConfig.io.srcHeight
-//  bChannelPart1Core.io.heightIn := inpConfig.io.srcHeight
+  bChannelPart1Core.io.heightIn := inpConfig.io.srcHeight
 
 //  rChannelPart2Core.io.heightIn := inpConfig.io.srcHeight
 //  gChannelPart2Core.io.heightIn := inpConfig.io.srcHeight
-//  bChannelPart2Core.io.heightIn := inpConfig.io.srcHeight
+  bChannelPart2Core.io.heightIn := inpConfig.io.srcHeight
 //
 //  rChannelPart3Core.io.heightIn := inpConfig.io.srcHeight
 //  gChannelPart3Core.io.heightIn := inpConfig.io.srcHeight
-//  bChannelPart3Core.io.heightIn := inpConfig.io.srcHeight
+  bChannelPart3Core.io.heightIn := inpConfig.io.srcHeight
 
 //  rChannelPart1Core.io.thresholdIn := inpConfig.io.threshold
 //  gChannelPart1Core.io.thresholdIn := inpConfig.io.threshold
-//  bChannelPart1Core.io.thresholdIn := inpConfig.io.threshold
+  bChannelPart1Core.io.thresholdIn := inpConfig.io.threshold
 
 //  rChannelPart2Core.io.thresholdIn := inpConfig.io.threshold
 //  gChannelPart2Core.io.thresholdIn := inpConfig.io.threshold
-//  bChannelPart2Core.io.thresholdIn := inpConfig.io.threshold
+  bChannelPart2Core.io.thresholdIn := inpConfig.io.threshold
 //
 //  rChannelPart3Core.io.thresholdIn := inpConfig.io.threshold
 //  gChannelPart3Core.io.thresholdIn := inpConfig.io.threshold
-//  bChannelPart3Core.io.thresholdIn := inpConfig.io.threshold
+  bChannelPart3Core.io.thresholdIn := inpConfig.io.threshold
 
 //  rChannelPart1Core.io.startIn := inpConfig.io.apStart
 //  gChannelPart1Core.io.startIn := inpConfig.io.apStart
 //  bChannelPart1Core.io.startIn := inpConfig.io.apStart
 
+  bChannelPart1Core.io.startIn := inpConfig.io.apStart
 //  rChannelPart1Core.io.pixelsOut      >> rChannelPart2Core.io.pixelsIn
 //  rChannelPart1Core.io.inpTwoDoneIn   := rChannelPart2Core.io.inpTwoDoneOut
 //  rChannelPart1Core.io.inpThreeDoneIn := rChannelPart3Core.io.inpThreeDoneOut
@@ -129,24 +120,25 @@ case class SuperResolutionCoreDemo1(config: IPConfig, axiLiteConfig: AxiLite4Con
 //  bChannelPart3Core.io.pixelsIn.rowEnd     := bChannelPart1Core.io.pixelsOut.rowEnd
 //  bChannelPart3Core.io.pixelsIn.inpValid.set()
 //
-//  bChannelPart1Core.io.inpTwoDoneIn.clear()
-//  bChannelPart1Core.io.inpThreeDoneIn.clear()
+  bChannelPart1Core.io.inpTwoDoneIn   := bChannelPart2Core.io.inpTwoDoneOut
+  bChannelPart1Core.io.inpThreeDoneIn := bChannelPart3Core.io.inpThreeDoneOut
 
-//  bChannelPart3Core.io.startIn := bChannelPart1Core.io.startOut
-//  bChannelPart1Core.io.pixelsOut      >> bChannelPart3Core.io.pixelsIn
-//  bChannelPart3Core.io.inpThreeDoneIn := bChannelPart3Core.io.inpThreeDoneOut
+  bChannelPart2Core.io.startIn := bChannelPart1Core.io.startOut
+  bChannelPart3Core.io.startIn := bChannelPart2Core.io.startOut
+//  bChannelPart1Core.io.pixelsOut >> bChannelPart2Core.io.pixelsIn
+  bChannelPart2Core.io.inpThreeDoneIn := bChannelPart3Core.io.inpThreeDoneOut
 
 //  bChannelPart3Core.io.startIn   := bChannelPart2Core.io.startOut
 //  bChannelPart1Core.io.pixelsOut >> channelCombiner.bPixelChannelIn
+//
+//  channelDispatcher.bPixelChannelOut >> channelCombiner.bPixelChannelIn
+//  channelDispatcher.gPixelChannelOut >> channelCombiner.gPixelChannelIn
+//  channelDispatcher.rPixelChannelOut >> channelCombiner.rPixelChannelIn
 
-  channelDispatcher.bPixelChannelOut >> channelCombiner.bPixelChannelIn
-  channelDispatcher.gPixelChannelOut >> channelCombiner.gPixelChannelIn
-  channelDispatcher.rPixelChannelOut >> channelCombiner.rPixelChannelIn
-
-  channelCombiner.allPixelChannelOut >> inpDataOut
+  bChannelPart3Core.io.pixelsOut >> inpDataOut
 
 }
 
 object CoreDemo extends App {
-  SpinalVerilog(SuperResolutionCoreDemo1(IPConfig(), AxiLite4Config(32, 32)))
+  SpinalVerilog(SuperResolutionCoreDemo2(IPConfig(), AxiLite4Config(32, 32)))
 }

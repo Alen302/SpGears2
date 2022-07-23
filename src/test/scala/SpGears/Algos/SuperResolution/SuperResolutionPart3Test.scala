@@ -42,7 +42,10 @@ object sim3Funcs {
       io.heightIn    #= sH
       io.thresholdIn #= threshold
       io.startIn     #= true
-      clockDomain.waitSamplingWhere(pixelOuts.size == testCases.size)
+      clockDomain.waitSamplingWhere {
+        println(s"pixelOuts size : ${pixelOuts.size}")
+        pixelOuts.size == testCases.size
+      }
       io.startIn #= false
       dut.clockDomain.waitSampling(2)
 

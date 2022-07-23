@@ -183,11 +183,11 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
 
   // read Stage
   val readStage = new Area {
-    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream).pipelined(m2s = true, s2m = true)
-    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream).pipelined(m2s = true, s2m = true)
-    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream).pipelined(m2s = true, s2m = true)
-    val controlPipe           = controlStream.pipelined(true, true).stage()
+    val mainOnePixelStream    = lineBufferOne.streamReadSync(mainAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterOnePixelStream = lineBufferOne.streamReadSync(counterAddrOneStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val mainTwoPixelStream    = lineBufferTwo.streamReadSync(mainAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val counterTwoPixelStream = lineBufferTwo.streamReadSync(counterAddrTwoStream.pipelined(m2s = true, s2m = true)).pipelined(m2s = true, s2m = true)
+    val controlPipe           = controlStream.pipelined(true, true).stage().pipelined(m2s = true, s2m = true)
   }
 
   val compareStage = new Area {
@@ -560,7 +560,7 @@ case class SuperResolutionPart1(config: IPConfig) extends Component {
         when(controlStream.fire) {
           when(bufferReuse)(goto(TWICE))
             .otherwise {
-              when(bufferWAddr === (outPixelAddr +^ U(2)) / U(2) && !passPixels.fire) { goto(HOLD) }
+              when(U(2) * bufferWAddr === outPixelAddr +^ U(2) && !passPixels.fire) { goto(HOLD) }
                 .otherwise { goto(TWICE) }
             }
         }
