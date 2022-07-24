@@ -43,7 +43,7 @@ object simCoreFunc {
 
       dut.ddrDataIn.setMasterDriver(dut.clockDomain, testCases)
       dut.ddrDataIn.setStreamMonitor(dut.clockDomain, getTestCasesIns)
-      dut.inpDone.setMonitor(dut.clockDomain, waitTime = 0, inpDoneOuts)
+//      dut.inpDone.setMonitor(dut.clockDomain, waitTime = 0, inpDoneOuts)
       dut.inpDataOut.setSlaveRandomReady(dut.clockDomain)
       dut.inpDataOut.setStreamMonitor(dut.clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
       dut.ipConfig.aw.setStreamMonitor(dut.clockDomain, Seq(getAxiLiteAw, getAxiLiteProt): _*)

@@ -5,9 +5,9 @@ import spinal.core._
 import spinal.lib.bus.amba4.axilite._
 
 case class SuperResolutionCore(config: IPConfig, axiLiteConfig: AxiLite4Config) extends Component {
-  val ddrDataIn  = slave Stream UInt(4 * config.dataW bits)
-  val ipConfig   = slave(AxiLite4(axiLiteConfig))
-  val inpDone    = out Bool ()
+  val ddrDataIn = slave Stream UInt(4 * config.dataW bits)
+  val ipConfig  = slave(AxiLite4(axiLiteConfig))
+//  val inpDone    = out Bool ()
   val inpDataOut = master Stream PixelData(config, allChannel = true)
 
   /* initiate DDRDataWrapper to get PixelData type Stream */
@@ -47,7 +47,7 @@ case class SuperResolutionCore(config: IPConfig, axiLiteConfig: AxiLite4Config) 
   }
 
   /* connect components */
-  inpDone := allChannelDone
+//  inpDone := allChannelDone
 
   ddrDataIn               >> ddrDataWrapper.ddrIn
   ddrDataWrapper.bmpWidth := inpConfig.io.srcWidth
@@ -136,4 +136,16 @@ case class SuperResolutionCore(config: IPConfig, axiLiteConfig: AxiLite4Config) 
 
   channelCombiner.allPixelChannelOut >> inpDataOut
 
+}
+
+object GenIPCode extends App {
+  SpinalConfig(
+    mode = Verilog,
+    defaultConfigForClockDomains = ClockDomainConfig(
+      clockEdge        = RISING,
+      resetKind        = ASYNC,
+      resetActiveLevel = LOW
+    ),
+    targetDirectory = "./IPCode"
+  ).generateVerilog(SuperResolutionCore(IPConfig(), axiLiteConfig = AxiLite4Config(dataWidth = 32, addressWidth = 32)))
 }
