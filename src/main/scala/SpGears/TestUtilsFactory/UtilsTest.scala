@@ -8,9 +8,9 @@ case class Signals() extends Bundle {
   val b = Bool()
 }
 case class UtilsTest() extends Component {
-  val dataIn  = slave Stream (Signals())
+  val dataIn  = slave Stream Signals()
   val baseIn  = in UInt (8 bits)
-  val dataOut = master Stream (Signals())
+  val dataOut = master Stream Signals()
   val baseOut = out UInt (8 bits)
 
   dataOut <-/< dataIn

@@ -14,24 +14,29 @@ package object TestUtilsFactory {
 
   /** @param backend
     *   the simulation backend
-    * @param vcsFlags
-    *   the VCS simulation additional flag information
+
     * @param pathName
     *   the path of simulation generated file
     * @param workSpaceName
     *   the generated directory
     * @param config
     *   the simulation config information
+    * @param vcsFlags
+    *   the VCS simulation additional flag information
     * @return
     *   the return SpinalSimConfig class
     */
   def simConfig(
       backend: Backend      = VERILATOR,
-      vcsFlags: VCSFlags    = VCSFlags(elaborateFlags = List("-LDFLAGS -Wl,--no-as-needed")),
       pathName: String      = "simWaves",
       workSpaceName: String = null,
-      config: SpinalConfig  = null
+      config: SpinalConfig  = null,
+      vcsFlags: VCSFlags    = VCSFlags(elaborateFlags = List("-LDFLAGS -Wl,--no-as-needed"))
   ): SpinalSimConfig = {
+    if(backend == VCS){
+
+    }
+
     (backend, workSpaceName, config) match {
       case (VERILATOR, null, null)            => SimConfig.withFstWave.workspacePath(s"./$pathName").allOptimisation
       case (VERILATOR, workSpaceName, null)   => SimConfig.withFstWave.workspacePath(s"./$pathName").workspaceName(workSpaceName).allOptimisation
