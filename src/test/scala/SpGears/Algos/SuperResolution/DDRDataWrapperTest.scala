@@ -5,7 +5,7 @@ import scala.collection.mutable._
 import spinal.core.sim._
 
 object DDRDataWrapperTest extends App {
-  simConfig().compile(DDRDataWrapper(IPConfig(10, 10))).doSim { dut =>
+  getSimConfig().compile(DDRDataWrapper(IPConfig(10, 10))).doSim { dut =>
     dut.clockDomain.forkStimulus(10)
 
     // initiate

@@ -25,7 +25,7 @@ object simFunc {
       isPrint: Boolean,
       isPrintRawData: Boolean
   ) = {
-    val compiled = simConfig(workSpaceName = workspaceName, config = SpinalConfig(defaultConfigForClockDomains = ClockDomainConfig(resetActiveLevel = LOW)))
+    val compiled = getSimConfig(workSpaceName = workspaceName, config = SpinalConfig(defaultConfigForClockDomains = ClockDomainConfig(resetActiveLevel = LOW)))
       .compile(ArraySlice(32, ArraySliceConfig(W, H, M, N)).setDefinitionName("arraySlice"))
 
     compiled.doSim { dut =>

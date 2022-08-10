@@ -12,7 +12,7 @@ object UtilsTester extends App {
 
   // style one
   def startSim() = {
-    val compiled = simConfig().compile(UtilsTest())
+    val compiled = getSimConfig().compileWithMake(UtilsTest())
 
     compiled.doSimUntilVoid { dut =>
       import dut._
@@ -49,7 +49,7 @@ object UtilsTester extends App {
   }
 
   // style two
-  val compiled = simConfig(backend = VCS).compile(UtilsTest())
+  val compiled = getSimConfig().compile(UtilsTest())
 
   compiled.doSimUntilVoid { dut =>
     import dut._

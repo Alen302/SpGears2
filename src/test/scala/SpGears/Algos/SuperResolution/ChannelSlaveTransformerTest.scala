@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random._
 
 object ChannelSlaveTransformerTest extends App {
-  simConfig().compile(ChannelSlaveTransformer(IPConfig())).doSim { dut =>
+  getSimConfig().compile(ChannelSlaveTransformer(IPConfig())).doSim { dut =>
     dut.clockDomain.forkStimulus(10)
 
     val testSize = 100
