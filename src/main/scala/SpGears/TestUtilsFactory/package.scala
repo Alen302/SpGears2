@@ -8,13 +8,13 @@ import SpGears.TestUtilsFactory.DataCarrierUtils._
 import SpGears.TestUtilsFactory.DataUtils._
 import SpGears.Backend._
 
+import java.io._
 import scala.collection.mutable._
 
 package object TestUtilsFactory {
 
   /** @param backend
     *   the simulation backend
-
     * @param pathName
     *   the path of simulation generated file
     * @param workSpaceName
@@ -28,27 +28,45 @@ package object TestUtilsFactory {
     */
   def simConfig(
       backend: Backend      = VERILATOR,
-      pathName: String      = "simWaves",
+      workSpacePath: String = "simWaves",
       workSpaceName: String = null,
       config: SpinalConfig  = null,
       vcsFlags: VCSFlags    = VCSFlags(elaborateFlags = List("-LDFLAGS -Wl,--no-as-needed"))
   ): SpinalSimConfig = {
-    if(backend == VCS){
-
-    }
-
     (backend, workSpaceName, config) match {
-      case (VERILATOR, null, null)            => SimConfig.withFstWave.workspacePath(s"./$pathName").allOptimisation
-      case (VERILATOR, workSpaceName, null)   => SimConfig.withFstWave.workspacePath(s"./$pathName").workspaceName(workSpaceName).allOptimisation
-      case (VERILATOR, null, config)          => SimConfig.withFstWave.withConfig(config).workspacePath(s"./$pathName").allOptimisation
-      case (VERILATOR, workSpaceName, config) => SimConfig.withFstWave.withConfig(config).workspacePath(s"./$pathName").workspaceName(workSpaceName).allOptimisation
+      case (VERILATOR, null, null)            => SimConfig.withFstWave.workspacePath(s"./$workSpacePath").allOptimisation
+      case (VERILATOR, workSpaceName, null)   => SimConfig.withFstWave.workspacePath(s"./$workSpacePath").workspaceName(workSpaceName).allOptimisation
+      case (VERILATOR, null, config)          => SimConfig.withFstWave.withConfig(config).workspacePath(s"./$workSpacePath").allOptimisation
+      case (VERILATOR, workSpaceName, config) => SimConfig.withFstWave.withConfig(config).workspacePath(s"./$workSpacePath").workspaceName(workSpaceName).allOptimisation
 
-      case (VCS, null, null)            => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./$pathName").allOptimisation
-      case (VCS, workSpaceName, null)   => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./$pathName").workspaceName(workSpaceName).allOptimisation
-      case (VCS, null, config)          => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./$pathName").allOptimisation
-      case (VCS, workSpaceName, config) => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./$pathName").workspaceName(workSpaceName).allOptimisation
+      case (VCS, null, null)            => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./$workSpacePath").allOptimisation
+      case (VCS, workSpaceName, null)   => SimConfig.withVCS(vcsFlags).withFSDBWave.workspacePath(s"./$workSpacePath").workspaceName(workSpaceName).allOptimisation
+      case (VCS, null, config)          => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./$workSpacePath").allOptimisation
+      case (VCS, workSpaceName, config) => SimConfig.withVCS(vcsFlags).withFSDBWave.withConfig(config).workspacePath(s"./$workSpacePath").workspaceName(workSpaceName).allOptimisation
     }
 
+  }
+
+  def openVerdi(workSpacePath: String = "simWaves", workSpaceName: String = null, componentName: String = null, genMakefile: Boolean = false): Unit = {
+    val targetPath     = s"./$workSpacePath/$workSpaceName/"
+    val targetFileList = s"filelist.f"
+    val targetFSDB = componentName match {
+      case null => s"${workSpaceName}.fsdb"
+      case _    => s"${componentName}.fsdb"
+    }
+    val command = List("verdi", "-f", targetFileList, targetFSDB).mkString(" ")
+    genMakefile match {
+      case false => DoCmd.doCmd(cmd = command, path = targetPath)
+      case true =>
+        val targetMakefile = new File(targetPath, "Makefile")
+        val makeFileWriter = new FileWriter(targetMakefile)
+        val verdiTarget    = List("verdi", ":", targetFileList, targetFSDB).mkString(" ")
+        val verdiCmd       = List(s"\t", "verdi", "-f", targetFileList, "-ssf", targetFSDB).mkString(" ")
+        val makeContent    = verdiTarget + s"\n" + verdiCmd + s"\n"
+        makeFileWriter.write(makeContent)
+        DoCmd.doCmd(cmd = List("make", "verdi").mkString(" "), path = targetPath)
+        makeFileWriter.close()
+    }
   }
 
   /** @param carrier

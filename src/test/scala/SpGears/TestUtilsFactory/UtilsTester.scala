@@ -12,7 +12,7 @@ object UtilsTester extends App {
 
   // style one
   def startSim() = {
-    val compiled = simConfig(backend = VCS).compile(UtilsTest())
+    val compiled = simConfig().compile(UtilsTest())
 
     compiled.doSimUntilVoid { dut =>
       import dut._
@@ -86,7 +86,7 @@ object UtilsTester extends App {
 }
 
 class StyleOne extends AnyFunSuite {
-  test("style one test !"){
+  test("style one test !") {
     UtilsTester.startSim()
   }
 }
