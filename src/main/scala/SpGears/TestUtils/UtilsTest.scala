@@ -1,4 +1,4 @@
-package SpGears.TestUtilsFactory
+package SpGears.TestUtils
 
 import spinal.core._
 import spinal.lib._

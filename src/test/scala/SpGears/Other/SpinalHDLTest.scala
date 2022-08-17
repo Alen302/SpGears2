@@ -2,8 +2,10 @@ package SpGears.Other
 
 import spinal.lib._
 import spinal.core._
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
 import spinal.core.sim._
+
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Random._
 
 case class SpinalHDLTest() extends Component {

@@ -1,6 +1,7 @@
 package SpGears.Algos.SuperResolution
 
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
+import SpGears.TestUtils.SimUtils._
 import spinal.core.sim._
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random._
@@ -12,10 +13,10 @@ object ChannelSlaveTransformerTest extends App {
     val testSize = 100
 
     // initialize
-    dut.bPixelChannelIn.haltCycles(dut.clockDomain, cycleCount    = 0)
-    dut.gPixelChannelIn.haltCycles(dut.clockDomain, cycleCount    = 0)
-    dut.rPixelChannelIn.haltCycles(dut.clockDomain, cycleCount    = 0)
-    dut.allPixelChannelOut.haltCycles(dut.clockDomain, cycleCount = 0)
+    dut.bPixelChannelIn.setRandomInitValue(dut.clockDomain)
+    dut.gPixelChannelIn.setRandomInitValue(dut.clockDomain)
+    dut.rPixelChannelIn.setRandomInitValue(dut.clockDomain)
+    dut.allPixelChannelOut.setRandomInitValue(dut.clockDomain)
 
     // driver
     val bPixelDriver = ArrayBuffer.fill(testSize)(BigInt(nextInt(255) + 1))
@@ -27,10 +28,10 @@ object ChannelSlaveTransformerTest extends App {
     val rowEnds          = ArrayBuffer.fill(testSize)(false)
     val rowEndsDriver    = rowEnds.zipWithIndex.map { case (e, i) => if ((i + 1) % 10 == 0) true else false }
 
-    dut.bPixelChannelIn.setMasterDriver(dut.clockDomain, Seq(bPixelDriver, frameStartDriver, rowEndsDriver): _*)
-    dut.gPixelChannelIn.setMasterDriver(dut.clockDomain, Seq(gPixelDriver, frameStartDriver, rowEndsDriver): _*)
-    dut.rPixelChannelIn.setMasterDriver(dut.clockDomain, Seq(rPixelDriver, frameStartDriver, rowEndsDriver): _*)
-    dut.allPixelChannelOut.setSlaveRandomReady(dut.clockDomain)
+    dut.bPixelChannelIn.setDriverRandomly(dut.clockDomain, latency = 0, Seq(bPixelDriver, frameStartDriver, rowEndsDriver): _*)
+    dut.gPixelChannelIn.setDriverRandomly(dut.clockDomain, latency = 0, Seq(gPixelDriver, frameStartDriver, rowEndsDriver): _*)
+    dut.rPixelChannelIn.setDriverRandomly(dut.clockDomain, latency = 0, Seq(rPixelDriver, frameStartDriver, rowEndsDriver): _*)
+    dut.allPixelChannelOut.setRandomDriverRandomly(dut.clockDomain)
 
     // monitor
     val bPixelIns      = ArrayBuffer[BigInt]()
@@ -49,10 +50,10 @@ object ChannelSlaveTransformerTest extends App {
     val rowEndOuts     = ArrayBuffer[Boolean]()
     val frameStartOuts = ArrayBuffer[Boolean]()
 
-    dut.bPixelChannelIn.setStreamMonitor(dut.clockDomain, Seq(bPixelIns, bFrameStartIns, bRowEndIns): _*)
-    dut.gPixelChannelIn.setStreamMonitor(dut.clockDomain, Seq(gPixelIns, gFrameStartIns, gRowEndIns): _*)
-    dut.rPixelChannelIn.setStreamMonitor(dut.clockDomain, Seq(rPixelIns, rFrameStartIns, rRowEndIns): _*)
-    dut.allPixelChannelOut.setStreamMonitor(dut.clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
+    dut.bPixelChannelIn.setMonitorAlways(dut.clockDomain, latency    = 0, Seq(bPixelIns, bFrameStartIns, bRowEndIns): _*)
+    dut.gPixelChannelIn.setMonitorAlways(dut.clockDomain, latency    = 0, Seq(gPixelIns, gFrameStartIns, gRowEndIns): _*)
+    dut.rPixelChannelIn.setMonitorAlways(dut.clockDomain, latency    = 0, Seq(rPixelIns, rFrameStartIns, rRowEndIns): _*)
+    dut.allPixelChannelOut.setMonitorAlways(dut.clockDomain, latency = 0, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
 
     dut.clockDomain.waitSamplingWhere(pixelOuts.size == testSize)
 

@@ -1,6 +1,6 @@
 package SpGears.Algos.SuperResolution
 
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
 import org.scalatest.funsuite._
 import org.slf4j._
 import spinal.core.sim._
@@ -26,10 +26,10 @@ object sim2Funcs {
 
       import dut.{clockDomain, io}
       clockDomain.forkStimulus(2)
-      io.pixelsIn.setMasterDriver(clockDomain, Seq(testCases, frameStartIns, rowEndIns): _*)
-      io.pixelsIn.setStreamMonitor(clockDomain, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
-      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts, inpValidOuts): _*)
-      io.pixelsOut.setSlaveRandomReady(clockDomain)
+      io.pixelsIn.setDriverRandomly(clockDomain, latency = 0, Seq(testCases, frameStartIns, rowEndIns): _*)
+      io.pixelsIn.setMonitorAlways(clockDomain, latency  = 0, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
+      io.pixelsOut.setMonitorAlways(clockDomain, latency = 0, Seq(pixelOuts, frameStartOuts, rowEndOuts, inpValidOuts): _*)
+      io.pixelsOut.setRandomDriverRandomly(clockDomain)
       io.pixelsIn.rowEnd     #= false
       io.pixelsIn.frameStart #= false
       io.startIn             #= false

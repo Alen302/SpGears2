@@ -1,6 +1,7 @@
 package SpGears.Algos.SuperResolution
 
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
+import SpGears.TestUtils.SimUtils._
 import spinal.core.sim._
 
 import scala.collection.mutable.ArrayBuffer
@@ -13,10 +14,10 @@ object ChannelMasterTransformerTest extends App {
     val testSize = 100
 
     // initialize
-    dut.allPixelChannelIn.haltCycles(dut.clockDomain, cycleCount = 0)
-    dut.bPixelChannelOut.haltCycles(dut.clockDomain, cycleCount  = 0)
-    dut.gPixelChannelOut.haltCycles(dut.clockDomain, cycleCount  = 0)
-    dut.rPixelChannelOut.haltCycles(dut.clockDomain, cycleCount  = 0)
+    dut.allPixelChannelIn.setRandomInitValue(dut.clockDomain)
+    dut.bPixelChannelOut.setRandomInitValue(dut.clockDomain)
+    dut.gPixelChannelOut.setRandomInitValue(dut.clockDomain)
+    dut.rPixelChannelOut.setRandomInitValue(dut.clockDomain)
 
     // driver
     val pixelDriver      = ArrayBuffer.fill(testSize)(BigInt(nextInt(255) + 1 << 16))
@@ -25,10 +26,10 @@ object ChannelMasterTransformerTest extends App {
     val rowEnds          = ArrayBuffer.fill(testSize)(false)
     val rowEndsDriver    = rowEnds.zipWithIndex.map { case (e, i) => if ((i + 1) % 10 == 0) true else false }
 
-    dut.allPixelChannelIn.setMasterDriver(dut.clockDomain, Seq(pixelDriver, frameStartDriver, rowEndsDriver): _*)
-    dut.bPixelChannelOut.setSlaveRandomReady(dut.clockDomain)
-    dut.gPixelChannelOut.setSlaveRandomReady(dut.clockDomain)
-    dut.rPixelChannelOut.setSlaveRandomReady(dut.clockDomain)
+    dut.allPixelChannelIn.setDriverRandomly(dut.clockDomain, latency = 0, Seq(pixelDriver, frameStartDriver, rowEndsDriver): _*)
+    dut.bPixelChannelOut.setRandomDriverRandomly(dut.clockDomain)
+    dut.gPixelChannelOut.setRandomDriverRandomly(dut.clockDomain)
+    dut.rPixelChannelOut.setRandomDriverRandomly(dut.clockDomain)
 
     // monitor
     val pixelIns      = ArrayBuffer[BigInt]()
@@ -47,10 +48,10 @@ object ChannelMasterTransformerTest extends App {
     val gRowEndOuts     = ArrayBuffer[Boolean]()
     val gFrameStartOuts = ArrayBuffer[Boolean]()
 
-    dut.allPixelChannelIn.setStreamMonitor(dut.clockDomain, Seq(pixelIns, frameStartIns, rowEndIns): _*)
-    dut.bPixelChannelOut.setStreamMonitor(dut.clockDomain, Seq(bPixelOuts, bFrameStartOuts, bRowEndOuts): _*)
-    dut.gPixelChannelOut.setStreamMonitor(dut.clockDomain, Seq(gPixelOuts, gFrameStartOuts, gRowEndOuts): _*)
-    dut.rPixelChannelOut.setStreamMonitor(dut.clockDomain, Seq(rPixelOuts, rFrameStartOuts, rRowEndOuts): _*)
+    dut.allPixelChannelIn.setMonitorAlways(dut.clockDomain, latency = 0, Seq(pixelIns, frameStartIns, rowEndIns): _*)
+    dut.bPixelChannelOut.setMonitorAlways(dut.clockDomain, latency  = 0, Seq(bPixelOuts, bFrameStartOuts, bRowEndOuts): _*)
+    dut.gPixelChannelOut.setMonitorAlways(dut.clockDomain, latency  = 0, Seq(gPixelOuts, gFrameStartOuts, gRowEndOuts): _*)
+    dut.rPixelChannelOut.setMonitorAlways(dut.clockDomain, latency  = 0, Seq(rPixelOuts, rFrameStartOuts, rRowEndOuts): _*)
 
     dut.clockDomain.waitSamplingWhere(bRowEndOuts.size >= testSize && gRowEndOuts.size >= testSize && rRowEndOuts.size >= testSize)
 

@@ -1,6 +1,7 @@
 package SpGears.Algos.SuperResolution
 
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
+import SpGears.TestUtils.SimUtils._
 import scala.collection.mutable._
 import spinal.core.sim._
 
@@ -9,14 +10,14 @@ object DDRDataWrapperTest extends App {
     dut.clockDomain.forkStimulus(10)
 
     // initiate
-    dut.ddrIn.haltCycles(dut.clockDomain)
-    dut.pixelsOut.haltCycles(dut.clockDomain)
+    dut.ddrIn.setRandomInitValue(dut.clockDomain)
+    dut.pixelsOut.setRandomInitValue(dut.clockDomain)
     dut.inpDone  #= false
     dut.bmpWidth #= 0
 
     // driver
-    dut.ddrIn.setMasterRandomDriver(dut.clockDomain)
-    dut.pixelsOut.setSlaveRandomReady(dut.clockDomain)
+    dut.ddrIn.setRandomDriverRandomly(dut.clockDomain)
+    dut.pixelsOut.setRandomDriverRandomly(dut.clockDomain)
     dut.bmpWidth #= 10
 
     // monitor
@@ -25,15 +26,15 @@ object DDRDataWrapperTest extends App {
     val rowEnds     = ArrayBuffer[Boolean]()
     val frameStarts = ArrayBuffer[Boolean]()
 
-    dut.ddrIn.setStreamMonitor(dut.clockDomain, ddrIns)
-    dut.pixelsOut.setStreamMonitor(dut.clockDomain, Seq(pixels, frameStarts, rowEnds): _*)
+    dut.ddrIn.setMonitorAlways(dut.clockDomain, latency     = 0, ddrIns)
+    dut.pixelsOut.setMonitorAlways(dut.clockDomain, latency = 0, Seq(pixels, frameStarts, rowEnds): _*)
 
     dut.clockDomain.waitSamplingWhere(pixels.size == 100)
     dut.inpDone #= true
     dut.clockDomain.waitSampling()
     dut.inpDone #= false
-    println(s" ddrIns : ${ddrIns.map(_.toString.padTo(7, ' ')).mkString("")}")
-    println(s" pixels : ${pixels.map(_.toString.padTo(7, ' ')).mkString("")}")
+    println(s" ddrIns : ${ddrIns.map(_.toString.padTo(15, ' ')).mkString("")}")
+    println(s" pixels : ${pixels.map(_.toString.padTo(15, ' ')).mkString("")}")
     println(s" frameStarts : ${frameStarts.map(_.toString.padTo(7, ' ')).mkString("")}")
     println(s" rowEnds : ${rowEnds.map(_.toString.padTo(7, ' ')).mkString("")}")
   }

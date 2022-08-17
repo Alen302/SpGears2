@@ -6,7 +6,7 @@ import spinal.core.sim._
 
 import scala.collection.mutable._
 import scala.util.Random._
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
 
 object sim1Funcs {
   def startSim(threshold: Int, sH: Int, sW: Int, testCases: ArrayBuffer[BigInt], golden: ArrayBuffer[BigInt], isPrint: Boolean = false) = {
@@ -25,10 +25,10 @@ object sim1Funcs {
 
       import dut.{clockDomain, io}
       clockDomain.forkStimulus(2)
-      io.pixelsIn.setMasterDriver(clockDomain, Seq(testCases, frameStartIns, rowEndIns): _*)
-      io.pixelsIn.setStreamMonitor(clockDomain, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
-      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
-      io.pixelsOut.setSlaveRandomReady(clockDomain)
+      io.pixelsIn.setDriverRandomly(clockDomain, latency = 0, Seq(testCases, frameStartIns, rowEndIns): _*)
+      io.pixelsIn.setMonitorAlways(clockDomain, latency  = 0, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns): _*)
+      io.pixelsOut.setMonitorAlways(clockDomain, latency = 0, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
+      io.pixelsOut.setRandomDriverRandomly(clockDomain)
       io.pixelsIn.rowEnd     #= false
       io.pixelsIn.frameStart #= false
       io.startIn             #= false

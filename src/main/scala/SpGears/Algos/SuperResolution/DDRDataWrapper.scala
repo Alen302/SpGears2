@@ -3,9 +3,7 @@ package SpGears.Algos.SuperResolution
 import spinal.lib._
 import spinal.core._
 
-import SpGears.TestUtilsFactory._
-import scala.collection.mutable._
-import spinal.core.sim._
+import scala.language.postfixOps
 
 case class DDRDataWrapper(config: IPConfig) extends Component {
   def dW = config.dataW

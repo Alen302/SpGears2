@@ -1,7 +1,8 @@
 package SpGears.Algos.SuperResolution
 
 import SpGears.Algos.SuperResolution.sim1Funcs.compareResults
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.SimUtils.DataSimUtils
+import SpGears.TestUtils.UVM._
 import org.scalatest.funsuite._
 import org.slf4j._
 import spinal.core.sim._
@@ -33,25 +34,25 @@ object simCoreFunc {
       val logger = LoggerFactory.getLogger(s"Test : SuperResolutionCoreTest")
 
       dut.clockDomain.forkStimulus(10)
-      dut.ddrDataIn.haltCycles(dut.clockDomain, cycleCount   = 0)
-      dut.inpDataOut.haltCycles(dut.clockDomain, cycleCount  = 0)
-      dut.ipConfig.aw.haltCycles(dut.clockDomain, cycleCount = 0)
-      dut.ipConfig.w.haltCycles(dut.clockDomain, cycleCount  = 0)
-      dut.ipConfig.b.haltCycles(dut.clockDomain, cycleCount  = 0)
-      dut.ipConfig.ar.haltCycles(dut.clockDomain, cycleCount = 0)
-      dut.ipConfig.r.haltCycles(dut.clockDomain, cycleCount  = 0)
+      dut.ddrDataIn.setRandomInitValue(dut.clockDomain)
+      dut.inpDataOut.setRandomInitValue(dut.clockDomain)
+      dut.ipConfig.aw.setRandomInitValue(dut.clockDomain)
+      dut.ipConfig.w.setRandomInitValue(dut.clockDomain)
+      dut.ipConfig.b.setRandomInitValue(dut.clockDomain)
+      dut.ipConfig.ar.setRandomInitValue(dut.clockDomain)
+      dut.ipConfig.r.setRandomInitValue(dut.clockDomain)
 
-      dut.ddrDataIn.setMasterDriver(dut.clockDomain, testCases)
-      dut.ddrDataIn.setStreamMonitor(dut.clockDomain, getTestCasesIns)
+      dut.ddrDataIn.setDriverRandomly(dut.clockDomain, latency = 0, testCases)
+      dut.ddrDataIn.setMonitorAlways(dut.clockDomain, latency  = 0, getTestCasesIns)
 //      dut.inpDone.setMonitor(dut.clockDomain, waitTime = 0, inpDoneOuts)
-      dut.inpDataOut.setSlaveRandomReady(dut.clockDomain)
-      dut.inpDataOut.setStreamMonitor(dut.clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
-      dut.ipConfig.aw.setStreamMonitor(dut.clockDomain, Seq(getAxiLiteAw, getAxiLiteProt): _*)
-      dut.ipConfig.aw.setMasterDriver(dut.clockDomain, Seq(ipConfigAddr, ArrayBuffer.fill(4)(BigInt(0))): _*)
-      dut.ipConfig.w.setStreamMonitor(dut.clockDomain, Seq(getAxiLIteW, getAxiLiteStrb): _*)
-      dut.ipConfig.w.setMasterDriver(dut.clockDomain, Seq(ipConfigData, ArrayBuffer.fill(4)(BigInt(15))): _*)
-      dut.ipConfig.b.setStreamMonitor(dut.clockDomain, axiLiteRespOuts)
-      dut.ipConfig.b.setSlaveReadyAlways(dut.clockDomain)
+      dut.inpDataOut.setRandomDriverRandomly(dut.clockDomain)
+      dut.inpDataOut.setMonitorAlways(dut.clockDomain, latency   = 0, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
+      dut.ipConfig.aw.setMonitorAlways(dut.clockDomain, latency  = 0, Seq(getAxiLiteAw, getAxiLiteProt): _*)
+      dut.ipConfig.aw.setDriverRandomly(dut.clockDomain, latency = 0, Seq(ipConfigAddr, ArrayBuffer.fill(4)(BigInt(0))): _*)
+      dut.ipConfig.w.setMonitorAlways(dut.clockDomain, latency   = 0, Seq(getAxiLIteW, getAxiLiteStrb): _*)
+      dut.ipConfig.w.setDriverRandomly(dut.clockDomain, latency  = 0, Seq(ipConfigData, ArrayBuffer.fill(4)(BigInt(15))): _*)
+      dut.ipConfig.b.setMonitorAlways(dut.clockDomain, latency   = 0, axiLiteRespOuts)
+      dut.ipConfig.b.setDriverAlways(dut.clockDomain, latency    = 0, ArrayBuffer(true))
 
       dut.clockDomain.waitSamplingWhere(getAxiLiteAw.size == 4 && getAxiLIteW.size == 4)
       println(s"ip config successful in time : ${simTime()} !")

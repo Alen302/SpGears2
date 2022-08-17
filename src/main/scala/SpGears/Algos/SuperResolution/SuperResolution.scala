@@ -16,8 +16,6 @@ package object SuperResolution {
             case bits: Bits => bits := B(0).resized
             case _          =>
           }
-        case bundle: Bundle =>
-          bundle.setInvalid()
         case _ =>
       }
     }

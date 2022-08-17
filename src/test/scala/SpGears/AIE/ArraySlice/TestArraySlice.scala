@@ -6,7 +6,8 @@ import spinal.core._
 import spinal.lib._
 import spinal.core.sim._
 
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
+import SpGears.TestUtils.SimUtils._
 import scala.collection.mutable._
 
 object simFunc {
@@ -44,10 +45,10 @@ object simFunc {
       import dut.{inputStreamArrayData, outputStreamArrayData}
 
       val returnResult = ArrayBuffer.fill(outputStreamArrayData.size)(new ArrayBuffer[BigInt]())
-      inputStreamArrayData.setMasterDriver(dut.clockDomain, testCases)
+      inputStreamArrayData.setDriverRandomly(dut.clockDomain, latency = 0, testCases)
       (0 until dut.outputStreamArrayData.size).foreach { i =>
-        outputStreamArrayData(i).setSlaveRandomReady(dut.clockDomain)
-        outputStreamArrayData(i).setStreamMonitor(dut.clockDomain, returnResult(i))
+        outputStreamArrayData(i).setRandomDriverRandomly(dut.clockDomain)
+        outputStreamArrayData(i).setMonitorAlways(dut.clockDomain, latency = 0, returnResult(i))
       }
 
       val refResult = genRefResult(testCases, H, W, M, N, ifmH, ifmW, ofmH, ofmW)

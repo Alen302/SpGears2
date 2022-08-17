@@ -3,7 +3,7 @@ package SpGears.Algos.SuperResolution
 import org.scalatest.funsuite._
 import org.slf4j._
 import spinal.core.sim._
-import SpGears.TestUtilsFactory._
+import SpGears.TestUtils.UVM._
 
 import scala.collection.mutable._
 import scala.util.Random._
@@ -28,10 +28,10 @@ object sim3Funcs {
 
       import dut.{clockDomain, io}
       clockDomain.forkStimulus(2)
-      io.pixelsIn.setMasterDriver(clockDomain, Seq(testCases, frameStartIns, rowEndIns, inpValidIns): _*)
-      io.pixelsIn.setStreamMonitor(clockDomain, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns, getInpValidIns): _*)
-      io.pixelsOut.setStreamMonitor(clockDomain, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
-      io.pixelsOut.setSlaveRandomReady(clockDomain)
+      io.pixelsIn.setDriverRandomly(clockDomain, latency = 0, Seq(testCases, frameStartIns, rowEndIns, inpValidIns): _*)
+      io.pixelsIn.setMonitorAlways(clockDomain, latency  = 0, Seq(getTestCasesIns, getFrameStartIns, getRowEndIns, getInpValidIns): _*)
+      io.pixelsOut.setMonitorAlways(clockDomain, latency = 0, Seq(pixelOuts, frameStartOuts, rowEndOuts): _*)
+      io.pixelsOut.setRandomDriverRandomly(clockDomain)
       io.pixelsIn.rowEnd     #= false
       io.pixelsIn.frameStart #= false
       io.startIn             #= false
