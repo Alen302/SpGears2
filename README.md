@@ -5,7 +5,8 @@
   \* Driver  
   \* Monitor  
   *The details and usage of these method is write in source code with ScalaDoc style*  
-**SimUtils:** some method of commom simulation behavior  
+### **SimUtils:**  
+**description**: some method of commom simulation behavior  
   \* compileWithMake  
   \* getSimConfig  
   \* setStreamAssert  
