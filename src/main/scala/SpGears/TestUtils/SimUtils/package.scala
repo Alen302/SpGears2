@@ -1,13 +1,13 @@
 package SpGears.TestUtils
 
-import SpGears.Backend._
+import SpGears.TestUtils.Backend._
 import SpGears.TestUtils.UVM.DataCarrierComponents._
 import spinal.core.sim._
 import spinal.core._
 import spinal.lib._
 import spinal.sim.WaveFormat._
-
 import org.slf4j._
+
 import java.io.FileWriter
 import java.nio.file.Paths
 import java.time._
@@ -60,6 +60,7 @@ package object SimUtils {
       val targetMakefile       = Paths.get(genDir.toString, "Makefile").toFile
       val targetMakefileWriter = new FileWriter(targetMakefile)
       targetMakefileWriter.write(makeContent)
+      targetMakefileWriter.flush()
       targetMakefileWriter.close()
 
       compiled
